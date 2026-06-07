@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doroapp | Protocolo: DEEP FOCUS</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="imagens/icons8-neo.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Rubik+Glitch&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="crt-overlay"></div>
+    <div class="app-container">
+      <!-- Sidebar / Status -->
+      <aside class="sidebar">
+        <div class="profile-section">
+          <div class="stats-row">
+            <div class="avatar-glitch" id="operator-id" data-text="01">
+              01
+            </div>
+            <div class="xp-bar-column">
+              <div class="xp-bar-container">
+                <div class="xp-bar" id="xp-progress" style="width: 0%"></div>
+              </div>
+              <p class="xp-text">
+                <span id="current-xp">0</span> /
+                <span id="next-level-xp">1000</span> XP
+              </p>
+            </div>
+          </div>
+          <div class="level-info">
+            <h2 id="current-level">Rookie Driver</h2>
+          </div>
+        </div>
+
+        <nav class="mission-log">
+          <h3>Log de Missões</h3>
+          <ul id="mission-list">
+            <!-- Missions injected via JS -->
+          </ul>
+        </nav>
+
+        <div class="daily-quote" id="quote-container">
+          <span class="terminal-prompt">></span>
+          <span id="quote-display">Inicializando sistema de motivação...</span>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="hero-header">
+          <h1 class="glitch-text" data-text="ESCAPE THE CAPS">ESCAPE THE CAPS</h1>
+          <p class="subtitle">ENTER THE CODE. BUILD YOUR FUTURE.</p>
+        </header>
+
+        <section class="focus-matrix">
+          <div class="timer-container" id="timer-container">
+            <div class="timer-ring">
+              <div class="timer-display" id="timer">25:00</div>
+            </div>
+
+
+            <div class="timer-controls">
+              <button id="btn-focus" class="btn btn-primary">INICIAR</button>
+              <button id="btn-set-focus" class="btn btn-secondary">
+                FOCO
+              </button>
+              <button id="btn-short-break" class="btn btn-secondary">
+                PAUSA
+              </button>
+            </div>
+
+            <div class="status-indicator">
+              <span class="status-dot"></span>
+              <span id="system-status">SISTEMA AGUARDANDO...</span>
+              <span class="status-divider">|</span>
+              <button id="btn-agent-toggle" class="btn-protocol">AGENTE: <span id="agent-status-text">OFF</span></button>
+            </div>
+
+
+            <div class="timer-options">
+              <div class="presets">
+
+                <button class="btn-preset" data-time="25">25</button>
+                <button class="btn-preset" data-time="40">40</button>
+                <button class="btn-preset" data-time="60">60</button>
+                <button class="btn-preset" data-time="75">75</button>
+                <button class="btn-preset" data-time="90">90</button>
+              </div>
+              <div class="manual-override">
+                <span class="terminal-mini">></span>
+                <input
+                  type="number"
+                  id="manual-input"
+                  placeholder="00"
+                  min="1"
+                  max="999"
+                />
+                <span class="unit">MIN</span>
+                <button id="btn-apply-manual" class="btn-apply">SET</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
