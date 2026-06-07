@@ -28,7 +28,7 @@
   --break-dim: #004d66;
 }
 
-body.agent-mode-active {
+body.agent-mode-active .main-content {
   --matrix-green: var(--agent-purple);
   --matrix-glow: var(--agent-purple-glow);
   --matrix-dim: #4c0082; /* Indigo/Deep Purple for dim elements */
