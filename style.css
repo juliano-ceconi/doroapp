@@ -280,6 +280,7 @@ body {
 .mission-log {
   min-height: 100px;
   margin-top: 1.5rem;
+  flex-shrink: 0;
 }
 
 .mission-log::-webkit-scrollbar {
@@ -356,23 +357,23 @@ body {
 
 /* Painel de Métricas */
 .metrics-panel {
-  margin-top: 1.5rem;
+  margin-top: 3rem; /* Empurra mais para baixo */
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem; /* Menor espaçamento */
   flex-shrink: 0;
 }
 
 .metric-row {
   background-color: rgba(0, 5, 0, 0.5);
   border: 1px solid var(--matrix-dim);
-  padding: 0.6rem 0.8rem;
+  padding: 0.4rem 0.6rem; /* Menor preenchimento */
   border-radius: var(--radius-sm);
   transition: all 0.2s ease;
   user-select: none;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.25rem; /* Menor espaçamento interno */
 }
 
 .metric-row:hover {
@@ -392,16 +393,16 @@ body {
 .metric-info {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .metric-icon {
-  font-size: 1.1rem;
+  font-size: 0.95rem; /* Ícone menor */
   filter: drop-shadow(0 0 3px var(--matrix-glow));
 }
 
 .metric-title {
-  font-size: 0.75rem;
+  font-size: 0.65rem; /* Título menor */
   font-weight: 700;
   color: var(--matrix-green);
   text-transform: uppercase;
@@ -409,7 +410,7 @@ body {
 }
 
 .metric-value-label {
-  font-size: 0.8rem;
+  font-size: 0.7rem; /* Porcentagem menor */
   font-weight: 800;
   color: var(--matrix-green);
   text-shadow: 0 0 3px var(--matrix-glow);
@@ -417,7 +418,7 @@ body {
 
 .metric-progress-wrapper {
   width: 100%;
-  height: 8px;
+  height: 6px; /* Barra mais fina */
   background-color: var(--matrix-gray);
   border: 1px solid var(--matrix-dim);
   position: relative;
