@@ -362,7 +362,7 @@ body {
   align-items: center;
   justify-content: flex-start;
   position: relative;
-  padding: 2rem;
+  padding: 0.75rem 2rem;
   overflow-y: auto;
   height: 100%;
 }
@@ -370,8 +370,8 @@ body {
 .hero-header {
   text-align: center;
   z-index: 10;
-  margin-bottom: 0.5rem;
-  margin-top: 1rem;
+  margin-bottom: 0;
+  margin-top: 0.25rem;
 }
 
 .glitch-text {
@@ -401,7 +401,7 @@ body {
   justify-content: flex-start;
   gap: 1px; /* More space between timer and buttons */
   height: auto;
-  margin-top: 1px; /* Raised significantly as requested */
+  margin-top: 0;
 }
 
 .timer-display {
@@ -411,6 +411,7 @@ body {
   text-shadow: 0 0 15px var(--matrix-green);
   letter-spacing: 5px;
   padding-top: 0;
+  line-height: 0.8;
   text-align: center;
 }
 
@@ -462,7 +463,7 @@ body {
   font-size: 0.8rem;
   color: var(--matrix-green);
   letter-spacing: 0.1em;
-  padding-top: 1.5rem;
+  padding-top: 1rem;
 }
 
 #system-status,
@@ -488,11 +489,11 @@ body {
 
 /* Timer Options (Discreet) */
 .timer-options {
-  margin-top: 1.5rem;
+  margin-top: 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.35rem;
   opacity: 0.3;
   transition:
     opacity 0.3s ease,
@@ -537,7 +538,7 @@ body {
   align-items: center;
   gap: 0.3rem;
   border-top: 1px solid rgba(0, 255, 65, 0.1);
-  padding-top: 0.5rem;
+  padding-top: 0.25rem;
 }
 
 .terminal-mini {
@@ -778,7 +779,7 @@ body {
 .board-section {
   width: 100%;
   max-width: 900px;
-  margin-top: 2rem;
+  margin-top: 0.75rem;
   animation: fadeInUp 0.6s ease;
 }
 
