@@ -44,3 +44,23 @@ garantir acessibilidade (pt-br), clareza (ADHD-friendly) e segurança operaciona
 - Melhora na legibilidade para o usuário humano.
 - Histórico de Git mais limpo e rastreável.
 - Redução de riscos de quebras acidentais na UI Cyberpunk.
+
+---
+
+## [2026-06-25] Implementação do Quadro Kanban e Definição de Pronto
+
+### Contexto
+
+Necessidade de trazer a funcionalidade de checklist e Kanban do `vida-os` para o `doroapp` sem quebrar a estética Cyberpunk/Matrix, mantendo a execução independente e adicionando regras claras para entrega de tarefas remotas.
+
+### Decisão
+
+1. Modificar o layout principal (`.main-content`) e o cabeçalho (`.hero-header`) para suportar rolagem vertical independente, permitindo exibir o Kanban abaixo do timer sem quebras visuais.
+2. Armazenar a lista de tarefas (`tasks`) no `gameState` e persistir localmente no `localStorage` do navegador para manter o aplicativo funcional de forma offline e leve.
+3. Adicionar regra formal de "Definição de Pronto" no `AGENTS.md`, exigindo commits atômicos, push no GitHub e confirmação de deploy bem-sucedido na Vercel antes de finalizar as tarefas.
+
+### Consequências
+
+- O `doroapp` agora possui um gerenciador de tarefas completo (Quadro Kanban com 3 colunas de prioridades e cálculo dinâmico de ganho de XP).
+- Compatibilidade retroativa de dados preservada (inicializando `tasks` vazias em dados antigos).
+- Processo de deploy e integridade de produção garantidos pelas novas diretrizes operacionais de agentes.
