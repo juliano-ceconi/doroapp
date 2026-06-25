@@ -1,50 +1,55 @@
-# 🤖 Protocolo de Agentes: Doroapp
+# Protocolo de Agentes: Doroapp
 
-## ⚡ Interação ADHD-Friendly
+## Interacao ADHD-Friendly
 
-- **Destaques:** Use **negrito** para palavras-chave e informações cruciais.
-- **Estrutura:** Prefira **listas curtas** e tópicos em vez de parágrafos longos.
-- **Clareza:** Vá direto ao ponto. Divida informações complexas em blocos.
-- **Espaçamento:** Utilize quebras de linha generosas entre seções.
+- **Destaques:** Use **negrito** para palavras-chave e informacoes cruciais.
+- **Estrutura:** Prefira **listas curtas** e topicos em vez de paragrafos longos.
+- **Clareza:** Va direto ao ponto. Divida informacoes complexas em blocos.
+- **Espacamento:** Utilize quebras de linha generosas entre secoes.
 
-## 🛡️ Protocolos de Operação
+## Protocolos de Operacao
 
-### 1. Commits Atômicos
+### 1. Commits Atomicos
 
-- **Regra:** Realize commits pequenos e focados em uma única mudança.
-- **Exemplo:** Separe alterações de CSS de alterações de JavaScript.
+- **Regra:** Realize commits pequenos e focados em uma unica mudanca.
+- **Exemplo:** Separe alteracoes de CSS de alteracoes de JavaScript.
 
-### 2. Auto-Correção e Validação
+### 2. Auto-Correcao e Validacao
 
-- **Regra:** Valide o código (sintaxe, bugs óbvios) antes de finalizar.
-- **Ação:** Use ferramentas de lint ou teste sempre que possível.
+- **Regra:** Valide o codigo (sintaxe, bugs obvios) antes de finalizar.
+- **Acao:** Use ferramentas de lint ou teste sempre que possivel.
 
-### 3. Preservação Estética (Cyberpunk)
+### 3. Preservacao Estetica (Cyberpunk)
 
-- **Regra:** **PROIBIDO** quebrar a estética Glitch/CRT e o tema Cyberpunk.
-- **Ação:** Verifique visualmente qualquer alteração na interface.
+- **Regra:** **PROIBIDO** quebrar a estetica Glitch/CRT e o tema Cyberpunk.
+- **Acao:** Verifique visualmente qualquer alteracao na interface.
 
-### 4. Segurança de Comando
+### 4. Seguranca de Comando
 
 - **Regra:** "Ler primeiro, Agir depois".
-- **Ação:** Use `ls` ou `view_file` antes de deletar ou sobrescrever arquivos.
+- **Acao:** Use `ls` ou `view_file` antes de deletar ou sobrescrever arquivos.
 
-## 📝 Registro de Decisões
+### 5. Definicao de Pronto (Deploy Producao)
 
-- **Regra:** Não utilize comentários extensos no código para explicar decisões
+- **Regra:** Mudancas apenas locais **nao** significam tarefa concluida. O trabalho so e considerado concluido quando estiver **rodando em producao no Vercel** (apos o *git push* para o GitHub).
+- **Acao:** Realize o commit, o push para o GitHub e confirme que o deploy na Vercel foi concluido com sucesso.
+
+## Registro de Decisoes
+
+- **Regra:** Nao utilize comentarios extensos no codigo para explicar decisoes
   arquiteturais.
-- **Ação:** Registre todas as mudanças importantes e seus "porquês" no arquivo [DECISIONS.md](file:///c:/projetos/juliano-ceconi/doroapp/DECISIONS.md).
+- **Acao:** Registre todas as mudancas importantes e seus "porques" no arquivo [DECISIONS.md](file:///c:/projetos/juliano-ceconi/doroapp/DECISIONS.md).
 
-## 📝 Padrões de Comunicação e Git
+## Padroes de Comunicacao e Git
 
 ### Commits
 
-- **Idioma:** Sempre escreva mensagens de commit em **Português do Brasil (pt-br)**.
-- **Linguagem:** Utilize uma linguagem simples, direta e de fácil
+- **Idioma:** Sempre escreva mensagens de commit em **Portugues do Brasil (pt-br)**.
+- **Linguagem:** Utilize uma linguagem simples, direta e de facil
   entendimento para qualquer pessoa.
-- **Estilo:** Evite jargões técnicos excessivos quando não forem estritamente necessários.
+- **Estilo:** Evite jargoes tecnicos excessivos quando nao forem estritamente necessarios.
 
-### Documentação
+### Documentacao
 
 - Ao atualizar o `README.md` ou outros documentos, mantenha o tom
-  motivacional e a estética do projeto (Uber ➔ Dev / Cyberpunk).
+  motivacional e a estetica do projeto (Uber -> Dev / Cyberpunk).
