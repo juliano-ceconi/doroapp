@@ -370,7 +370,7 @@ body {
 .hero-header {
   text-align: center;
   z-index: 10;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
   margin-top: 1rem;
 }
 
@@ -410,7 +410,7 @@ body {
   color: var(--matrix-green);
   text-shadow: 0 0 15px var(--matrix-green);
   letter-spacing: 5px;
-  padding-top: 1.5rem;
+  padding-top: 0;
   text-align: center;
 }
 
