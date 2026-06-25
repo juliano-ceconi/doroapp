@@ -36,6 +36,12 @@ let gameState = {
   lastLogin: null,
   agentMode: false,
   tasks: [],
+  metrics: {
+    productivity: 1,
+    physical: 1,
+    money: 1,
+    emotional: 1,
+  },
 };
 
 // Config
@@ -379,6 +385,45 @@ function toggleMission(id) {
   }
 }
 
+// Metrics Logic
+function updateMetricsUI() {
+  const metrics = ["productivity", "physical", "money", "emotional"];
+  metrics.forEach((metric) => {
+    const value = gameState.metrics[metric] !== undefined ? gameState.metrics[metric] : 1;
+    const bar = document.getElementById(`metric-bar-${metric}`);
+    const label = document.getElementById(`metric-val-${metric}`);
+    if (bar) bar.style.width = `${value}%`;
+    if (label) label.textContent = `${value}%`;
+  });
+}
+
+function initMetricsListeners() {
+  const metricRows = document.querySelectorAll(".metric-row");
+  metricRows.forEach((row) => {
+    row.addEventListener("dblclick", () => {
+      const metricKey = row.getAttribute("data-metric");
+      const metricName = row.querySelector(".metric-title").textContent;
+      const currentValue = gameState.metrics[metricKey];
+
+      const newValueInput = prompt(
+        `Ajustar ${metricName} (atual: ${currentValue}%).\nInsira um valor de 1 a 100:`,
+        currentValue,
+      );
+
+      if (newValueInput !== null) {
+        const newValue = parseInt(newValueInput, 10);
+        if (!isNaN(newValue) && newValue >= 1 && newValue <= 100) {
+          gameState.metrics[metricKey] = newValue;
+          saveGame();
+          updateMetricsUI();
+        } else {
+          alert("Por favor, insira um número inteiro válido de 1 a 100.");
+        }
+      }
+    });
+  });
+}
+
 // Persistence
 function saveGame() {
   localStorage.setItem("uberToDevSave", JSON.stringify(gameState));
@@ -396,6 +441,23 @@ function loadGame() {
     gameState.lastLogin = parsed.lastLogin;
     gameState.agentMode = parsed.agentMode || false;
     gameState.tasks = parsed.tasks || [];
+
+    // Restore metrics
+    if (parsed.metrics) {
+      gameState.metrics = {
+        productivity: parsed.metrics.productivity !== undefined ? parsed.metrics.productivity : 1,
+        physical: parsed.metrics.physical !== undefined ? parsed.metrics.physical : 1,
+        money: parsed.metrics.money !== undefined ? parsed.metrics.money : 1,
+        emotional: parsed.metrics.emotional !== undefined ? parsed.metrics.emotional : 1,
+      };
+    } else {
+      gameState.metrics = {
+        productivity: 1,
+        physical: 1,
+        money: 1,
+        emotional: 1,
+      };
+    }
 
     // Restore mission status ONLY (keep text/xp from code)
 
@@ -416,10 +478,17 @@ function loadGame() {
     }
   } else {
     gameState.tasks = [];
+    gameState.metrics = {
+      productivity: 1,
+      physical: 1,
+      money: 1,
+      emotional: 1,
+    };
   }
   updateLevel();
   renderMissions();
   renderTasks();
+  updateMetricsUI();
 
   // Sync Agent Mode Visuals
   const statusText = document.getElementById("agent-status-text");
@@ -570,6 +639,7 @@ function renderTasks() {
 // Init
 document.addEventListener("DOMContentLoaded", () => {
   loadGame();
+  initMetricsListeners();
   showRandomQuote();
   resetTimer(currentFocusTime, "focus"); // Init state
 
