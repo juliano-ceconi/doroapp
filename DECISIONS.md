@@ -122,5 +122,30 @@ O usuário solicitou que a frase motivacional aleatória exibida abaixo do log d
 
 - A frase aleatória mantém um visual amarelo suave e persistente, servindo como ponto de destaque visual constante que se descola da alternância de cores de tema de Foco (Verde), Agente (Roxo) e Pausa (Azul).
 
+---
+
+## [2026-06-25] Ajuste Visual de Espaçamentos, Nomenclaturas e Inclusão de Indicadores
+
+### Contexto
+
+O usuário solicitou simplificação de nomenclatura em duas métricas ("Corpo Físico" para "Físico"; "Saúde Emocional" para "Emocional"), inserção de mais dois indicadores no painel ("Saúde" e "Espiritual") e ajustes finos de layout nas missões, níveis e altura das métricas para otimizar o aproveitamento de espaço.
+
+### Decisão
+
+1. **Alteração de Nomenclatura:** Atualizado o arquivo `index.html` para exibir "Físico" e "Emocional".
+2. **Inclusão de Novos Indicadores:** Adicionado os blocos HTML para as métricas "Saúde" (❤️) e "Espiritual" (🧘) no arquivo `index.html`. No `script.js`, as novas métricas foram inseridas no objeto de estado inicial `gameState.metrics`, mapeadas no fluxo de renderização (`updateMetricsUI()`) e tratadas no mecanismo de carregamento (`loadGame()`) e reset para retrocompatibilidade.
+3. **Ajustes de Proporção (CSS):**
+   - Reduzido a altura das missões em 10% alterando o padding vertical de `.mission-item` de `0.5rem` para `0.45rem` (e no layout responsivo de `1rem` para `0.9rem`).
+   - Reduzido a distância entre missões em 5% configurando o `gap` em `#mission-list` para `0.475rem`.
+   - Reduzido a distância entre Level e Título do level em 10% definindo o `gap` de `.profile-section` para `0.9rem`.
+   - Reduzido a distância do Título do level para "Log de Missões" em 15% ajustando o `margin-top` de `.mission-log` para `1.275rem`.
+   - Reduzido a altura da caixa de indicadores em 10% configurando o padding vertical de `.metric-row` para `0.315rem` e o `gap` interno para `0.225rem`.
+
+### Consequências
+
+- A barra lateral de status agora suporta 6 indicadores com ajuste interativo completo (duplo-clique) e persistência de dados.
+- O layout vertical ficou mais compacto e otimizado, permitindo que todas as missões e novos indicadores caibam de forma harmoniosa sem prejudicar a leitura das fontes.
+
+
 
 
