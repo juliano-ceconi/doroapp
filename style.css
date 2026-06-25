@@ -306,7 +306,7 @@ body {
 
 .mission-item {
   background-color: rgba(0, 20, 0, 0.5);
-  padding: 0.75rem;
+  padding: 0.55rem 0.7rem; /* Reduzido em aprox. 10-20% */
   border: 1px solid var(--matrix-dim);
   transition: all 0.2s ease;
   cursor: pointer;
@@ -328,7 +328,7 @@ body {
 }
 
 .daily-quote {
-  margin-top: 2rem;
+  margin-top: 1.2rem; /* Reduzido de 2rem */
   background: black;
   padding: 0.4rem 0.6rem;
   border: 1px solid var(--matrix-green);
@@ -357,7 +357,7 @@ body {
 
 /* Painel de Métricas */
 .metrics-panel {
-  margin-top: 3rem; /* Empurra mais para baixo */
+  margin-top: 1.5rem; /* Reduzido de 3rem */
   display: flex;
   flex-direction: column;
   gap: 0.5rem; /* Menor espaçamento */
