@@ -32,7 +32,9 @@
 ### 5. Definicao de Pronto (Deploy Producao)
 
 - **Regra:** Mudancas apenas locais **nao** significam tarefa concluida. O trabalho so e considerado concluido quando estiver **rodando em producao no Vercel** (apos o *git push* para o GitHub).
+- **Proibicao:** **PROIBIDO rodar ou iniciar qualquer tipo de servidor local (ex: Python HTTP Server, Node, Live Server) para desenvolvimento ou teste.** A validacao deve ser feita sempre e exclusivamente no deploy de producao na Vercel apos o push.
 - **Acao:** Realize o commit, o push para o GitHub e confirme que o deploy na Vercel foi concluido com sucesso.
+
 
 ## Registro de Decisoes
 
