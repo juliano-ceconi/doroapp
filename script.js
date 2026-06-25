@@ -35,6 +35,7 @@ let gameState = {
   streak: 0,
   lastLogin: null,
   agentMode: false,
+  tasks: [],
 };
 
 // Config
@@ -394,6 +395,7 @@ function loadGame() {
     gameState.streak = parsed.streak || 0;
     gameState.lastLogin = parsed.lastLogin;
     gameState.agentMode = parsed.agentMode || false;
+    gameState.tasks = parsed.tasks || [];
 
     // Restore mission status ONLY (keep text/xp from code)
 
@@ -412,9 +414,12 @@ function loadGame() {
         return mission;
       });
     }
+  } else {
+    gameState.tasks = [];
   }
   updateLevel();
   renderMissions();
+  renderTasks();
 
   // Sync Agent Mode Visuals
   const statusText = document.getElementById("agent-status-text");
@@ -458,6 +463,108 @@ function showRandomQuote() {
     }
   }
   type();
+}
+
+// Kanban Logic
+function extractTags(text) {
+  const matches = text.match(/#(\w+)/g);
+  return matches ? matches.map((m) => m.slice(1).toLowerCase()) : [];
+}
+
+function addTask(text, priority) {
+  const tags = extractTags(text);
+  const cleanText = text.replace(/#(\w+)/g, "").trim();
+
+  const task = {
+    id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
+    text: cleanText,
+    priority: priority,
+    done: false,
+    xpReward: priority === "urgente" ? 100 : priority === "importante" ? 75 : 50,
+    pomodoroCount: 0,
+    createdAt: new Date().toISOString(),
+    tags: tags,
+  };
+
+  if (!gameState.tasks) {
+    gameState.tasks = [];
+  }
+  gameState.tasks.push(task);
+  saveGame();
+  renderTasks();
+}
+
+function toggleTaskDone(taskId) {
+  const task = gameState.tasks.find((t) => t.id === taskId);
+  if (task) {
+    task.done = !task.done;
+    if (task.done) {
+      task.completedAt = new Date().toISOString();
+      addXP(task.xpReward);
+      playSound("finish");
+      alert(`Tarefa concluída! +${task.xpReward} XP`);
+    } else {
+      delete task.completedAt;
+    }
+    saveGame();
+    renderTasks();
+  }
+}
+
+function deleteTask(taskId) {
+  gameState.tasks = gameState.tasks.filter((t) => t.id !== taskId);
+  saveGame();
+  renderTasks();
+}
+
+function renderTasks() {
+  const priorities = ["diaria", "urgente", "importante"];
+  const tasksList = gameState.tasks || [];
+
+  priorities.forEach((priority) => {
+    const listEl = document.getElementById(`list-${priority}`);
+    if (!listEl) return;
+    listEl.innerHTML = "";
+
+    const filtered = tasksList.filter((t) => t.priority === priority);
+
+    if (filtered.length === 0) {
+      listEl.innerHTML = `<div class="empty-state">Nenhuma tarefa...</div>`;
+    } else {
+      filtered.forEach((task) => {
+        const card = document.createElement("div");
+        card.className = `task-card ${task.done ? "done" : ""}`;
+        card.dataset.taskId = task.id;
+
+        const pomodoroBadge = task.pomodoroCount > 0
+          ? `<span class="pomodoro-badge">🍅${task.pomodoroCount}</span>`
+          : "";
+
+        const tagsHtml = task.tags && task.tags.length > 0
+          ? `<div class="task-tags">${task.tags.map((t) => `<span class="tag">#${t}</span>`).join("")}</div>`
+          : "";
+
+        card.innerHTML = `
+          <button class="task-check" aria-label="Concluir tarefa">${task.done ? "✓" : ""}</button>
+          <div class="task-content">
+            <span class="task-text">${task.text}</span>
+            ${tagsHtml}
+            ${pomodoroBadge}
+          </div>
+          <button class="task-delete" aria-label="Deletar tarefa">×</button>
+        `;
+
+        // Handlers
+        card.querySelector(".task-check").addEventListener("click", () => toggleTaskDone(task.id));
+        card.querySelector(".task-delete").addEventListener("click", (e) => {
+          e.stopPropagation();
+          deleteTask(task.id);
+        });
+
+        listEl.appendChild(card);
+      });
+    }
+  });
 }
 
 // Init
@@ -543,5 +650,45 @@ document.addEventListener("DOMContentLoaded", () => {
       : "OFF";
     toggleAgentModeVisuals(gameState.agentMode);
     saveGame();
+  });
+
+  // Configurar botões de adicionar tarefa no Kanban
+  document.querySelectorAll(".btn-add-task").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const priority = btn.getAttribute("data-priority");
+      const listEl = document.getElementById(`list-${priority}`);
+      if (!listEl) return;
+
+      // Impede múltiplos inputs abertos simultaneamente
+      if (listEl.querySelector(".new-task-input")) return;
+
+      const inputWrap = document.createElement("div");
+      inputWrap.className = "new-task-input";
+      inputWrap.innerHTML = `<input type="text" class="task-input-field" placeholder="Nova tarefa..." autofocus />`;
+      listEl.prepend(inputWrap);
+
+      const input = inputWrap.querySelector("input");
+      input.focus();
+
+      let committed = false;
+      const commit = () => {
+        if (committed) return;
+        committed = true;
+        const text = input.value.trim();
+        if (text) {
+          addTask(text, priority);
+        }
+        inputWrap.remove();
+      };
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") commit();
+        if (e.key === "Escape") {
+          committed = true;
+          inputWrap.remove();
+        }
+      });
+      input.addEventListener("blur", commit);
+    });
   });
 });
