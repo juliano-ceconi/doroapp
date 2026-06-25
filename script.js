@@ -41,6 +41,8 @@ let gameState = {
     physical: 1,
     money: 1,
     emotional: 1,
+    health: 1,
+    spiritual: 1,
   },
 };
 
@@ -387,7 +389,7 @@ function toggleMission(id) {
 
 // Metrics Logic
 function updateMetricsUI() {
-  const metrics = ["productivity", "physical", "money", "emotional"];
+  const metrics = ["productivity", "physical", "money", "emotional", "health", "spiritual"];
   metrics.forEach((metric) => {
     const value = gameState.metrics[metric] !== undefined ? gameState.metrics[metric] : 1;
     const bar = document.getElementById(`metric-bar-${metric}`);
@@ -449,6 +451,8 @@ function loadGame() {
         physical: parsed.metrics.physical !== undefined ? parsed.metrics.physical : 1,
         money: parsed.metrics.money !== undefined ? parsed.metrics.money : 1,
         emotional: parsed.metrics.emotional !== undefined ? parsed.metrics.emotional : 1,
+        health: parsed.metrics.health !== undefined ? parsed.metrics.health : 1,
+        spiritual: parsed.metrics.spiritual !== undefined ? parsed.metrics.spiritual : 1,
       };
     } else {
       gameState.metrics = {
@@ -456,6 +460,8 @@ function loadGame() {
         physical: 1,
         money: 1,
         emotional: 1,
+        health: 1,
+        spiritual: 1,
       };
     }
 
@@ -483,6 +489,8 @@ function loadGame() {
       physical: 1,
       money: 1,
       emotional: 1,
+      health: 1,
+      spiritual: 1,
     };
   }
   updateLevel();
