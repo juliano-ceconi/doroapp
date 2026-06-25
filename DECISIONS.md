@@ -84,3 +84,24 @@ Anteriormente, o escopo das variáveis roxas do Modo Agente (`body.agent-mode-ac
 - Com o Modo Pausa ativo, todo o site fica azul claro (incluindo painel de missões).
 - Quando o Modo Pausa e o Modo Agente estão ativos simultaneamente, o Modo Pausa (azul claro) se sobressai integralmente em todo o site.
 
+---
+
+## [2026-06-25] Implementação de Painel de Métricas na Sidebar
+
+### Contexto
+
+O usuário solicitou a inclusão de 4 métricas com barras de progresso (Produtividade, Corpo Físico, Dinheiro, Saúde Emocional) no rodapé do menu esquerdo, abaixo da frase motivacional diária. As porcentagens devem ser individualmente ajustáveis via duplo clique e iniciar em 1%.
+
+### Decisão
+
+1. Adicionar uma nova seção `.metrics-panel` no HTML do menu lateral (`index.html`) contendo as 4 métricas, ícones representativos (`⚡`, `💪`, `💵`, `🧠`), barra de progresso e rótulos de porcentagem.
+2. Criar estilos CSS (`style.css`) responsivos no tema Cyberpunk, utilizando as variáveis nativas do Doroapp (`var(--matrix-green)`, `var(--matrix-glow)`) para que as cores das barras acompanhem dinamicamente o tema ativo (verde Matrix, roxo Agente ou azul Pausa).
+3. Expandir o estado global `gameState` no JavaScript (`script.js`) para incluir o objeto `metrics` com valores iniciais `1`, persistindo-o e recuperando-o de forma nativa através do `localStorage` (nas funções `saveGame` e `loadGame`).
+4. Implementar listeners de duplo clique (`dblclick`) no painel de métricas para solicitar uma nova porcentagem de 1 a 100 via caixa de diálogo (`prompt`), validando e atualizando a interface e a persistência.
+
+### Consequências
+
+- A barra lateral agora apresenta 4 barras de status interativas e persistentes que mudam dinamicamente de visual dependendo do modo ativado no temporizador Pomodoro.
+- O estado de carregamento inicial garante a retrocompatibilidade com perfis sem métricas salvas.
+
+
