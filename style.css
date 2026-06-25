@@ -16,6 +16,8 @@
   --alert: #ff0000;
   --agent-purple: #b026ff;
   --agent-purple-glow: rgba(176, 38, 255, 0.5);
+  --quote-yellow: #fff3a8;
+  --quote-yellow-glow: rgba(255, 243, 168, 0.15);
 
   /* Semantic Priorities */
   --urgente: #ef4444;
@@ -331,12 +333,12 @@ body {
   margin-top: 1rem; /* Reduzido para 1rem */
   background: black;
   padding: 0.4rem 0.6rem;
-  border: 1px solid var(--matrix-green);
+  border: 1px solid var(--quote-yellow);
   font-size: 0.85rem;
-  color: var(--matrix-green);
+  color: var(--quote-yellow);
   line-height: 1.4;
   flex-shrink: 0;
-  box-shadow: 0 0 15px rgba(0, 255, 65, 0.1);
+  box-shadow: 0 0 15px var(--quote-yellow-glow);
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
@@ -347,6 +349,10 @@ body {
   color: var(--matrix-green);
   flex-shrink: 0;
   animation: blink 1s step-end infinite;
+}
+
+.daily-quote .terminal-prompt {
+  color: var(--quote-yellow);
 }
 
 @keyframes blink {

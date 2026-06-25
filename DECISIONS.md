@@ -104,4 +104,23 @@ O usuário solicitou a inclusão de 4 métricas com barras de progresso (Produti
 - A barra lateral agora apresenta 4 barras de status interativas e persistentes que mudam dinamicamente de visual dependendo do modo ativado no temporizador Pomodoro.
 - O estado de carregamento inicial garante a retrocompatibilidade com perfis sem métricas salvas.
 
+---
+
+## [2026-06-25] Estilização Estática da Frase Aleatória (Daily Quote)
+
+### Contexto
+
+O usuário solicitou que a frase motivacional aleatória exibida abaixo do log de missões na barra lateral tenha suas cores alteradas para um amarelo claro constante, que não sofra alteração pelas trocas de modo do Pomodoro (Foco / Pausa / Agente ON).
+
+### Decisão
+
+1. Criar variáveis de cor estáticas no `:root` do CSS (`--quote-yellow` e `--quote-yellow-glow`) com tonalidades de amarelo cyberpunk claro.
+2. Alterar as propriedades de borda (`border`), cor de texto (`color`) e sombra (`box-shadow`) da classe `.daily-quote` para consumirem permanentemente as novas variáveis amarelas.
+3. Isolar o `.terminal-prompt` dentro de `.daily-quote` aplicando a cor amarela especificamente a ele, preservando a regra geral para outros possíveis prompts de terminal do sistema.
+
+### Consequências
+
+- A frase aleatória mantém um visual amarelo suave e persistente, servindo como ponto de destaque visual constante que se descola da alternância de cores de tema de Foco (Verde), Agente (Roxo) e Pausa (Azul).
+
+
 
