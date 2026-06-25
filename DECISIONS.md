@@ -64,3 +64,23 @@ Necessidade de trazer a funcionalidade de checklist e Kanban do `vida-os` para o
 - O `doroapp` agora possui um gerenciador de tarefas completo (Quadro Kanban com 3 colunas de prioridades e cálculo dinâmico de ganho de XP).
 - Compatibilidade retroativa de dados preservada (inicializando `tasks` vazias em dados antigos).
 - Processo de deploy e integridade de produção garantidos pelas novas diretrizes operacionais de agentes.
+
+---
+
+## [2026-06-25] Reversão do Escopo de Cores do Modo Agente
+
+### Contexto
+
+Anteriormente, o escopo das variáveis roxas do Modo Agente (`body.agent-mode-active`) havia sido restringido para `.main-content` (painel direito) para manter o painel esquerdo (`.sidebar`/Missões) sempre verde. Isso causou inconsistências visuais, principalmente no modo de Pausa (`break-mode-active`), onde as cores ficavam divididas (azul claro na esquerda e roxo na direita). O usuário solicitou reverter esse comportamento para o comportamento global anterior.
+
+### Decisão
+
+1. Remover o seletor filho `.main-content` da regra de `body.agent-mode-active`, fazendo com que as variáveis de cor do Modo Agente se apliquem ao `body` como um todo.
+2. Garantir que as variáveis do Modo Pausa (`body.break-mode-active`) sobressaiam em relação ao Modo Agente quando ambos estiverem ativos, aproveitando a ordem e especificidade da cascata CSS.
+
+### Consequências
+
+- Com o Modo Agente ativo, todo o site fica roxo (incluindo painel de missões).
+- Com o Modo Pausa ativo, todo o site fica azul claro (incluindo painel de missões).
+- Quando o Modo Pausa e o Modo Agente estão ativos simultaneamente, o Modo Pausa (azul claro) se sobressai integralmente em todo o site.
+
