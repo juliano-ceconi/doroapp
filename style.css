@@ -1083,3 +1083,46 @@ body {
     transform: translateY(0);
   }
 }
+
+/* Custom styles added by agent */
+.operator-name {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--matrix-green);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  user-select: none;
+  text-shadow: 0 0 5px var(--matrix-glow);
+  transition: all 0.2s ease;
+  margin-bottom: 2px;
+}
+
+.operator-name:hover {
+  color: #fff;
+  text-shadow: 0 0 10px var(--matrix-glow);
+}
+
+.mission-item.medicine-alert {
+  border-color: var(--alert) !important;
+  color: var(--alert) !important;
+  background-color: rgba(255, 0, 0, 0.15) !important;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.3) !important;
+  font-weight: bold;
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+  0% {
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.3);
+    border-color: rgba(255, 0, 0, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+    border-color: rgba(255, 0, 0, 1);
+  }
+  100% {
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.3);
+    border-color: rgba(255, 0, 0, 0.7);
+  }
+}
