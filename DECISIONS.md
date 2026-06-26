@@ -223,3 +223,20 @@ O usuário solicitou alterar o fundo do Doroapp para branco para realizar um tes
 
 - O fundo da aplicação ficará branco para fins de visualização rápida e testes do usuário.
 - Elementos com cores claras (verde elétrico, roxo, azul) sofrerão perda temporária de contraste no fundo branco até que o usuário reverta a alteração.
+
+---
+
+## [2026-06-26] Reversão da Alteração Temporária do Fundo para Preto
+
+### Contexto
+
+O usuário solicitou desfazer a alteração temporária e retornar ao fundo preto padrão do tema.
+
+### Decisão
+
+1. Restaurar a variável de cor `--matrix-bg` no arquivo `style.css` para `#020203` (Deepest Zinc).
+
+### Consequências
+
+- O fundo da aplicação retorna à cor escura padrão do tema Matrix/Cyberpunk.
+- Contraste e legibilidade dos textos e brilhos neon restaurados ao comportamento original.
