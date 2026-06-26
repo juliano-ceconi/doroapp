@@ -267,3 +267,23 @@ O usuário solicitou separar a página em 3 colunas (coluna de missões na esque
 - Otimização dimensional que evita o aparecimento de barras de rolagem horizontais e reduz o risco de rolagem vertical excessiva em resoluções de desktop comuns.
 - Responsividade mobile mantida, com uma transição suave e organizada de 3 colunas para 1 coluna vertical.
 
+---
+
+## [2026-06-26] Ajuste Fino de Largura de Colunas e Ocultação da Barra de Rolagem Central
+
+### Contexto
+
+Identificou-se a presença de uma barra de rolagem vertical visível e indesejada na coluna central (`.main-content`). Além disso, o usuário solicitou diminuir mais 10% a largura da coluna central e repassar essa proporção para a coluna de indicadores à direita.
+
+### Decisão
+
+1. Adicionar regras de `scrollbar-width: none`, `-ms-overflow-style: none` e `.main-content::-webkit-scrollbar { display: none; }` na classe `.main-content` para ocultar a barra de rolagem da coluna central.
+2. Aumentar a largura da `.metrics-sidebar` (direita) de `140px` para `200px` e ajustar o padding horizontal para `1rem`. Como a coluna central possui dimensionamento flexível (`flex: 1`), esse aumento de largura da direita comprime a coluna central em cerca de 10% em resoluções de desktop típicas.
+
+### Consequências
+
+- Barra de rolagem vertical no centro ocultada de forma idêntica à coluna esquerda.
+- Melhor legibilidade e visualização mais espaçada das barras de métricas na coluna direita.
+- Relação visual e proporções das 3 colunas mais equilibradas.
+
+
