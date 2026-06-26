@@ -24,12 +24,12 @@ let gameState = {
     },
     {
       id: 1,
-      text: "Completar 4 Pomodoros",
+      text: "Completar 2h de foco",
       completed: false,
-      xp: 0, // XP per step (handled by tick() directly)
-      bonusXp: 200, // Bonus when reaching 4
+      xp: 0, // XP por minuto (controlado pelo temporizador)
+      bonusXp: 200, // Bônus ao atingir 2h
       currentProgress: 0,
-      targetProgress: 4,
+      targetProgress: 120, // 120 minutos
     },
     {
       id: 2,
@@ -194,6 +194,7 @@ function tick() {
   if (timeLeft > 0) {
     timeLeft--;
     updateTimerDisplay();
+    updatePartialButtonVisibility();
   } else {
     clearInterval(timerInterval);
     isRunning = false;
@@ -211,9 +212,9 @@ function tick() {
         `Foco concluído! +${reward} XP ${gameState.agentMode ? "(BÔNUS AGENTE 2x)" : ""}`,
       );
 
-      // Avançar missão de pomodoros (ID 1)
-      const missionPoints = gameState.agentMode ? 2 : 1;
-      incrementMissionProgress(1, missionPoints);
+      // Avançar missão de foco (ID 1)
+      const missionMinutes = gameState.agentMode ? currentFocusTime * 2 : currentFocusTime;
+      incrementMissionProgress(1, missionMinutes);
 
       resetTimer(currentBreakTime, "break"); // Default break after focus
     } else {
@@ -231,6 +232,7 @@ function startTimer() {
     updateSystemStatus();
     document.getElementById("btn-focus").innerText = "PAUSAR";
     playSound("start");
+    updatePartialButtonVisibility();
   }
 }
 
@@ -241,6 +243,7 @@ function pauseTimer() {
     document.body.classList.remove("status-active");
     document.getElementById("system-status").innerText = "SISTEMA PAUSADO";
     document.getElementById("btn-focus").innerText = "CONTINUAR";
+    updatePartialButtonVisibility();
   }
 }
 
@@ -252,6 +255,18 @@ function updateSystemStatus() {
   } else {
     statusEl.innerText = "MODO: PAUSA";
     toggleBreakModeVisuals(true);
+  }
+}
+
+function updatePartialButtonVisibility() {
+  const btnPartial = document.getElementById("btn-partial");
+  if (!btnPartial) return;
+
+  const hasTimeElapsed = timeLeft < totalTime;
+  if (mode === "focus" && hasTimeElapsed) {
+    btnPartial.style.display = "inline-flex";
+  } else {
+    btnPartial.style.display = "none";
   }
 }
 
@@ -273,6 +288,7 @@ function resetTimer(newTime, newMode) {
   updateSystemStatus();
   document.getElementById("btn-focus").innerText = "INICIAR";
   updateTimerDisplay();
+  updatePartialButtonVisibility();
 }
 
 // XP & Level System
@@ -366,7 +382,8 @@ function renderMissions() {
     } else {
       let progressText = "";
       if (mission.targetProgress) {
-        progressText = ` (${mission.currentProgress}/${mission.targetProgress})`;
+        const unit = mission.id === 1 ? " min" : "";
+        progressText = ` (${mission.currentProgress}/${mission.targetProgress}${unit})`;
       }
       li.innerText = `${mission.text}${progressText} [${mission.xp} XP]`;
     }
@@ -783,6 +800,33 @@ document.addEventListener("DOMContentLoaded", () => {
       startTimer();
     }
   });
+
+  // Lógica do Botão Parcial
+  const btnPartial = document.getElementById("btn-partial");
+  if (btnPartial) {
+    btnPartial.addEventListener("click", () => {
+      const elapsedSeconds = totalTime - timeLeft;
+      const minutesToAdd = Math.floor(elapsedSeconds / 60);
+
+      if (minutesToAdd < 1) {
+        alert("Mergulho muito curto! É necessário pelo menos 1 minuto de foco para consolidar.");
+        return;
+      }
+
+      const baseReward = minutesToAdd * XP_PER_MINUTE;
+      const xpMultiplier = gameState.agentMode ? 2 : 1;
+      const reward = baseReward * xpMultiplier;
+
+      addXP(reward);
+
+      const missionMinutes = gameState.agentMode ? minutesToAdd * 2 : minutesToAdd;
+      incrementMissionProgress(1, missionMinutes);
+
+      alert(`PARCIAL CONSOLIDADO: +${minutesToAdd} min de foco e +${reward} XP ${gameState.agentMode ? "(BÔNUS AGENTE 2x)" : ""} registrados!`);
+
+      resetTimer(currentFocusTime, "focus");
+    });
+  }
 
   document.getElementById("btn-set-focus").addEventListener("click", () => {
     resetTimer(currentFocusTime, "focus");
