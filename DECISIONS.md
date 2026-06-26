@@ -305,4 +305,20 @@ O usuário solicitou aumentar a largura da coluna esquerda em 10% e da coluna di
 - Melhor legibilidade do painel esquerdo (missões) e direito (métricas), proporcionando uma visualização mais confortável.
 
 
+---
 
+## [2026-06-26] Alteração do Rótulo, Unidade e XP da Missão de Foco
+
+### Contexto
+
+O usuário solicitou simplificar e ajustar o texto da missão de 2h de foco, removendo a unidade "min" e atualizando o valor de XP exibido diretamente na lista de missões de 0 XP para 200 XP (que é o bônus de conclusão).
+
+### Decisão
+
+1. Alterar o texto da missão no `gameState` de `"Completar 2h de foco"` para `"2h de foco"`.
+2. Remover a concatenação da string `" min"` para o progresso da missão 1 em `renderMissions()`.
+3. Ajustar o XP renderizado para mostrar `mission.bonusXp` em vez de `mission.xp` se a missão for a de foco (id: 1), exibindo `[200 XP]` na interface.
+
+### Consequências
+
+- Interface de missões diárias mais direta e alinhada com as recompensas de XP reais da missão de foco.

@@ -24,7 +24,7 @@ let gameState = {
     },
     {
       id: 1,
-      text: "Completar 2h de foco",
+      text: "2h de foco",
       completed: false,
       xp: 0, // XP por minuto (controlado pelo temporizador)
       bonusXp: 200, // Bônus ao atingir 2h
@@ -382,10 +382,10 @@ function renderMissions() {
     } else {
       let progressText = "";
       if (mission.targetProgress) {
-        const unit = mission.id === 1 ? " min" : "";
-        progressText = ` (${mission.currentProgress}/${mission.targetProgress}${unit})`;
+        progressText = ` (${mission.currentProgress}/${mission.targetProgress})`;
       }
-      li.innerText = `${mission.text}${progressText} [${mission.xp} XP]`;
+      const xpToShow = mission.id === 1 ? mission.bonusXp : mission.xp;
+      li.innerText = `${mission.text}${progressText} [${xpToShow} XP]`;
     }
 
     li.onclick = () => toggleMission(mission.id);
