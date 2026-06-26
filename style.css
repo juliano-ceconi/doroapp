@@ -185,7 +185,7 @@ body {
 
 /* Sidebar */
 .sidebar {
-  width: 255px; /* Reduzido em 15% de 300px */
+  width: 280px; /* Aumentado em 10% (de 255px) */
   background-color: rgba(0, 5, 0, 0.9);
   border-right: 1px solid var(--matrix-dim);
   padding: 1rem;
@@ -201,8 +201,8 @@ body {
 
 /* Metrics Sidebar (Coluna Direita) */
 .metrics-sidebar {
-  width: 200px; /* Aumentado de 140px para expandir a coluna direita e reduzir a central */
-  background-color: rgba(0, 5, 0, 0.9);
+  width: 210px; /* Aumentado em 5% (de 200px) */
+  background-color: rgba(0, 5, 0, 0.95);
   border-left: 1px solid var(--matrix-dim);
   padding: 1rem;
   display: flex;
