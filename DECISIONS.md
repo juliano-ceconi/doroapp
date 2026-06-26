@@ -240,3 +240,30 @@ O usuário solicitou desfazer a alteração temporária e retornar ao fundo pret
 
 - O fundo da aplicação retorna à cor escura padrão do tema Matrix/Cyberpunk.
 - Contraste e legibilidade dos textos e brilhos neon restaurados ao comportamento original.
+
+---
+
+## [2026-06-26] Reorganização do Layout em 3 Colunas e Otimização Dimensional
+
+### Contexto
+
+O usuário solicitou separar a página em 3 colunas (coluna de missões na esquerda, coluna de timer/quadro na central e coluna de métricas/indicadores na direita), garantindo que todo o conteúdo caiba em uma tela sem barra de rolagem horizontal, otimizando as larguras das colunas e reduzindo proporcionalmente o tamanho dos elementos da coluna central.
+
+### Decisão
+
+1. Mover o `.metrics-panel` de dentro da `.sidebar` no arquivo `index.html` para uma nova tag `<aside class="metrics-sidebar">` no final do layout (coluna da direita).
+2. Reduzir o tamanho da `.sidebar` (coluna da esquerda) em 15%, mudando sua largura de `300px` para `255px`.
+3. Criar a classe `.metrics-sidebar` com largura fixa de `140px` (aproximadamente metade da esquerda) e padding horizontal reduzido (`0.5rem`) para otimização espacial.
+4. Reduzir o tamanho dos elementos visuais da coluna central (`.main-content`) em cerca de 20%:
+   - `.glitch-text` reduzido de `5rem` para `4rem`.
+   - `.timer-display` reduzido de `10rem` para `8rem`.
+   - `.btn` reduzido de `min-width: 160px; padding: 0.8rem 0;` para `min-width: 130px; padding: 0.6rem 0;`.
+   - Ajustar paddings internos de `.main-content` de `0.75rem 2rem` para `0.5rem 1rem`.
+5. Estender as regras de CSS responsivo mobile (`@media (max-width: 768px)`) aplicando `display: contents` para a nova `.metrics-sidebar` e ordenando as métricas com `order: 7` e `8` para ficarem no fim do fluxo de rolagem vertical.
+
+### Consequências
+
+- Layout mais limpo e melhor distribuído horizontalmente, eliminando a sobrecarga de informações da sidebar esquerda.
+- Otimização dimensional que evita o aparecimento de barras de rolagem horizontais e reduz o risco de rolagem vertical excessiva em resoluções de desktop comuns.
+- Responsividade mobile mantida, com uma transição suave e organizada de 3 colunas para 1 coluna vertical.
+
