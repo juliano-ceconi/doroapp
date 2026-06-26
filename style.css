@@ -794,8 +794,9 @@ body {
   }
   .board-section {
     order: 4;
-    padding: 0 1rem;
-    margin-top: 1.5rem;
+    padding: 1.5rem 1rem 0 1rem;
+    margin-top: 2.2rem;
+    border-top: 1px solid var(--matrix-dim);
   }
   .daily-quote {
     order: 5;
@@ -926,7 +927,9 @@ body {
 .board-section {
   width: 100%;
   max-width: 900px;
-  margin-top: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--matrix-dim);
   animation: fadeInUp 0.6s ease;
 }
 
@@ -1147,7 +1150,7 @@ body {
 
 /* Custom styles added by agent */
 .operator-name {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 800;
   color: var(--matrix-green);
   text-transform: uppercase;

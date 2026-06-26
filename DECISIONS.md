@@ -322,3 +322,23 @@ O usuário solicitou simplificar e ajustar o texto da missão de 2h de foco, rem
 ### Consequências
 
 - Interface de missões diárias mais direta e alinhada com as recompensas de XP reais da missão de foco.
+
+---
+
+## [2026-06-26] Ajustes de Layout e Tipografia no Doroapp (CSS)
+
+### Contexto
+
+O usuário solicitou aumentar em 1 o tamanho da fonte do Nome (acima da barra de XP) e aumentar a distância entre a seção do temporizador (especificamente o manual override `> 00 MIN SET`) e o quadro de tarefas (Kanban), adicionando uma linha horizontal divisora entre eles.
+
+### Decisão
+
+1. Aumentar o `font-size` da classe `.operator-name` de `0.7rem` para `0.8rem`.
+2. Adicionar uma borda superior (`border-top: 1px solid var(--matrix-dim);`) no elemento `.board-section` para servir de barra horizontal.
+3. Aumentar o `margin-top` do `.board-section` de `0.75rem` para `2rem` e adicionar `padding-top: 1.5rem` para dar o distanciamento adequado de forma proporcional nos modos desktop e mobile.
+
+### Consequências
+
+- Nome do operador mais legível e destacado no painel esquerdo.
+- Separação visual clara entre a área de foco central (temporizador) e o quadro de tarefas, evitando que a interface pareça muito densa verticalmente.
+
