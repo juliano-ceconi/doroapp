@@ -206,3 +206,20 @@ O usuário solicitou uma maneira de consolidar o progresso de foco mesmo quando 
 
 - Maior flexibilidade no uso diário do aplicativo, permitindo registrar o foco em cenários de interrupções inevitáveis.
 - Acompanhamento do tempo total focado de forma contínua e gradual na missão diária, ao invés da contagem binária de pomodoros.
+
+---
+
+## [2026-06-26] Alteração Temporária do Fundo para Branco
+
+### Contexto
+
+O usuário solicitou alterar o fundo do Doroapp para branco para realizar um teste rápido, com a intenção de reverter a alteração posteriormente.
+
+### Decisão
+
+1. Alterar a variável de cor `--matrix-bg` no arquivo `style.css` de `#020203` (preto) para `#ffffff` (branco).
+
+### Consequências
+
+- O fundo da aplicação ficará branco para fins de visualização rápida e testes do usuário.
+- Elementos com cores claras (verde elétrico, roxo, azul) sofrerão perda temporária de contraste no fundo branco até que o usuário reverta a alteração.
