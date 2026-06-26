@@ -405,6 +405,7 @@ function incrementMissionProgress(id, amount = 1) {
 
     if (mission.currentProgress >= mission.targetProgress) {
       mission.completed = true;
+      logHistoryEvent("missao", mission.id, mission.text, true);
 
       // Give Bonus XP (if defined)
       if (mission.bonusXp) {
@@ -439,6 +440,7 @@ function toggleMission(id) {
     const todayStr = new Date().toLocaleDateString('sv');
     mission.completed = true;
     mission.lastDoneDate = todayStr;
+    logHistoryEvent("missao", mission.id, mission.text, true);
     addXP(mission.xp);
     playSound("finish");
     renderMissions();
@@ -447,6 +449,7 @@ function toggleMission(id) {
     incrementMissionProgress(id);
   } else {
     mission.completed = true;
+    logHistoryEvent("missao", mission.id, mission.text, true);
     addXP(mission.xp);
     playSound("finish");
     renderMissions();
@@ -502,6 +505,7 @@ function initMetricsListeners() {
         const newValue = parseInt(newValueInput, 10);
         if (!isNaN(newValue) && newValue >= 1 && newValue <= 100) {
           gameState.metrics[metricKey] = newValue;
+          logHistoryEvent("metrica", metricKey, metricName.trim(), newValue);
           saveGame();
           updateMetricsUI();
         } else {
@@ -516,6 +520,38 @@ function initMetricsListeners() {
 function saveGame() {
   localStorage.setItem("uberToDevSave", JSON.stringify(gameState));
 }
+
+// History Logging
+function logHistoryEvent(category, itemId, itemLabel, value = null) {
+  try {
+    const history = JSON.parse(localStorage.getItem("doroapp_history_log") || "[]");
+    const entry = {
+      timestamp: new Date().toISOString(),
+      category: category, // "missao" | "task" | "metrica"
+      id: itemId,
+      label: itemLabel,
+      value: value
+    };
+    history.push(entry);
+    localStorage.setItem("doroapp_history_log", JSON.stringify(history));
+    updateHistoryCountUI();
+  } catch (e) {
+    console.error("Erro ao registrar evento no histórico:", e);
+  }
+}
+
+function updateHistoryCountUI() {
+  const countEl = document.getElementById("history-count");
+  if (countEl) {
+    try {
+      const history = JSON.parse(localStorage.getItem("doroapp_history_log") || "[]");
+      countEl.innerText = `${history.length} registros`;
+    } catch (e) {
+      countEl.innerText = "0 registros";
+    }
+  }
+}
+
 
 function loadGame() {
   const saved = localStorage.getItem("uberToDevSave");
@@ -684,6 +720,7 @@ function toggleTaskDone(taskId) {
     task.done = !task.done;
     if (task.done) {
       task.completedAt = new Date().toISOString();
+      logHistoryEvent("task", task.id, task.text, true);
       addXP(task.xpReward);
       playSound("finish");
       alert(`Tarefa concluída! +${task.xpReward} XP`);
@@ -938,4 +975,35 @@ document.addEventListener("DOMContentLoaded", () => {
       input.addEventListener("blur", commit);
     });
   });
+
+  // History UI listeners
+  updateHistoryCountUI();
+
+  const btnExportHistory = document.getElementById("btn-export-history");
+  if (btnExportHistory) {
+    btnExportHistory.addEventListener("click", () => {
+      const historyStr = localStorage.getItem("doroapp_history_log") || "[]";
+      const blob = new Blob([historyStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const today = new Date().toISOString().slice(0, 10);
+      a.download = `doroapp-historico-${today}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  const btnClearHistory = document.getElementById("btn-clear-history");
+  if (btnClearHistory) {
+    btnClearHistory.addEventListener("click", () => {
+      if (confirm("Deseja realmente limpar todo o histórico de logs salvos? Esta ação não pode ser desfeita.")) {
+        localStorage.setItem("doroapp_history_log", "[]");
+        updateHistoryCountUI();
+        alert("Histórico de logs limpo com sucesso.");
+      }
+    });
+  }
 });
