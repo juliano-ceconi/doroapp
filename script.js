@@ -2,7 +2,26 @@
 let gameState = {
   xp: 1700,
   level: 0,
+  operatorName: "Juliano Ceconi",
   missions: [
+    {
+      id: "venvanse",
+      text: "Venvanse",
+      completed: false,
+      xp: 100,
+      isMedicine: true,
+      triggerTime: "07:00",
+      lastDoneDate: null
+    },
+    {
+      id: "sertralina",
+      text: "Sertralina",
+      completed: false,
+      xp: 100,
+      isMedicine: true,
+      triggerTime: "13:30",
+      lastDoneDate: null
+    },
     {
       id: 1,
       text: "Completar 4 Pomodoros",
@@ -43,6 +62,10 @@ let gameState = {
     emotional: 1,
     health: 1,
     spiritual: 1,
+    eating: 1,
+    water: 1,
+    aerobic: 1,
+    punctuality: 1,
   },
 };
 
@@ -307,20 +330,47 @@ function addXP(amount) {
   updateLevel();
 }
 
+function hasMedicineTriggered(triggerTime) {
+  const [targetHour, targetMinute] = triggerTime.split(":").map(Number);
+  const now = new Date();
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+
+  if (currentHour > targetHour) return true;
+  if (currentHour === targetHour && currentMinute >= targetMinute) return true;
+  return false;
+}
+
 // Missions
 function renderMissions() {
   const list = document.getElementById("mission-list");
+  if (!list) return;
   list.innerHTML = "";
+
+  const todayStr = new Date().toLocaleDateString('sv');
+
   gameState.missions.forEach((mission) => {
     const li = document.createElement("li");
     li.className = `mission-item ${mission.completed ? "completed" : ""}`;
 
-    let progressText = "";
-    if (mission.targetProgress) {
-      progressText = ` (${mission.currentProgress}/${mission.targetProgress})`;
+    if (mission.isMedicine) {
+      if (mission.lastDoneDate !== todayStr) {
+        mission.completed = false;
+      }
+
+      if (!mission.completed && hasMedicineTriggered(mission.triggerTime)) {
+        li.classList.add("medicine-alert");
+      }
+
+      li.innerText = `${mission.text} (${mission.triggerTime}) [${mission.xp} XP]`;
+    } else {
+      let progressText = "";
+      if (mission.targetProgress) {
+        progressText = ` (${mission.currentProgress}/${mission.targetProgress})`;
+      }
+      li.innerText = `${mission.text}${progressText} [${mission.xp} XP]`;
     }
 
-    li.innerText = `${mission.text}${progressText} [${mission.xp} XP]`;
     li.onclick = () => toggleMission(mission.id);
     list.appendChild(li);
   });
@@ -368,7 +418,15 @@ function toggleMission(id) {
   const mission = gameState.missions.find((m) => m.id === id);
   if (!mission || mission.completed) return;
 
-  if (mission.targetProgress) {
+  if (mission.isMedicine) {
+    const todayStr = new Date().toLocaleDateString('sv');
+    mission.completed = true;
+    mission.lastDoneDate = todayStr;
+    addXP(mission.xp);
+    playSound("finish");
+    renderMissions();
+    saveGame();
+  } else if (mission.targetProgress) {
     incrementMissionProgress(id);
   } else {
     mission.completed = true;
@@ -389,7 +447,18 @@ function toggleMission(id) {
 
 // Metrics Logic
 function updateMetricsUI() {
-  const metrics = ["productivity", "physical", "money", "emotional", "health", "spiritual"];
+  const metrics = [
+    "productivity",
+    "physical",
+    "money",
+    "emotional",
+    "health",
+    "spiritual",
+    "eating",
+    "water",
+    "aerobic",
+    "punctuality"
+  ];
   metrics.forEach((metric) => {
     const value = gameState.metrics[metric] !== undefined ? gameState.metrics[metric] : 1;
     const bar = document.getElementById(`metric-bar-${metric}`);
@@ -443,6 +512,7 @@ function loadGame() {
     gameState.lastLogin = parsed.lastLogin;
     gameState.agentMode = parsed.agentMode || false;
     gameState.tasks = parsed.tasks || [];
+    gameState.operatorName = parsed.operatorName || "Juliano Ceconi";
 
     // Restore metrics
     if (parsed.metrics) {
@@ -453,6 +523,10 @@ function loadGame() {
         emotional: parsed.metrics.emotional !== undefined ? parsed.metrics.emotional : 1,
         health: parsed.metrics.health !== undefined ? parsed.metrics.health : 1,
         spiritual: parsed.metrics.spiritual !== undefined ? parsed.metrics.spiritual : 1,
+        eating: parsed.metrics.eating !== undefined ? parsed.metrics.eating : 1,
+        water: parsed.metrics.water !== undefined ? parsed.metrics.water : 1,
+        aerobic: parsed.metrics.aerobic !== undefined ? parsed.metrics.aerobic : 1,
+        punctuality: parsed.metrics.punctuality !== undefined ? parsed.metrics.punctuality : 1,
       };
     } else {
       gameState.metrics = {
@@ -462,21 +536,25 @@ function loadGame() {
         emotional: 1,
         health: 1,
         spiritual: 1,
+        eating: 1,
+        water: 1,
+        aerobic: 1,
+        punctuality: 1,
       };
     }
 
     // Restore mission status ONLY (keep text/xp from code)
-
     if (parsed.missions) {
       gameState.missions = gameState.missions.map((mission) => {
         // Find saved version of this mission by ID
         const savedMission = parsed.missions.find((m) => m.id === mission.id);
         if (savedMission) {
-          // Update ONLY the completed status and progress
+          // Update ONLY the completed status, progress and lastDoneDate
           return {
             ...mission,
             completed: savedMission.completed,
             currentProgress: savedMission.currentProgress || 0,
+            lastDoneDate: savedMission.lastDoneDate || null,
           };
         }
         return mission;
@@ -484,6 +562,7 @@ function loadGame() {
     }
   } else {
     gameState.tasks = [];
+    gameState.operatorName = "Juliano Ceconi";
     gameState.metrics = {
       productivity: 1,
       physical: 1,
@@ -491,8 +570,19 @@ function loadGame() {
       emotional: 1,
       health: 1,
       spiritual: 1,
+      eating: 1,
+      water: 1,
+      aerobic: 1,
+      punctuality: 1,
     };
   }
+
+  // Update Operator Name Element
+  const nameEl = document.getElementById("operator-name");
+  if (nameEl) {
+    nameEl.innerText = gameState.operatorName;
+  }
+
   updateLevel();
   renderMissions();
   renderTasks();
@@ -650,6 +740,41 @@ document.addEventListener("DOMContentLoaded", () => {
   initMetricsListeners();
   showRandomQuote();
   resetTimer(currentFocusTime, "focus"); // Init state
+
+  // Configurar Nome do Operador alterável com duplo clique
+  const nameEl = document.getElementById("operator-name");
+  if (nameEl) {
+    nameEl.innerText = gameState.operatorName || "Juliano Ceconi";
+    nameEl.addEventListener("dblclick", () => {
+      const newName = prompt("Inserir nome do operador:", gameState.operatorName);
+      if (newName !== null) {
+        const cleanName = newName.trim();
+        if (cleanName) {
+          gameState.operatorName = cleanName;
+          nameEl.innerText = cleanName;
+          saveGame();
+        }
+      }
+    });
+  }
+
+  // Intervalo periódico de atualização de remédios
+  setInterval(() => {
+    let updated = false;
+    const todayStr = new Date().toLocaleDateString('sv');
+    gameState.missions.forEach((mission) => {
+      if (mission.isMedicine) {
+        if (mission.lastDoneDate !== todayStr && mission.completed) {
+          mission.completed = false;
+          updated = true;
+        }
+      }
+    });
+    if (updated) {
+      saveGame();
+    }
+    renderMissions();
+  }, 10000);
 
   document.getElementById("btn-focus").addEventListener("click", () => {
     if (isRunning) {
