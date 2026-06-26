@@ -180,3 +180,29 @@ O usuário solicitou melhorias no Doroapp para:
 - O Doroapp passa a possuir uma gestão interativa e visual de tomada de medicamentos controlados integrada ao seu ciclo diário de XP.
 - Quatro novos indicadores de hábitos diários integrados à sidebar de métricas.
 - Identificação do operador personalizada, salvando o nome localmente no navegador.
+
+---
+
+## [2026-06-26] Consolidação Parcial de Foco e Missão de 2h de Foco
+
+### Contexto
+
+O usuário solicitou uma maneira de consolidar o progresso de foco mesmo quando este é interrompido antes do fim por uma urgência ("Mergulho Parcial"), garantindo o XP correspondente e o progresso da missão diária de foco. Além disso, solicitou a substituição da missão "Completar 4 Pomodoros" por "Completar 2h de foco", que acumula o tempo real focado em minutos.
+
+### Decisão
+
+1. **Botão Parcial na Interface**:
+   - Inserido o botão `<button id="btn-partial">` com classes `btn btn-secondary` no `.timer-controls` em `index.html`. Ele permanece oculto (`display: none`) por padrão.
+2. **Lógica de Visibilidade e Clique**:
+   - Desenvolvida a função `updatePartialButtonVisibility()` no `script.js` para exibir o botão Parcial apenas quando o timer estiver em modo `"focus"` e com tempo decorrido (`timeLeft < totalTime`).
+   - Implementado o listener de clique no `btn-partial`: calcula os minutos inteiros focados (`Math.floor(tempo decorrido)`), valida o mínimo de 1 minuto para evitar abusos, adiciona o XP proporcional (`minutos * 4`), incrementa a missão 1, exibe feedback no estilo terminal e reseta o timer de foco.
+3. **Conversão da Missão 1 para Minutos de Foco**:
+   - Atualizada a definição da missão 1 no `gameState.missions` para `"Completar 2h de foco"`, com meta (`targetProgress`) configurada para `120` (minutos) e `xp: 0` (o XP é ganho no timer, a missão fornece apenas o bônus de conclusão de `200 XP`).
+   - Adicionada a unidade `"min"` na renderização da missão 1 em `renderMissions()` para exibir o progresso no formato `(X/120 min)`.
+   - Modificada a lógica de tick no final do ciclo completo para incrementar o progresso da missão com o tempo total do timer (`currentFocusTime`).
+   - O multiplicador de benefício do **Agent Mode (2x)** foi preservado: quando o modo agente está ativo, os minutos de foco acumulados na missão também são duplicados.
+
+### Consequências
+
+- Maior flexibilidade no uso diário do aplicativo, permitindo registrar o foco em cenários de interrupções inevitáveis.
+- Acompanhamento do tempo total focado de forma contínua e gradual na missão diária, ao invés da contagem binária de pomodoros.
