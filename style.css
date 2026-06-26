@@ -201,10 +201,10 @@ body {
 
 /* Metrics Sidebar (Coluna Direita) */
 .metrics-sidebar {
-  width: 140px; /* Cerca de metade do tamanho da esquerda */
+  width: 200px; /* Aumentado de 140px para expandir a coluna direita e reduzir a central */
   background-color: rgba(0, 5, 0, 0.9);
   border-left: 1px solid var(--matrix-dim);
-  padding: 1rem 0.5rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -482,6 +482,12 @@ body {
   padding: 0.5rem 1rem; /* Reduzido padding lateral */
   overflow-y: auto;
   height: 100%;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.main-content::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 .hero-header {
