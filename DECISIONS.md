@@ -286,4 +286,23 @@ Identificou-se a presença de uma barra de rolagem vertical visível e indesejad
 - Melhor legibilidade e visualização mais espaçada das barras de métricas na coluna direita.
 - Relação visual e proporções das 3 colunas mais equilibradas.
 
+---
+
+## [2026-06-26] Ajuste Adicional de Largura das Colunas Esquerda e Direita
+
+### Contexto
+
+O usuário solicitou aumentar a largura da coluna esquerda em 10% e da coluna direita em 5%, reduzindo o espaço ocupado pela coluna central.
+
+### Decisão
+
+1. Aumentar a largura da `.sidebar` (esquerda) de `255px` para `280px` (aumento de 10%).
+2. Aumentar a largura da `.metrics-sidebar` (direita) de `200px` para `210px` (aumento de 5%).
+
+### Consequências
+
+- A coluna central (`.main-content`) teve seu tamanho flexível reduzido de forma correspondente (cerca de 35px a menos).
+- Melhor legibilidade do painel esquerdo (missões) e direito (métricas), proporcionando uma visualização mais confortável.
+
+
 
