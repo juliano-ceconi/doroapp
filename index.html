@@ -51,7 +51,100 @@
           <span id="quote-display">Inicializando sistema de motivação...</span>
         </div>
 
-        <!-- Painel de Métricas -->
+
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="hero-header">
+          <h1 class="glitch-text" data-text="DEEP DIVE FOCUS">DEEP DIVE FOCUS</h1>
+          <p class="subtitle">UM MERGULHO MUDA TUDO.</p>
+        </header>
+
+        <section class="focus-matrix">
+          <div class="timer-container" id="timer-container">
+            <div class="timer-ring">
+              <div class="timer-display" id="timer">25:00</div>
+            </div>
+
+
+            <div class="timer-controls">
+              <button id="btn-focus" class="btn btn-primary">INICIAR</button>
+              <button id="btn-partial" class="btn btn-secondary" style="display: none;">PARCIAL</button>
+              <button id="btn-set-focus" class="btn btn-secondary">
+                FOCO
+              </button>
+              <button id="btn-short-break" class="btn btn-secondary">
+                PAUSA
+              </button>
+            </div>
+
+            <div class="status-indicator">
+              <span class="status-dot"></span>
+              <span id="system-status">SISTEMA AGUARDANDO...</span>
+              <span class="status-divider">|</span>
+              <button id="btn-agent-toggle" class="btn-protocol">AGENTE: <span id="agent-status-text">OFF</span></button>
+            </div>
+
+
+            <div class="timer-options">
+              <div class="presets">
+
+                <button class="btn-preset" data-time="25">25</button>
+                <button class="btn-preset" data-time="40">40</button>
+                <button class="btn-preset" data-time="60">60</button>
+                <button class="btn-preset" data-time="75">75</button>
+                <button class="btn-preset" data-time="90">90</button>
+              </div>
+              <div class="manual-override">
+                <span class="terminal-mini">></span>
+                <input
+                  type="number"
+                  id="manual-input"
+                  placeholder="00"
+                  min="1"
+                  max="999"
+                />
+                <span class="unit">MIN</span>
+                <button id="btn-apply-manual" class="btn-apply">SET</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Board Section -->
+        <section class="board-section" id="board-section">
+          <div class="board">
+            <div class="column diaria" id="col-diaria">
+              <div class="column-header">
+                <div class="column-title">🎯 Foco de Hoje</div>
+                <button class="btn-add-task" data-priority="diaria" title="Adicionar tarefa">+</button>
+              </div>
+              <div class="task-list" id="list-diaria"></div>
+            </div>
+
+            <div class="column urgente" id="col-urgente">
+              <div class="column-header">
+                <div class="column-title">🔥 Urgentes</div>
+                <button class="btn-add-task" data-priority="urgente" title="Adicionar tarefa">+</button>
+              </div>
+              <div class="task-list" id="list-urgente"></div>
+            </div>
+
+            <div class="column importante" id="col-importante">
+              <div class="column-header">
+                <div class="column-title">⭐ Importantes</div>
+                <button class="btn-add-task" data-priority="importante" title="Adicionar tarefa">+</button>
+              </div>
+              <div class="task-list" id="list-importante"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Painel de Métricas (Coluna Direita) -->
+      <aside class="metrics-sidebar">
+        <h3>Métricas</h3>
         <div class="metrics-panel">
           <div class="metric-row" data-metric="productivity" title="Dê duplo-clique para ajustar">
             <div class="metric-header">
@@ -184,94 +277,6 @@
           </div>
         </div>
       </aside>
-
-      <!-- Main Content -->
-      <main class="main-content">
-        <header class="hero-header">
-          <h1 class="glitch-text" data-text="DEEP DIVE FOCUS">DEEP DIVE FOCUS</h1>
-          <p class="subtitle">UM MERGULHO MUDA TUDO.</p>
-        </header>
-
-        <section class="focus-matrix">
-          <div class="timer-container" id="timer-container">
-            <div class="timer-ring">
-              <div class="timer-display" id="timer">25:00</div>
-            </div>
-
-
-            <div class="timer-controls">
-              <button id="btn-focus" class="btn btn-primary">INICIAR</button>
-              <button id="btn-partial" class="btn btn-secondary" style="display: none;">PARCIAL</button>
-              <button id="btn-set-focus" class="btn btn-secondary">
-                FOCO
-              </button>
-              <button id="btn-short-break" class="btn btn-secondary">
-                PAUSA
-              </button>
-            </div>
-
-            <div class="status-indicator">
-              <span class="status-dot"></span>
-              <span id="system-status">SISTEMA AGUARDANDO...</span>
-              <span class="status-divider">|</span>
-              <button id="btn-agent-toggle" class="btn-protocol">AGENTE: <span id="agent-status-text">OFF</span></button>
-            </div>
-
-
-            <div class="timer-options">
-              <div class="presets">
-
-                <button class="btn-preset" data-time="25">25</button>
-                <button class="btn-preset" data-time="40">40</button>
-                <button class="btn-preset" data-time="60">60</button>
-                <button class="btn-preset" data-time="75">75</button>
-                <button class="btn-preset" data-time="90">90</button>
-              </div>
-              <div class="manual-override">
-                <span class="terminal-mini">></span>
-                <input
-                  type="number"
-                  id="manual-input"
-                  placeholder="00"
-                  min="1"
-                  max="999"
-                />
-                <span class="unit">MIN</span>
-                <button id="btn-apply-manual" class="btn-apply">SET</button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Board Section -->
-        <section class="board-section" id="board-section">
-          <div class="board">
-            <div class="column diaria" id="col-diaria">
-              <div class="column-header">
-                <div class="column-title">🎯 Foco de Hoje</div>
-                <button class="btn-add-task" data-priority="diaria" title="Adicionar tarefa">+</button>
-              </div>
-              <div class="task-list" id="list-diaria"></div>
-            </div>
-
-            <div class="column urgente" id="col-urgente">
-              <div class="column-header">
-                <div class="column-title">🔥 Urgentes</div>
-                <button class="btn-add-task" data-priority="urgente" title="Adicionar tarefa">+</button>
-              </div>
-              <div class="task-list" id="list-urgente"></div>
-            </div>
-
-            <div class="column importante" id="col-importante">
-              <div class="column-header">
-                <div class="column-title">⭐ Importantes</div>
-                <button class="btn-add-task" data-priority="importante" title="Adicionar tarefa">+</button>
-              </div>
-              <div class="task-list" id="list-importante"></div>
-            </div>
-          </div>
-        </section>
-      </main>
     </div>
     <script src="script.js"></script>
   </body>
