@@ -342,3 +342,29 @@ O usuário solicitou aumentar em 1 o tamanho da fonte do Nome (acima da barra de
 - Nome do operador mais legível e destacado no painel esquerdo.
 - Separação visual clara entre a área de foco central (temporizador) e o quadro de tarefas, evitando que a interface pareça muito densa verticalmente.
 
+---
+
+## [2026-06-26] Implementação de Logs de Histórico no LocalStorage e Exportação
+
+### Contexto
+
+O usuário solicitou uma maneira de persistir e registrar localmente timestamps de missões concluídas, tarefas finalizadas no Kanban e alterações feitas nas métricas para viabilizar a criação de gráficos no futuro.
+
+### Decisão
+
+1. **Estrutura e Logs no LocalStorage:** Criado o histórico de logs serializado em JSON com a chave `doroapp_history_log` no `localStorage`.
+2. **Registro nos Eventos:**
+   - Adicionada chamada `logHistoryEvent` no clique de medicamentos e de missões comuns, além da conclusão automática por progresso.
+   - Adicionado registro ao marcar tarefas como feitas (`toggleTaskDone`).
+   - Adicionado registro ao ajustar valores das métricas pelo prompt.
+3. **Interface Visual (Cyberpunk):**
+   - Inserida uma seção discreta no rodapé da barra lateral direita com contador de logs em tempo real.
+   - Botão **EXPORTAR LOG** que compila os logs em um arquivo `.json` para download.
+   - Botão **LIMPAR LOG** para deletar o histórico com confirmação.
+
+### Consequências
+
+- Logs salvos localmente e duradouros, prontos para serem usados em dashboards ou ferramentas de gráficos externas.
+- Interface Cyberpunk integrada sem quebrar o layout existente nem as cores dinâmicas das sidebar e dos botões.
+
+
