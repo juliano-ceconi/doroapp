@@ -146,6 +146,37 @@ O usuário solicitou simplificação de nomenclatura em duas métricas ("Corpo F
 - A barra lateral de status agora suporta 6 indicadores com ajuste interativo completo (duplo-clique) e persistência de dados.
 - O layout vertical ficou mais compacto e otimizado, permitindo que todas as missões e novos indicadores caibam de forma harmoniosa sem prejudicar a leitura das fontes.
 
+---
 
+## [2026-06-26] Novas métricas, lembrete diário de remédios com alerta vermelho e personalização do operador
 
+### Contexto
 
+O usuário solicitou melhorias no Doroapp para:
+1. Adicionar quatro novos indicadores com porcentagens e ajuste via duplo clique (Alimentação, Água, Aeróbico, Pontualidade).
+2. Adicionar missões de lembretes de remédios no topo da lista (Venvanse disparando às 07:00 e Sertralina disparando às 13:30), os quais devem pulsar em vermelho até serem marcados como feitos, e persistir o estado de concluídos até o reset no dia seguinte.
+3. Permitir personalizar o nome do operador exibido em cima da barra de XP (padrão "Juliano Ceconi") através de um duplo clique.
+
+### Decisão
+
+1. **Adição de Indicadores no HTML e JS**:
+   - Inserido no `index.html` os novos blocos das métricas Alimentação (🥗), Água (💧), Aeróbico (🏃) e Pontualidade (⏱️).
+   - Inseridas as chaves correspondentes no objeto de métricas do `gameState.metrics` no `script.js` e inicializadas/restauradas no `loadGame` garantindo retrocompatibilidade.
+2. **Nome do Operador Customizável**:
+   - Inserido o elemento `.operator-name` no `index.html` acima do contêiner da barra de XP.
+   - Adicionados estilos CSS no `style.css` com cursor pointer e brilho hover cyberpunk.
+   - Adicionada propriedade `operatorName` no `gameState` no `script.js`.
+   - Adicionado listener de `dblclick` no DOM para permitir alteração do nome via caixa de prompt e persistência.
+3. **Missões Especiais de Remédio**:
+   - Adicionado no topo da lista de missões os itens especiais com IDs `"venvanse"` e `"sertralina"`.
+   - Criada a função `hasMedicineTriggered` que avalia se a hora e minuto atual superam o horário de disparo (07:00 / 13:30).
+   - Implementado reset diário baseado em data local (`lastDoneDate`) comparando com `todayStr` (formato `YYYY-MM-DD`). Se a data for diferente, a missão de remédio torna-se pendente.
+   - Criada animação CSS `@keyframes pulse-red` e a classe `.mission-item.medicine-alert` em `style.css` para fazer os remédios não concluídos piscarem em vermelho neon após o horário de disparo.
+   - Atualizado o listener de clique (`toggleMission`) para que remédios, uma vez concluídos, fiquem permanentes no dia (sem o auto-reset de 1.5 segundos das outras missões).
+   - Criado um loop de verificação periódico (`setInterval` a cada 10 segundos) que checa a virada de data em tempo real e atualiza a interface sem requerer recarregamento da página.
+
+### Consequências
+
+- O Doroapp passa a possuir uma gestão interativa e visual de tomada de medicamentos controlados integrada ao seu ciclo diário de XP.
+- Quatro novos indicadores de hábitos diários integrados à sidebar de métricas.
+- Identificação do operador personalizada, salvando o nome localmente no navegador.
