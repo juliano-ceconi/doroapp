@@ -1037,7 +1037,7 @@ body {
 .diaria .task-card:hover { border-color: var(--diaria); box-shadow: 0 0 10px rgba(59, 130, 246, 0.25); }
 
 .task-card.done {
-  opacity: 0.4;
+  opacity: 0.6;
 }
 
 .task-check {
@@ -1077,7 +1077,7 @@ body {
 
 .task-card.done .task-text {
   text-decoration: line-through;
-  color: var(--matrix-dim);
+  color: var(--matrix-dim-medium);
 }
 
 .pomodoro-badge {

@@ -469,3 +469,22 @@ Na versão mobile do Doroapp, a seção de "Registro Histórico" (composta pelas
 - Na versão desktop, o "Registro Histórico" continua no rodapé da barra lateral de métricas.
 - Na versão mobile, a seção agora é renderizada corretamente ao final de todo o conteúdo da página, preservando a hierarquia de leitura e a fluidez do layout responsivo de forma harmoniosa com o tema Cyberpunk.
 
+---
+
+## [2026-06-27] Melhoria na Legibilidade de Tarefas Concluídas (Kanban)
+
+### Contexto
+
+O usuário observou que as tarefas concluídas (done) no Kanban ficavam muito escuras e difíceis de ler, devido ao uso da cor verde escura (`--matrix-dim`) e baixa opacidade (`0.4`). Solicitou um tom intermediário para tornar a leitura legível, mantendo o aspecto de tarefa feita.
+
+### Decisão
+
+1. **Ajuste de Opacidade:** Aumentada a opacidade de `.task-card.done` de `0.4` para `0.6` no arquivo `style.css`.
+2. **Uso de Cor Intermediária:** Alterada a cor do texto da tarefa concluída (`.task-card.done .task-text`) de `var(--matrix-dim)` para `var(--matrix-dim-medium)`, aproveitando a cor intermediária existente que se adapta dinamicamente aos modos Matrix Green, Agent Purple e Break Blue.
+
+### Consequências
+
+- Excelente leitura das tarefas concluídas em todos os três temas do aplicativo.
+- O card continua visualmente identificável como concluído graças à linha tracejada (line-through), check ativo e opacidade ligeiramente reduzida, mas agora totalmente legível.
+
+
