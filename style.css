@@ -188,7 +188,7 @@ body {
 
 /* Sidebar */
 .sidebar {
-  width: 266px; /* Reduzido em 5% (de 280px) */
+  width: 275px; /* Ajustado para 275px */
   background-color: rgba(0, 5, 0, 0.9);
   border-right: 1px solid var(--matrix-dim);
   padding: 1rem;
@@ -204,7 +204,7 @@ body {
 
 /* Metrics Sidebar (Coluna Direita) */
 .metrics-sidebar {
-  width: 224px; /* Aumentado em 14px (valor retirado da esquerda) */
+  width: 220px; /* Ajustado para 220px */
   background-color: rgba(0, 5, 0, 0.95);
   border-left: 1px solid var(--matrix-dim);
   padding: 1rem;
@@ -546,7 +546,7 @@ body {
   gap: 0.75rem; /* Ajustado gap */
   flex-wrap: wrap;
   justify-content: center;
-  padding-top: 1rem; /* Reduzido padding superior */
+  padding-top: 1.5rem; /* Aumentado para igualar a distância acima do timer */
 }
 
 .btn {
