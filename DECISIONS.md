@@ -450,3 +450,22 @@ O usuário solicitou novos ajustes funcionais e estéticos:
 - Inclusão do hábito de exercícios aeróbicos no controle de gamificação.
 - Maior harmonia e sobriedade nas divisórias da barra lateral, minimizando o destaque visual excessivo da seção de Registro Histórico.
 - Otimização do espaço central da tela em monitores desktop, com colunas do Kanban mais largas e redução de espaço ocioso nas laterais.
+
+---
+
+## [2026-06-27] Reordenação do Registro Histórico no Layout Mobile
+
+### Contexto
+
+Na versão mobile do Doroapp, a seção de "Registro Histórico" (composta pelas ações de exportação e total de logs) estava sendo renderizada no topo da tela. O usuário solicitou que ela fosse movida para o final do fluxo da página.
+
+### Decisão
+
+1. **Reordenação Flexbox no Mobile:** Adicionada a regra `.history-actions { order: 9; }` na media query de mobile (`@media (max-width: 768px)`) no `style.css` para colocá-la após o `.metrics-panel` (que tem `order: 8`).
+2. **Estilização Responsiva:** Foram aplicadas correções de espaçamento (`margin-top: 0 !important;` e `padding: 1.5rem 1rem !important;`), largura total (`width: 100%;`) e fundo translúcido (`background: rgba(0, 10, 0, 0.4) !important;`) com borda superior sólida para garantir que a seção se integre visualmente com as outras seções do layout colapsado em mobile.
+
+### Consequências
+
+- Na versão desktop, o "Registro Histórico" continua no rodapé da barra lateral de métricas.
+- Na versão mobile, a seção agora é renderizada corretamente ao final de todo o conteúdo da página, preservando a hierarquia de leitura e a fluidez do layout responsivo de forma harmoniosa com o tema Cyberpunk.
+
