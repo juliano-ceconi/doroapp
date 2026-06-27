@@ -404,3 +404,26 @@ O usuário solicitou melhorias no Doroapp para:
 - Menor ocupação horizontal da barra de missões e maior respiro para as barras de progresso das métricas à direita.
 - Missão diária de foco em hábitos aprimorada com maior incentivo de XP contra doomscrolling.
 - Registro Histórico com melhor leitura, integrado ao comportamento dinâmico de cores do app.
+
+---
+
+## [2026-06-27] Ajustes Finos de Dimensão de Colunas, Divisor do Histórico e Espaçamento de Botões
+
+### Contexto
+
+O usuário solicitou novos ajustes finos na UI:
+1. Fixar a largura da coluna esquerda (sidebar) em 275px e a coluna direita em 220px.
+2. Aumentar a distância vertical entre o display do timer e os botões de controle para ficar simétrica em relação à distância acima do timer.
+3. Alterar o estilo de divisor (linha divisória) acima do Registro Histórico de tracejado para linha sólida, harmonizando com a barra horizontal existente abaixo de "MISSÕES".
+
+### Decisão
+
+1. **Largura das Colunas:** Ajustadas as larguras fixas no CSS: `.sidebar` para `275px` e `.metrics-sidebar` para `220px`.
+2. **Espaçamento de Controles:** Aumentado o `padding-top` da classe `.timer-controls` de `1rem` para `1.5rem`, igualando ao `margin-top` de `1.5rem` acima do timer.
+3. **Estilo do Divisor:** Modificada a linha divisória de `border-top: 1px dashed` para `border-top: 1px solid` no HTML da seção `.history-actions`, mantendo a cor ajustada `--matrix-dim-medium`.
+
+### Consequências
+
+- Simetria visual aprimorada em torno da área de foco do temporizador Pomodoro.
+- Identidade visual mais coesa com o uso de linhas sólidas padronizadas em todas as divisões do app.
+- Distribuição de espaço horizontal otimizada para ambas as colunas de status.
