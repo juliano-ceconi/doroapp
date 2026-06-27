@@ -5,6 +5,7 @@
   --matrix-gray: #18181b;
   --matrix-green: #00ff41; /* Voltei para o verde clássico da Matrix, mais elétrico */
   --matrix-dim: #003b00;
+  --matrix-dim-medium: #00881b; /* Meio termo para Registro Histórico */
   --matrix-glow: rgba(0, 255, 65, 0.5);
 
   --slate-800: var(--matrix-dark); /* Remap for compatibility */
@@ -46,12 +47,14 @@ body.agent-mode-active {
   --matrix-green: var(--agent-purple);
   --matrix-glow: var(--agent-purple-glow);
   --matrix-dim: #4c0082; /* Indigo/Deep Purple for dim elements */
+  --matrix-dim-medium: #7e12c0; /* Meio termo para Registro Histórico */
 }
 
 body.break-mode-active {
   --matrix-green: var(--break-blue);
   --matrix-glow: var(--break-glow);
   --matrix-dim: var(--break-dim);
+  --matrix-dim-medium: #3896b3; /* Meio termo para Registro Histórico */
 }
 
 * {
@@ -185,7 +188,7 @@ body {
 
 /* Sidebar */
 .sidebar {
-  width: 280px; /* Aumentado em 10% (de 255px) */
+  width: 266px; /* Reduzido em 5% (de 280px) */
   background-color: rgba(0, 5, 0, 0.9);
   border-right: 1px solid var(--matrix-dim);
   padding: 1rem;
@@ -201,7 +204,7 @@ body {
 
 /* Metrics Sidebar (Coluna Direita) */
 .metrics-sidebar {
-  width: 210px; /* Aumentado em 5% (de 200px) */
+  width: 224px; /* Aumentado em 14px (valor retirado da esquerda) */
   background-color: rgba(0, 5, 0, 0.95);
   border-left: 1px solid var(--matrix-dim);
   padding: 1rem;
@@ -494,7 +497,7 @@ body {
   text-align: center;
   z-index: 10;
   margin-bottom: 0;
-  margin-top: 0.25rem;
+  margin-top: 1.5rem; /* Aumentado a distância para o topo */
 }
 
 .glitch-text {
@@ -524,7 +527,7 @@ body {
   justify-content: flex-start;
   gap: 1px; /* More space between timer and buttons */
   height: auto;
-  margin-top: 0;
+  margin-top: 1.5rem; /* Aumentado a distância para o subtítulo */
 }
 
 .timer-display {
