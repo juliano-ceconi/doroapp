@@ -348,7 +348,7 @@ O usuário solicitou aumentar em 1 o tamanho da fonte do Nome (acima da barra de
 
 ### Contexto
 
-O usuário solicitou uma maneira de persistir e registrar localmente timestamps de missões concluídas, tarefas finalizadas no Kanban e alterações feitas nas métricas para viabilizar a criação de gráficos no futuro.
+O usuário solicitou uma maneira de persistir e registrar localmente timestamps de missões concluídas, tarefas finalizadas no Kanban e alterações feitas nas métricas para viabilizar a criação de gráficos no futuro. Adicionalmente, solicitou registrar os minutos de foco de cada dive e remover o botão físico de limpar histórico para evitar exclusão acidental.
 
 ### Decisão
 
@@ -357,14 +357,16 @@ O usuário solicitou uma maneira de persistir e registrar localmente timestamps 
    - Adicionada chamada `logHistoryEvent` no clique de medicamentos e de missões comuns, além da conclusão automática por progresso.
    - Adicionado registro ao marcar tarefas como feitas (`toggleTaskDone`).
    - Adicionado registro ao ajustar valores das métricas pelo prompt.
-3. **Interface Visual (Cyberpunk):**
-   - Inserida uma seção discreta no rodapé da barra lateral direita com contador de logs em tempo real.
-   - Botão **EXPORTAR LOG** que compila os logs em um arquivo `.json` para download.
-   - Botão **LIMPAR LOG** para deletar o histórico com confirmação.
+   - **Registro de Dives (Foco):** Adicionado log do tempo focado em minutos ao finalizar um ciclo Pomodoro completo (tipo `pomodoro`) e ao consolidar tempo parcial (tipo `parcial`).
+3. **Interface Visual & Segurança (Cyberpunk):**
+   - Inserida uma seção discreta no rodapé da barra lateral direita com contador de logs em tempo real e botão **EXPORTAR LOG**.
+   - **Remoção do Limpar Físico:** Removido o botão "LIMPAR LOG" da interface para evitar exclusão acidental.
+   - **Console-Only Clear:** Implementada a função global `window.clearDoroappHistory()` que permite limpar o log via console de desenvolvedor com diálogo de confirmação.
 
 ### Consequências
 
-- Logs salvos localmente e duradouros, prontos para serem usados em dashboards ou ferramentas de gráficos externas.
-- Interface Cyberpunk integrada sem quebrar o layout existente nem as cores dinâmicas das sidebar e dos botões.
+- Logs salvos localmente e duradouros, incluindo registros precisos dos tempos de dive em minutos.
+- Eliminação do risco de limpar o histórico por clique acidental, mantendo a capacidade de gerenciamento por comandos no console do navegador.
+- Estética da barra lateral mais limpa e focada em exportação de dados.
 
 

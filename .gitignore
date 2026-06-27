@@ -5,3 +5,5 @@ Thumbs.db
 dist/
 .env*
 !*.example
+doroapp-historico-*.json
+log-registros-local/

@@ -208,6 +208,7 @@ function tick() {
       const reward = baseReward * xpMultiplier;
 
       addXP(reward);
+      logHistoryEvent("foco", "pomodoro", "Tempo de Foco", currentFocusTime);
       alert(
         `Foco concluído! +${reward} XP ${gameState.agentMode ? "(BÔNUS AGENTE 2x)" : ""}`,
       );
@@ -855,6 +856,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const reward = baseReward * xpMultiplier;
 
       addXP(reward);
+      logHistoryEvent("foco", "parcial", "Tempo de Foco", minutesToAdd);
 
       const missionMinutes = gameState.agentMode ? minutesToAdd * 2 : minutesToAdd;
       incrementMissionProgress(1, missionMinutes);
@@ -996,14 +998,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const btnClearHistory = document.getElementById("btn-clear-history");
-  if (btnClearHistory) {
-    btnClearHistory.addEventListener("click", () => {
-      if (confirm("Deseja realmente limpar todo o histórico de logs salvos? Esta ação não pode ser desfeita.")) {
-        localStorage.setItem("doroapp_history_log", "[]");
-        updateHistoryCountUI();
-        alert("Histórico de logs limpo com sucesso.");
-      }
-    });
-  }
+  // Expose clear history functionality only via browser console
+  window.clearDoroappHistory = function() {
+    if (confirm("Deseja realmente limpar todo o histórico de logs salvos? Esta ação não pode ser desfeita.")) {
+      localStorage.setItem("doroapp_history_log", "[]");
+      updateHistoryCountUI();
+      alert("Histórico de logs limpo com sucesso.");
+    }
+  };
 });
