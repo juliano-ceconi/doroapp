@@ -372,4 +372,35 @@ O usuário solicitou uma maneira de persistir e registrar localmente timestamps 
 - Eliminação do risco de limpar o histórico por clique acidental, mantendo a capacidade de gerenciamento por comandos no console do navegador.
 - Estética da barra lateral mais limpa e focada em exportação de dados.
 
+---
 
+## [2026-06-27] Ajustes de Cores, Espaçamentos, Nomenclaturas e Proporções de Colunas
+
+### Contexto
+
+O usuário solicitou melhorias no Doroapp para:
+1. Ajustar a cor da seção de "Registro Histórico" para um tom mais claro intermediário, mantendo boa legibilidade sem disputar atenção com o restante do site.
+2. Aumentar a distância vertical entre o título "DEEP DIVE FOCUS" e o topo da página, e também entre "UM MERGULHO MUDA TUDO." e o temporizador.
+3. Remover a palavra "Métricas" do cabeçalho da barra de métricas.
+4. Alterar a missão "Não abrir redes sociais [100 XP]" para "Dia sem Doomscrolling [1000 XP]" e ajustar a recompensa correspondente.
+5. Alterar a nomenclatura do menu esquerdo de "Log de Missões" para "Missões".
+6. Ajustar a proporção das colunas laterais: diminuindo 5% da largura da coluna da esquerda e transferindo esse mesmo valor (14px) para somar na largura da coluna de métricas (direita).
+
+### Decisão
+
+1. **Variável de Cor Intermediária:** Criada a variável CSS `--matrix-dim-medium` com tons intermediários nas três folhas de temas (Matrix Green: `#00881b`, Agent Purple: `#7e12c0`, Break Blue: `#3896b3`) e aplicada a cor na borda e nos textos da seção de Registro Histórico.
+2. **Espaçamento Central:** Ajustado o `margin-top` de `.hero-header` para `1.5rem` e o `margin-top` de `.focus-matrix` para `1.5rem`.
+3. **Remoção de Título:** Removida a tag `<h3>Métricas</h3>` do cabeçalho da barra direita (`.metrics-sidebar`).
+4. **Renomeação de Menu e Missões:**
+   - Atualizado o título no HTML de "Log de Missões" para "Missões".
+   - Modificada a missão ID 3 em `gameState.missions` para `"Dia sem Doomscrolling"` e seu XP para `1000`.
+5. **Redimensionamento de Colunas:**
+   - Reduzida a largura de `.sidebar` de `280px` para `266px` (redução de 5%).
+   - Aumentada a largura de `.metrics-sidebar` de `210px` para `224px` (adição de 14px).
+
+### Consequências
+
+- Visual mais espaçado e harmônico no centro da página.
+- Menor ocupação horizontal da barra de missões e maior respiro para as barras de progresso das métricas à direita.
+- Missão diária de foco em hábitos aprimorada com maior incentivo de XP contra doomscrolling.
+- Registro Histórico com melhor leitura, integrado ao comportamento dinâmico de cores do app.
