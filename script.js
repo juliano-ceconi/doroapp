@@ -37,7 +37,7 @@ let gameState = {
       completed: false,
       xp: 500,
     },
-    { id: 3, text: "Não abrir redes sociais", completed: false, xp: 100 },
+    { id: 3, text: "Dia sem Doomscrolling", completed: false, xp: 1000 },
     {
       id: 4,
       text: "Beber 500ml de água",
