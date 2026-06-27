@@ -427,3 +427,26 @@ O usuário solicitou novos ajustes finos na UI:
 - Simetria visual aprimorada em torno da área de foco do temporizador Pomodoro.
 - Identidade visual mais coesa com o uso de linhas sólidas padronizadas em todas as divisões do app.
 - Distribuição de espaço horizontal otimizada para ambas as colunas de status.
+
+---
+
+## [2026-06-27] Nova Missão Aeróbico, Ajuste de Borda e Aumento de Colunas do Kanban
+
+### Contexto
+
+O usuário solicitou novos ajustes funcionais e estéticos:
+1. Adicionar uma nova missão chamada "Aeróbico" no valor de 500 XP.
+2. Escurecer o divisor superior da seção "Registro Histórico" para o mesmo tom da barra abaixo de "MISSÕES".
+3. Aumentar a largura de cada uma das colunas do Kanban em 5px, sem mexer nas colunas principais da página, reduzindo o espaço vazio na coluna central.
+
+### Decisão
+
+1. **Adição de Missão:** Adicionada a missão `{ id: 7, text: "Aeróbico", completed: false, xp: 500 }` ao estado inicial no `script.js` (após a missão "Malhar").
+2. **Escurecimento do Divisor:** Alterada a cor da borda de `--matrix-dim-medium` para `--matrix-dim` no estilo inline da div `.history-actions` em `index.html`.
+3. **Largura das Colunas Kanban:** Alterado o `max-width` da classe `.board-section` no `style.css` de `900px` para `915px`. Com 3 colunas em grid fluida (`1fr`), cada coluna cresce exatamente 5px, aproveitando melhor o espaço vazio do centro.
+
+### Consequências
+
+- Inclusão do hábito de exercícios aeróbicos no controle de gamificação.
+- Maior harmonia e sobriedade nas divisórias da barra lateral, minimizando o destaque visual excessivo da seção de Registro Histórico.
+- Otimização do espaço central da tela em monitores desktop, com colunas do Kanban mais largas e redução de espaço ocioso nas laterais.
