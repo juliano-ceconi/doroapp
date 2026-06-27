@@ -348,24 +348,27 @@ O usuário solicitou aumentar em 1 o tamanho da fonte do Nome (acima da barra de
 
 ### Contexto
 
-O usuário solicitou uma maneira de persistir e registrar localmente timestamps de missões concluídas, tarefas finalizadas no Kanban e alterações feitas nas métricas para viabilizar a criação de gráficos no futuro. Adicionalmente, solicitou registrar os minutos de foco de cada dive e remover o botão físico de limpar histórico para evitar exclusão acidental.
+O usuário solicitou uma maneira de persistir e registrar localmente timestamps de missões concluídas, tarefas finalizadas no Kanban e alterações feitas nas métricas para viabilizar a criação de gráficos no futuro. Adicionalmente, solicitou registrar os minutos de foco de cada dive e remover o botão físico de limpar histórico para evitar exclusão acidental. Também foi solicitado adicionar o XP do evento, o XP total acumulado, o tipo de dispositivo (desktop, mobile ou tablet) de onde partiu a ação, e registrar logs específicos de tarefas adicionadas e excluídas.
 
 ### Decisão
 
 1. **Estrutura e Logs no LocalStorage:** Criado o histórico de logs serializado em JSON com a chave `doroapp_history_log` no `localStorage`.
-2. **Registro nos Eventos:**
+2. **Campos Adicionais de Metadata:**
+   - Adicionada detecção de dispositivo usando `navigator.userAgent` (retornando `desktop`, `mobile` ou `tablet` via função `getDeviceType()`).
+   - Adicionados os campos `xpGained` (XP recebido na ação) e `totalXp` (XP acumulado pós-ação) em cada entrada de log.
+3. **Registro nos Eventos:**
    - Adicionada chamada `logHistoryEvent` no clique de medicamentos e de missões comuns, além da conclusão automática por progresso.
-   - Adicionado registro ao marcar tarefas como feitas (`toggleTaskDone`).
+   - **Registro de Tarefas:** Logs detalhados criados com a ação correspondente no campo `value` (`adicionada`, `excluida`, `concluida`) ao interagir com o Kanban de tarefas.
    - Adicionado registro ao ajustar valores das métricas pelo prompt.
    - **Registro de Dives (Foco):** Adicionado log do tempo focado em minutos ao finalizar um ciclo Pomodoro completo (tipo `pomodoro`) e ao consolidar tempo parcial (tipo `parcial`).
-3. **Interface Visual & Segurança (Cyberpunk):**
+4. **Interface Visual & Segurança (Cyberpunk):**
    - Inserida uma seção discreta no rodapé da barra lateral direita com contador de logs em tempo real e botão **EXPORTAR LOG**.
    - **Remoção do Limpar Físico:** Removido o botão "LIMPAR LOG" da interface para evitar exclusão acidental.
    - **Console-Only Clear:** Implementada a função global `window.clearDoroappHistory()` que permite limpar o log via console de desenvolvedor com diálogo de confirmação.
 
 ### Consequências
 
-- Logs salvos localmente e duradouros, incluindo registros precisos dos tempos de dive em minutos.
+- Logs salvos localmente ricos em metadados (XP individual, XP total acumulado, dispositivo, tipo de ação da task), facilitando a montagem de gráficos detalhados no futuro.
 - Eliminação do risco de limpar o histórico por clique acidental, mantendo a capacidade de gerenciamento por comandos no console do navegador.
 - Estética da barra lateral mais limpa e focada em exportação de dados.
 

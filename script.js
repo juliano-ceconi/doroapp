@@ -206,9 +206,9 @@ function tick() {
       const baseReward = Math.ceil(currentFocusTime * XP_PER_MINUTE);
       const xpMultiplier = gameState.agentMode ? 2 : 1;
       const reward = baseReward * xpMultiplier;
-
+ 
       addXP(reward);
-      logHistoryEvent("foco", "pomodoro", "Tempo de Foco", currentFocusTime);
+      logHistoryEvent("foco", "pomodoro", "Tempo de Foco", currentFocusTime, reward);
       alert(
         `Foco concluído! +${reward} XP ${gameState.agentMode ? "(BÔNUS AGENTE 2x)" : ""}`,
       );
@@ -406,17 +406,20 @@ function incrementMissionProgress(id, amount = 1) {
 
     if (mission.currentProgress >= mission.targetProgress) {
       mission.completed = true;
-      logHistoryEvent("missao", mission.id, mission.text, true);
-
+ 
       // Give Bonus XP (if defined)
+      let completionXp = 0;
       if (mission.bonusXp) {
         addXP(mission.bonusXp);
+        completionXp = mission.bonusXp;
         alert(`BÔNUS DE MISSÃO: +${mission.bonusXp} XP!`);
       } else if (mission.xp > 0 && mission.xp !== 100) {
         // Fallback or legacy behavior for total mission XP
         addXP(mission.xp);
+        completionXp = mission.xp;
       }
-
+ 
+      logHistoryEvent("missao", mission.id, mission.text, true, completionXp);
       playSound("finish");
 
       // Auto-reset para permitir repetição
@@ -436,13 +439,13 @@ function incrementMissionProgress(id, amount = 1) {
 function toggleMission(id) {
   const mission = gameState.missions.find((m) => m.id === id);
   if (!mission || mission.completed) return;
-
+ 
   if (mission.isMedicine) {
     const todayStr = new Date().toLocaleDateString('sv');
     mission.completed = true;
     mission.lastDoneDate = todayStr;
-    logHistoryEvent("missao", mission.id, mission.text, true);
     addXP(mission.xp);
+    logHistoryEvent("missao", mission.id, mission.text, true, mission.xp);
     playSound("finish");
     renderMissions();
     saveGame();
@@ -450,18 +453,18 @@ function toggleMission(id) {
     incrementMissionProgress(id);
   } else {
     mission.completed = true;
-    logHistoryEvent("missao", mission.id, mission.text, true);
     addXP(mission.xp);
+    logHistoryEvent("missao", mission.id, mission.text, true, mission.xp);
     playSound("finish");
     renderMissions();
-
+ 
     // Auto-reset para permitir repetição após 1.5 segundos
     setTimeout(() => {
       mission.completed = false;
       renderMissions();
       saveGame();
     }, 1500);
-
+ 
     saveGame();
   }
 }
@@ -522,16 +525,31 @@ function saveGame() {
   localStorage.setItem("uberToDevSave", JSON.stringify(gameState));
 }
 
+// Device detection helper
+function getDeviceType() {
+  const ua = navigator.userAgent;
+  if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+    return "tablet";
+  }
+  if (/Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/i.test(ua)) {
+    return "mobile";
+  }
+  return "desktop";
+}
+
 // History Logging
-function logHistoryEvent(category, itemId, itemLabel, value = null) {
+function logHistoryEvent(category, itemId, itemLabel, value = null, xpGained = 0) {
   try {
     const history = JSON.parse(localStorage.getItem("doroapp_history_log") || "[]");
     const entry = {
       timestamp: new Date().toISOString(),
-      category: category, // "missao" | "task" | "metrica"
+      category: category, // "missao" | "task" | "metrica" | "foco"
       id: itemId,
       label: itemLabel,
-      value: value
+      value: value,
+      xpGained: xpGained,
+      totalXp: gameState.xp,
+      device: getDeviceType()
     };
     history.push(entry);
     localStorage.setItem("doroapp_history_log", JSON.stringify(history));
@@ -711,6 +729,7 @@ function addTask(text, priority) {
     gameState.tasks = [];
   }
   gameState.tasks.push(task);
+  logHistoryEvent("task", task.id, task.text, "adicionada", 0);
   saveGame();
   renderTasks();
 }
@@ -721,8 +740,8 @@ function toggleTaskDone(taskId) {
     task.done = !task.done;
     if (task.done) {
       task.completedAt = new Date().toISOString();
-      logHistoryEvent("task", task.id, task.text, true);
       addXP(task.xpReward);
+      logHistoryEvent("task", task.id, task.text, "concluida", task.xpReward);
       playSound("finish");
       alert(`Tarefa concluída! +${task.xpReward} XP`);
     } else {
@@ -734,6 +753,10 @@ function toggleTaskDone(taskId) {
 }
 
 function deleteTask(taskId) {
+  const task = gameState.tasks.find((t) => t.id === taskId);
+  if (task) {
+    logHistoryEvent("task", task.id, task.text, "excluida", 0);
+  }
   gameState.tasks = gameState.tasks.filter((t) => t.id !== taskId);
   saveGame();
   renderTasks();
@@ -854,10 +877,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const baseReward = minutesToAdd * XP_PER_MINUTE;
       const xpMultiplier = gameState.agentMode ? 2 : 1;
       const reward = baseReward * xpMultiplier;
-
+ 
       addXP(reward);
-      logHistoryEvent("foco", "parcial", "Tempo de Foco", minutesToAdd);
-
+      logHistoryEvent("foco", "parcial", "Tempo de Foco", minutesToAdd, reward);
+ 
       const missionMinutes = gameState.agentMode ? minutesToAdd * 2 : minutesToAdd;
       incrementMissionProgress(1, missionMinutes);
 
