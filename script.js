@@ -49,6 +49,7 @@ let gameState = {
     },
     { id: 5, text: "Pranayama", completed: false, xp: 200 },
     { id: 6, text: "Malhar", completed: false, xp: 500 },
+    { id: 7, text: "Aeróbico", completed: false, xp: 500 },
   ],
 
   streak: 0,
