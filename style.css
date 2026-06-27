@@ -832,6 +832,16 @@ body {
     background: rgba(0, 10, 0, 0.4);
   }
 
+  .history-actions {
+    order: 9;
+    width: 100%;
+    background: rgba(0, 10, 0, 0.4) !important;
+    padding: 1.5rem 1rem !important;
+    border-top: 2px solid var(--matrix-dim) !important;
+    margin-top: 0 !important;
+  }
+
+
   .stats-row {
     justify-content: center;
   }
