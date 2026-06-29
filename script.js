@@ -563,8 +563,14 @@ function initAiPlansListeners() {
       if (newValueInput !== null) {
         const newValue = parseInt(newValueInput, 10);
         if (!isNaN(newValue) && newValue >= 0 && newValue <= 100) {
+          let xpGained = 0;
+          if (newValue === 100 && currentValue < 100) {
+            xpGained = 500;
+            addXP(xpGained);
+            alert(`BÔNUS PLANO DE IA: +500 XP! Você atingiu 100% no plano ${planName}!`);
+          }
           gameState.aiPlans[planKey] = newValue;
-          logHistoryEvent("metrica", `ai_plan_${planKey}`, `Uso ${planName}`, newValue);
+          logHistoryEvent("metrica", `ai_plan_${planKey}`, `Uso ${planName}`, newValue, xpGained);
           saveGame();
           updateAiPlansUI();
         } else {
