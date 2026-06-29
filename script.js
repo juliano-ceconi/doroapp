@@ -862,7 +862,7 @@ function renderTasks() {
         card.dataset.taskId = task.id;
 
         const pomodoroBadge = task.pomodoroCount > 0
-          ? `<span class="pomodoro-badge">🍅${task.pomodoroCount}</span>`
+          ? `<span class="pomodoro-badge">${task.pomodoroCount}</span>`
           : "";
 
         const tagsHtml = task.tags && task.tags.length > 0
