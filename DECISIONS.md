@@ -549,5 +549,29 @@ Para otimizar o espaço visual da tela e evitar ruídos redundantes na UI Cyberp
 - Redução substancial de espaço vertical consumido pelo painel de planos de IA, mantendo o Doroapp ADHD-friendly e confortável de usar em telas menores.
 - Alinhamento horizontal perfeito de todas as barras de planos de IA.
 
+---
+
+## [2026-06-29] Divisão da Cota Antigravity em AGY GEMINI e AGY CLAUDE
+
+### Contexto
+
+O usuário identificou que o plano de IA Antigravity possui, na realidade, duas cotas distintas (uma do Gemini e outra do Claude). Foi solicitado substituir a barra unificada "ANTIGRAVITY" por duas barras separadas denominadas "AGY GEMINI" e "AGY CLAUDE".
+
+### Decisão
+
+1. **Substituição Visual:** Editado o `index.html` para substituir o elemento `antigravity` pelas linhas correspondentes a `agy_gemini` e `agy_claude`.
+2. **Estilização Cyberpunk:**
+   - **AGY GEMINI** herdou a cor Roxa/Violeta original (`#b026ff`) do Antigravity.
+   - **AGY CLAUDE** recebeu a cor Rosa Neon (`#ff007f`) para criar uma identidade visual distinta e contrastante.
+3. **Persistência e Migração:**
+   - O objeto `aiPlans` no `gameState` foi atualizado em `script.js` para usar as chaves `agy_gemini` e `agy_claude`.
+   - Implementada lógica de migração no carregamento do estado (`loadGame`): se existirem dados persistidos na antiga chave `antigravity`, o valor é copiado automaticamente para `agy_gemini` para manter o histórico de progresso do usuário.
+
+### Consequências
+
+- O painel de Planos de IA passa a representar com fidelidade o uso real das cotas do Antigravity (Gemini e Claude separadamente).
+- Preservação da retrocompatibilidade sem causar falhas no carregamento de dados do usuário.
+- O visual do Doroapp se manteve fiel à identidade Cyberpunk com a introdução do tom Rosa Neon.
+
 
 
