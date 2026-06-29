@@ -487,4 +487,26 @@ O usuário observou que as tarefas concluídas (done) no Kanban ficavam muito es
 - Excelente leitura das tarefas concluídas em todos os três temas do aplicativo.
 - O card continua visualmente identificável como concluído graças à linha tracejada (line-through), check ativo e opacidade ligeiramente reduzida, mas agora totalmente legível.
 
+---
+
+## [2026-06-29] Implementação do Painel de Uso de Planos de IA
+
+### Contexto
+
+O usuário solicitou a inclusão de um painel de uso de Planos de IA contendo as IAs **Claude**, **Codex**, **Antigravity**, **OpenRouter** e **Groq**. O painel deve ser inserido acima da seção de missões, conter barras com porcentagem iniciando em 0% e indo até 100%, permitir a alteração do valor através de duplo clique e apresentar cores customizadas para cada plano no tema cyberpunk.
+
+### Decisão
+
+1. **Estrutura HTML:** Adicionar o container `.ai-plans-panel` contendo os 5 indicadores de planos de IA na barra lateral esquerda (`index.html`), logo acima do log de missões.
+2. **Estilização Cyberpunk:** Definir no CSS (`style.css`) regras de layout e gradientes de cores neon permanentes para cada uma das IAs: Claude (Laranja Coral), Codex (Ciano), Antigravity (Roxo/Violeta), OpenRouter (Verde Esmeralda) e Groq (Amarelo Vibrante). O hover de cada linha utilizará a cor específica de cada IA (`currentColor`).
+3. **Persistência de Dados:** Expandir o `gameState` no JavaScript (`script.js`) com o objeto `aiPlans`, iniciando todos com o valor `0`. Implementar a carga e restauração deste objeto em `loadGame()` garantindo retrocompatibilidade para perfis locais.
+4. **Interatividade (Duplo Clique):** Desenvolver as funções `updateAiPlansUI()` e `initAiPlansListeners()` em `script.js` para registrar eventos de duplo clique nas linhas dos planos, permitindo ao usuário definir um novo valor entre 0 e 100 via prompt e registrar essas ações no log de histórico.
+
+### Consequências
+
+- A barra lateral esquerda ganhou uma seção dinâmica e interativa para acompanhar o consumo dos planos de IA.
+- A experiência visual foi enriquecida através de cores exclusivas que se mantêm fixas e independentes do modo de cor geral do Doroapp (Foco, Pausa ou Agente).
+- A retrocompatibilidade de sessões e perfis salvos no navegador foi mantida com segurança.
+
+
 
