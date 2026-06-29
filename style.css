@@ -282,10 +282,18 @@ body {
 
 .level-info h2 {
   font-size: 1rem;
-  color: var(--matrix-green);
+  color: #70ff97; /* Verde ligeiramente mais claro e pastel do que #00ff41 */
   text-transform: uppercase;
   text-shadow: 0 0 5px var(--matrix-dim);
   margin-top: 2px;
+}
+
+body.agent-mode-active .level-info h2 {
+  color: #d27eff; /* Roxo ligeiramente mais claro do que #b026ff */
+}
+
+body.break-mode-active .level-info h2 {
+  color: #b2f0ff; /* Azul ligeiramente mais claro do que #70e0ff */
 }
 
 .xp-text {
@@ -519,71 +527,71 @@ body {
   flex-shrink: 0;
 }
 
-/* Cores específicas para os planos de IA (Estética Cyberpunk) */
+/* Cores específicas para os planos de IA (Estética Cyberpunk Sóbria) */
 .ai-plan-row[data-plan="claude"] .metric-title,
 .ai-plan-row[data-plan="claude"] .metric-value-label,
 .ai-plan-row[data-plan="claude"] .metric-icon {
-  color: #ff6f3c;
-  text-shadow: 0 0 3px rgba(255, 111, 60, 0.5);
+  color: #cf8567;
+  text-shadow: 0 0 3px rgba(207, 133, 103, 0.4);
 }
 .ai-plan-row[data-plan="claude"] .metric-progress-bar {
-  background: linear-gradient(90deg, #5c2c16, #ff6f3c);
-  box-shadow: 0 0 8px rgba(255, 111, 60, 0.5);
+  background: linear-gradient(90deg, #4e2e21, #cf8567);
+  box-shadow: 0 0 8px rgba(207, 133, 103, 0.4);
 }
 
 .ai-plan-row[data-plan="codex"] .metric-title,
 .ai-plan-row[data-plan="codex"] .metric-value-label,
 .ai-plan-row[data-plan="codex"] .metric-icon {
-  color: #00f0ff;
-  text-shadow: 0 0 3px rgba(0, 240, 255, 0.5);
+  color: #5ecad1;
+  text-shadow: 0 0 3px rgba(94, 202, 209, 0.4);
 }
 .ai-plan-row[data-plan="codex"] .metric-progress-bar {
-  background: linear-gradient(90deg, #004d5a, #00f0ff);
-  box-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+  background: linear-gradient(90deg, #1d4c50, #5ecad1);
+  box-shadow: 0 0 8px rgba(94, 202, 209, 0.4);
 }
 
 .ai-plan-row[data-plan="agy_gemini"] .metric-title,
 .ai-plan-row[data-plan="agy_gemini"] .metric-value-label,
 .ai-plan-row[data-plan="agy_gemini"] .metric-icon {
-  color: #b026ff;
-  text-shadow: 0 0 3px rgba(176, 38, 255, 0.5);
+  color: #a66acb;
+  text-shadow: 0 0 3px rgba(166, 106, 203, 0.4);
 }
 .ai-plan-row[data-plan="agy_gemini"] .metric-progress-bar {
-  background: linear-gradient(90deg, #440066, #b026ff);
-  box-shadow: 0 0 8px rgba(176, 38, 255, 0.5);
+  background: linear-gradient(90deg, #3d1a52, #a66acb);
+  box-shadow: 0 0 8px rgba(166, 106, 203, 0.4);
 }
 
 .ai-plan-row[data-plan="agy_claude"] .metric-title,
 .ai-plan-row[data-plan="agy_claude"] .metric-value-label,
 .ai-plan-row[data-plan="agy_claude"] .metric-icon {
-  color: #ff007f;
-  text-shadow: 0 0 3px rgba(255, 0, 127, 0.5);
+  color: #cf5a95;
+  text-shadow: 0 0 3px rgba(207, 90, 149, 0.4);
 }
 .ai-plan-row[data-plan="agy_claude"] .metric-progress-bar {
-  background: linear-gradient(90deg, #660033, #ff007f);
-  box-shadow: 0 0 8px rgba(255, 0, 127, 0.5);
+  background: linear-gradient(90deg, #521c38, #cf5a95);
+  box-shadow: 0 0 8px rgba(207, 90, 149, 0.4);
 }
 
 .ai-plan-row[data-plan="openrouter"] .metric-title,
 .ai-plan-row[data-plan="openrouter"] .metric-value-label,
 .ai-plan-row[data-plan="openrouter"] .metric-icon {
-  color: #10b981;
-  text-shadow: 0 0 3px rgba(16, 185, 129, 0.5);
+  color: #4ea387;
+  text-shadow: 0 0 3px rgba(78, 163, 135, 0.4);
 }
 .ai-plan-row[data-plan="openrouter"] .metric-progress-bar {
-  background: linear-gradient(90deg, #064e3b, #10b981);
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+  background: linear-gradient(90deg, #1d483c, #4ea387);
+  box-shadow: 0 0 8px rgba(78, 163, 135, 0.4);
 }
 
 .ai-plan-row[data-plan="groq"] .metric-title,
 .ai-plan-row[data-plan="groq"] .metric-value-label,
 .ai-plan-row[data-plan="groq"] .metric-icon {
-  color: #eab308;
-  text-shadow: 0 0 3px rgba(234, 179, 8, 0.5);
+  color: #cca958;
+  text-shadow: 0 0 3px rgba(204, 169, 88, 0.4);
 }
 .ai-plan-row[data-plan="groq"] .metric-progress-bar {
-  background: linear-gradient(90deg, #78350f, #eab308);
-  box-shadow: 0 0 8px rgba(234, 179, 8, 0.5);
+  background: linear-gradient(90deg, #52401f, #cca958);
+  box-shadow: 0 0 8px rgba(204, 169, 88, 0.4);
 }
 
 .ai-plan-row:hover {
