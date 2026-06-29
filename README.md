@@ -67,7 +67,7 @@ Repositório: [juliano-ceconi/doroapp](https://github.com/juliano-ceconi/doroapp
 ## 🧭 Roadmap de Evolução
 
 - [x] Timer Manual e Presets customizados.
-- [ ] Sincronização em nuvem via Supabase.
+- [ ] Sincronização em nuvem via Supabase (🔴 Pausado/Despriorizado - sem ganho imediato).
 - [ ] Integração com API de chat.
 - [ ] Sistema de Achievements visuais (badges).
 
