@@ -592,6 +592,28 @@ O usuário solicitou diminuir a distância entre a barra do plano de IA "Groq" e
 - Redução do scroll vertical na sidebar esquerda.
 - Melhor agrupamento de elementos adjacentes, tornando o visual mais minimalista e esteticamente balanceado.
 
+---
 
+## [2026-06-29] Ajustes de Layout e Paleta de Cores Sóbria
 
+### Contexto
 
+Para melhorar a harmonia visual da barra lateral esquerda do Doroapp e evitar a fadiga visual, o usuário solicitou clarear o título referente ao Level (deixando-o mais legível e destacado), mudar a cor dos Planos de IA para versões mais sóbrias/desaturadas das cores atuais e mover a frase motivacional diária para que ela seja exibida acima da seção de "Missões".
+
+### Decisão
+
+1. **Reordenação do Layout da Sidebar**: No arquivo `index.html`, o contêiner `.daily-quote` (`#quote-container`) foi movido para antes da seção `.mission-log` (Missões), mantendo o fluxo natural de leitura visual descendente.
+2. **Nova Paleta de Cores para Planos de IA**: No arquivo `style.css`, as cores neon vibrantes anteriores foram desaturadas (saturação em torno de 40-60%) para criar tons mais sóbrios e sofisticados:
+   - **Claude**: Laranja coral -> Laranja terracota (`#cf8567`)
+   - **Codex**: Ciano neon -> Ciano acinzentado (`#5ecad1`)
+   - **AGY GEMINI**: Roxo elétrico -> Lavanda sóbrio (`#a66acb`)
+   - **AGY CLAUDE**: Pink choque -> Rosa antigo sóbrio (`#cf5a95`)
+   - **OpenRouter**: Verde brilhante -> Verde sálvia sóbrio (`#4ea387`)
+   - **Groq**: Amarelo elétrico -> Ouro/Mostarda sóbrio (`#cca958`)
+3. **Clareamento do Título de Level**: Alterada a cor de `.level-info h2` do verde padrão elétrico para um tom de verde neon suave e mais claro (`#70ff97`), com overrides mapeados para manter essa maior clareza e contraste nos modos agente (`#d27eff`) e pausa (`#b2f0ff`).
+
+### Consequências
+
+- A barra lateral esquerda ganhou uma hierarquia de leitura melhor, com a frase diária se integrando logo acima das missões.
+- As barras de Planos de IA tornaram-se muito mais integradas ao visual escuro e profissional do Doroapp, diminuindo a poluição visual causada pelos gradientes saturados em excesso.
+- O título de nível agora possui maior destaque visual devido à maior luminosidade de sua cor.
