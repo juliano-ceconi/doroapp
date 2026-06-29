@@ -660,3 +660,21 @@ Para incentivar o progresso e a dedicação do usuário nos Planos de IA, foi so
 - Gamificação do uso das ferramentas de IA mais atraente com recompensas mais expressivas de progresso.
 - Histórico de eventos consistente com o XP ganho.
 
+---
+
+## [2026-06-29] Centralização dos Títulos de Tasks e Título de Evolução Pessoal
+
+### Contexto
+
+Para melhorar a clareza e simetria do layout visual do Doroapp, o usuário solicitou centralizar os títulos dentro da caixa das colunas de tarefas (Foco de Hoje, Urgentes, Importantes) e adicionar o título "EVOLUÇÃO" logo acima das barras de progresso de desenvolvimento pessoal.
+
+### Decisão
+
+1. **Centralização dos Títulos de Tasks**: Adicionado um elemento `<span class="column-spacer"></span>` com largura de 24px no início de cada `.column-header` no arquivo `index.html` para servir de contra-peso ao botão de adicionar tarefa (`.btn-add-task`, também com 24px de largura). No arquivo `style.css`, atualizou-se `.column-title` com `text-align: center;` e `flex: 1;` para ocupar simetricamente o centro do contêiner flexbox.
+2. **Título de Evolução Pessoal**: Inserida a tag `<h3>EVOLUÇÃO</h3>` como primeiro filho da barra lateral de métricas (`.metrics-sidebar`) no arquivo `index.html`. O estilo correspondente já existia e foi aplicado automaticamente, inclusive o ordenamento flexível para visualização mobile.
+
+### Consequências
+
+- Os títulos das colunas de tarefas agora ficam perfeitamente centralizados horizontalmente nas caixas, mantendo a harmonia visual.
+- A barra lateral de métricas pessoais agora exibe o título "EVOLUÇÃO" no topo de forma limpa, consistente com as demais seções do painel.
+
