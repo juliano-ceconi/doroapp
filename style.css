@@ -18,7 +18,7 @@
   --agent-purple: #b026ff;
   --agent-purple-glow: rgba(176, 38, 255, 0.5);
   --quote-yellow: #fff3a8;
-  --quote-yellow-glow: rgba(255, 243, 168, 0.15);
+  --quote-yellow-glow: rgba(255, 243, 168, 0.08);
 
   /* Semantic Priorities */
   --urgente: #ef4444;
@@ -282,7 +282,7 @@ body {
 
 .level-info h2 {
   font-size: 1rem;
-  color: #70ff97; /* Verde ligeiramente mais claro e pastel do que #00ff41 */
+  color: #82ff8c; /* Verde mais claro e limpo, sem puxar para o azul */
   text-transform: uppercase;
   text-shadow: 0 0 5px var(--matrix-dim);
   margin-top: 2px;
@@ -380,7 +380,7 @@ body.break-mode-active .level-info h2 {
   color: var(--quote-yellow);
   line-height: 1.4;
   flex-shrink: 0;
-  box-shadow: 0 0 15px var(--quote-yellow-glow);
+  box-shadow: 0 0 10px var(--quote-yellow-glow);
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
@@ -447,6 +447,17 @@ body.break-mode-active .level-info h2 {
 .metric-icon {
   font-size: 0.95rem; /* Ícone menor */
   filter: drop-shadow(0 0 3px var(--matrix-glow));
+}
+
+.metrics-panel .metric-icon {
+  opacity: 0.65;
+  filter: grayscale(0.15) drop-shadow(0 0 1.5px var(--matrix-glow));
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
+.metrics-panel .metric-row:hover .metric-icon {
+  opacity: 0.95;
+  filter: grayscale(0) drop-shadow(0 0 3px var(--matrix-glow));
 }
 
 .metric-title {
@@ -1105,9 +1116,9 @@ body.break-mode-active .level-info h2 {
   letter-spacing: 0.08em;
 }
 
-.urgente .column-title { color: var(--urgente); }
-.importante .column-title { color: var(--importante); }
-.diaria .column-title { color: var(--diaria); }
+.urgente .column-title { color: #bf616a; } /* Vermelho escuro/sóbrio */
+.importante .column-title { color: #d8a657; } /* Âmbar/sóbrio */
+.diaria .column-title { color: #6c8db3; } /* Azul acinzentado/sóbrio */
 
 .btn-add-task {
   background: none;

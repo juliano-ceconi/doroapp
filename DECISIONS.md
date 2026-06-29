@@ -617,3 +617,26 @@ Para melhorar a harmonia visual da barra lateral esquerda do Doroapp e evitar a 
 - A barra lateral esquerda ganhou uma hierarquia de leitura melhor, com a frase diária se integrando logo acima das missões.
 - As barras de Planos de IA tornaram-se muito mais integradas ao visual escuro e profissional do Doroapp, diminuindo a poluição visual causada pelos gradientes saturados em excesso.
 - O título de nível agora possui maior destaque visual devido à maior luminosidade de sua cor.
+
+---
+
+## [2026-06-29] Ajustes de Suavização Estética e Cores Sóbrias das Tasks
+
+### Contexto
+
+Para refinar a experiência visual do usuário e reduzir a poluição cromática, foram solicitados ajustes pontuais na intensidade dos ícones de métricas pessoais, no brilho da frase motivacional, na sobriedade das tarefas e no tom do verde do Level (que parecia azulado).
+
+### Decisão
+
+1. **Intensidade dos Ícones de Métricas Pessoais**: Reduzida a opacidade padrão do seletor `.metrics-panel .metric-icon` para `0.65` e aplicada uma leve dessaturação (`grayscale(0.15)`) para que os emojis fiquem menos chamativos. Adicionada uma transição de hover para restaurar `opacity: 0.95` e foco colorido ao interagir com a linha.
+2. **Suavização do Brilho da Frase Motivacional**: Diminuída a opacidade da sombra da frase motivacional (`--quote-yellow-glow` de `0.15` para `0.08`) e reduzido o raio do `box-shadow` de `.daily-quote` de `15px` para `10px`.
+3. **Cabeçalhos de Tasks Sóbrios**: Substituídas as cores semânticas vibrantes do título das colunas de tarefas (`Foco de Hoje`, `Urgentes`, `Importantes`) por tonalidades sóbrias, desaturadas e elegantes (baseadas no tema Nord):
+   - **Urgentes**: Vermelho escuro/sóbrio (`#bf616a`)
+   - **Importantes**: Âmbar/sóbrio (`#d8a657`)
+   - **Foco de Hoje**: Azul acinzentado/sóbrio (`#6c8db3`)
+4. **Correção de Tom do Level (AGENTE: OFF)**: Substituída a cor `#70ff97` do título do level (que tinha viés azulado) pelo tom `#82ff8c` (verde clássico matrix clareado na matiz exata), preservando o restante da estética esmeralda.
+
+### Consequências
+
+- Redução da fadiga visual geral ao utilizar o painel de tarefas e acompanhar o progresso diário.
+- Melhoria do alinhamento cromático do título do nível com o tom verde clássico do projeto.
