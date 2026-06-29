@@ -526,5 +526,28 @@ Ao testar a barra de uso de Planos de IA, o usuário relatou que, ao efetuar dup
 - Eliminada a exibição de pop-ups duplicados ao ajustar o percentual de uso dos Planos de IA.
 - A consistência do design foi preservada sem a necessidade de duplicar ou alterar nomes de classes CSS do layout.
 
+---
+
+## [2026-06-29] Otimização de Espaço, Alinhamento Inline dos Planos de IA e Remoção de Ícones
+
+### Contexto
+
+Para otimizar o espaço visual da tela e evitar ruídos redundantes na UI Cyberpunk, o usuário solicitou remover todos os ícones/emojis das IAs e das colunas do Kanban (mantendo apenas os ícones das métricas de desempenho originais), colocar as barras de planos de IA na mesma linha de seus nomes e aproximar a listagem do título "Planos de IA".
+
+### Decisão
+
+1. **Remoção de Emojis do Kanban:** Editado `index.html` para remover os emojis `🎯`, `🔥` e `⭐` dos títulos das colunas do Kanban. Removido o emoji `🍅` do badge de pomodoro das tarefas no renderizador (`script.js`).
+2. **Remoção de Emojis das IAs:** Editado `index.html` para remover os spans `.metric-icon` contendo `🤖`, `💻`, `🌌`, `🔌` e `⚡`.
+3. **Layout Inline de IAs:**
+   - Modificada a estrutura HTML dos planos de IA para alinhar o título, a barra e a porcentagem no mesmo nível hierárquico sob o container `.ai-plan-row`.
+   - Adicionadas regras no CSS (`style.css`) para definir `.ai-plan-row` como flex horizontal (`flex-direction: row`), alinhar verticalmente ao centro, fixar largura mínima para os títulos das IAs (`min-width: 75px`), definir flex-grow para a barra (`flex: 1`) e alinhar porcentagens à direita (`min-width: 32px`).
+4. **Espaçamento do Título:** Ajustado `margin-bottom` do `h3` dentro de `.ai-plans-panel` de `0.5rem` para `0.15rem` no CSS, diminuindo o espaço ocioso vertical.
+
+### Consequências
+
+- Visual da sidebar esquerdo e Kanban muito mais limpo, minimalista e focado, com redução drástica de ruído de emojis.
+- Redução substancial de espaço vertical consumido pelo painel de planos de IA, mantendo o Doroapp ADHD-friendly e confortável de usar em telas menores.
+- Alinhamento horizontal perfeito de todas as barras de planos de IA.
+
 
 
