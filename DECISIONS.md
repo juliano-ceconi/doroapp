@@ -678,3 +678,23 @@ Para melhorar a clareza e simetria do layout visual do Doroapp, o usuário solic
 - Os títulos das colunas de tarefas agora ficam perfeitamente centralizados horizontalmente nas caixas, mantendo a harmonia visual.
 - A barra lateral de métricas pessoais exibe o título "EVOLUÇÃO" com um espaçamento muito mais compacto, integrado e harmônico acima das barras de progresso.
 
+---
+
+## [2026-06-29] Reordenação Drag & Drop e Edição Inline de Tarefas no Kanban
+
+### Contexto
+
+O usuário solicitou a capacidade de arrastar tarefas no quadro Kanban para alterar sua ordem física, e de poder editar o texto das tarefas criadas.
+
+### Decisão
+
+1. **Drag & Drop Nativo (HTML5)**: Adicionou-se o atributo `draggable="true"` em cada `.task-card`. No JavaScript, o arrasto é gerenciado manipulando os eventos nativos. O `dragover` na `.task-list` calcula dinamicamente qual card adjacente está mais próximo verticalmente e insere o card arrastado na posição física correspondente no DOM. No final do arrasto (`dragend` / `drop`), lemos a nova ordem física do DOM em todas as colunas para reconstruir o array `gameState.tasks` em memória, salvando no `localStorage`.
+2. **Movimentação entre Colunas (Opção A)**: Permitiu-se arrastar tarefas entre colunas de prioridades distintas. Ao mudar uma tarefa de coluna, sua prioridade (`priority`) e o prêmio correspondente de conclusão (`xpReward`) são atualizados de forma automática (Urgente = 100 XP, Importante = 75 XP, Diária = 50 XP), registrando a movimentação no log de histórico.
+3. **Edição Inline de Tarefas (Opção B)**: Adicionou-se um listener de duplo clique (`dblclick`) no texto da tarefa. Ao disparar, o card entra em estado de edição (desabilitando temporariamente seu arrasto), e o texto é substituído por um `<input>` inline contendo o texto da tarefa e suas tags (ex: `#estudo`). Ao teclar `Enter` ou perder o foco (`blur`), o novo texto e tags são validados, salvos no estado e o card é renderizado novamente. Teclar `Escape` cancela as alterações sem salvar.
+
+### Consequências
+
+- Melhora significativa na interatividade do Kanban do Doroapp, aproximando a aplicação de organizadores modernos de produtividade.
+- Persistência e integridade do estado e do XP garantidos ao reordenar, reclassificar e editar tarefas de forma fluida.
+- Zero dependência externa, mantendo a aplicação estática extremamente rápida e leve.
+
