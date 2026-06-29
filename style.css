@@ -474,6 +474,86 @@ body {
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Painel de Planos de IA */
+.ai-plans-panel {
+  margin-top: 1.275rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.ai-plans-panel h3 {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: var(--matrix-glow);
+  border-bottom: 1px solid var(--matrix-dim);
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.8;
+}
+
+/* Cores específicas para os planos de IA (Estética Cyberpunk) */
+.ai-plan-row[data-plan="claude"] .metric-title,
+.ai-plan-row[data-plan="claude"] .metric-value-label,
+.ai-plan-row[data-plan="claude"] .metric-icon {
+  color: #ff6f3c;
+  text-shadow: 0 0 3px rgba(255, 111, 60, 0.5);
+}
+.ai-plan-row[data-plan="claude"] .metric-progress-bar {
+  background: linear-gradient(90deg, #5c2c16, #ff6f3c);
+  box-shadow: 0 0 8px rgba(255, 111, 60, 0.5);
+}
+
+.ai-plan-row[data-plan="codex"] .metric-title,
+.ai-plan-row[data-plan="codex"] .metric-value-label,
+.ai-plan-row[data-plan="codex"] .metric-icon {
+  color: #00f0ff;
+  text-shadow: 0 0 3px rgba(0, 240, 255, 0.5);
+}
+.ai-plan-row[data-plan="codex"] .metric-progress-bar {
+  background: linear-gradient(90deg, #004d5a, #00f0ff);
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+}
+
+.ai-plan-row[data-plan="antigravity"] .metric-title,
+.ai-plan-row[data-plan="antigravity"] .metric-value-label,
+.ai-plan-row[data-plan="antigravity"] .metric-icon {
+  color: #b026ff;
+  text-shadow: 0 0 3px rgba(176, 38, 255, 0.5);
+}
+.ai-plan-row[data-plan="antigravity"] .metric-progress-bar {
+  background: linear-gradient(90deg, #440066, #b026ff);
+  box-shadow: 0 0 8px rgba(176, 38, 255, 0.5);
+}
+
+.ai-plan-row[data-plan="openrouter"] .metric-title,
+.ai-plan-row[data-plan="openrouter"] .metric-value-label,
+.ai-plan-row[data-plan="openrouter"] .metric-icon {
+  color: #10b981;
+  text-shadow: 0 0 3px rgba(16, 185, 129, 0.5);
+}
+.ai-plan-row[data-plan="openrouter"] .metric-progress-bar {
+  background: linear-gradient(90deg, #064e3b, #10b981);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+}
+
+.ai-plan-row[data-plan="groq"] .metric-title,
+.ai-plan-row[data-plan="groq"] .metric-value-label,
+.ai-plan-row[data-plan="groq"] .metric-icon {
+  color: #eab308;
+  text-shadow: 0 0 3px rgba(234, 179, 8, 0.5);
+}
+.ai-plan-row[data-plan="groq"] .metric-progress-bar {
+  background: linear-gradient(90deg, #78350f, #eab308);
+  box-shadow: 0 0 8px rgba(234, 179, 8, 0.5);
+}
+
+.ai-plan-row:hover {
+  border-color: currentColor !important;
+  background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
 /* Main Content */
 .main-content {
   flex: 1;
