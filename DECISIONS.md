@@ -573,5 +573,25 @@ O usuário identificou que o plano de IA Antigravity possui, na realidade, duas 
 - Preservação da retrocompatibilidade sem causar falhas no carregamento de dados do usuário.
 - O visual do Doroapp se manteve fiel à identidade Cyberpunk com a introdução do tom Rosa Neon.
 
+---
+
+## [2026-06-29] Ajustes Finos de Espaçamento e Redução de Caixas da Sidebar
+
+### Contexto
+
+O usuário solicitou diminuir a distância entre a barra do plano de IA "Groq" e a seção de "Missões", bem como reduzir o tamanho dos retângulos (caixas) ao redor de cada plano de IA e de cada missão para melhorar a densidade de informações e visualização do espaço vertical.
+
+### Decisão
+
+1. **Redução do Espaçamento de Missões:** Alterado `margin-top` de `.mission-log` de `1.275rem` para `0.65rem` no `style.css`.
+2. **Redução das Caixas de Planos de IA:** Reduzido o `padding` de `.ai-plan-row` de `0.25rem 0.6rem !important` para `0.18rem 0.5rem !important`.
+3. **Redução das Caixas de Missões:** Reduzido o `padding` de `.mission-item` de `0.45rem 0.7rem` para `0.35rem 0.6rem` (e de `0.9rem 1rem` para `0.7rem 0.8rem` na media query mobile).
+
+### Consequências
+
+- Redução do scroll vertical na sidebar esquerda.
+- Melhor agrupamento de elementos adjacentes, tornando o visual mais minimalista e esteticamente balanceado.
+
+
 
 

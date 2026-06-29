@@ -315,7 +315,7 @@ body {
 
 .mission-log {
   min-height: 100px;
-  margin-top: 1.275rem;
+  margin-top: 0.65rem;
   flex-shrink: 0;
 }
 
@@ -342,7 +342,7 @@ body {
 
 .mission-item {
   background-color: rgba(0, 20, 0, 0.5);
-  padding: 0.45rem 0.7rem; /* Reduzido mais 10% na altura */
+  padding: 0.35rem 0.6rem;
   border: 1px solid var(--matrix-dim);
   transition: all 0.2s ease;
   cursor: pointer;
@@ -498,7 +498,7 @@ body {
   align-items: center !important;
   justify-content: space-between;
   gap: 0.5rem !important;
-  padding: 0.25rem 0.6rem !important;
+  padding: 0.18rem 0.5rem !important;
 }
 
 .ai-plan-row .metric-title {
@@ -979,7 +979,7 @@ body {
 
   .mission-item {
     font-size: 0.8rem;
-    padding: 0.9rem 1rem;
+    padding: 0.7rem 0.8rem;
   }
 
   .glitch-text {
