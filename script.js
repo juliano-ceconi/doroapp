@@ -501,10 +501,11 @@ function updateMetricsUI() {
 }
 
 function initMetricsListeners() {
-  const metricRows = document.querySelectorAll(".metric-row");
+  const metricRows = document.querySelectorAll(".metric-row:not(.ai-plan-row)");
   metricRows.forEach((row) => {
     row.addEventListener("dblclick", () => {
       const metricKey = row.getAttribute("data-metric");
+      if (!metricKey) return;
       const metricName = row.querySelector(".metric-title").textContent;
       const currentValue = gameState.metrics[metricKey];
 
