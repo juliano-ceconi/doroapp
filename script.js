@@ -68,6 +68,13 @@ let gameState = {
     aerobic: 1,
     punctuality: 1,
   },
+  aiPlans: {
+    claude: 0,
+    codex: 0,
+    antigravity: 0,
+    openrouter: 0,
+    groq: 0,
+  },
 };
 
 // Config
@@ -522,6 +529,50 @@ function initMetricsListeners() {
 }
 
 // Persistence
+// AI Plans Logic
+function updateAiPlansUI() {
+  const plans = ["claude", "codex", "antigravity", "openrouter", "groq"];
+  plans.forEach((plan) => {
+    const value = gameState.aiPlans[plan] !== undefined ? gameState.aiPlans[plan] : 0;
+    const bar = document.getElementById(`ai-plan-bar-${plan}`);
+    const label = document.getElementById(`ai-plan-val-${plan}`);
+    if (bar) {
+      bar.style.width = `${value}%`;
+    }
+    if (label) {
+      label.textContent = `${value}%`;
+    }
+  });
+}
+
+function initAiPlansListeners() {
+  const planRows = document.querySelectorAll(".ai-plan-row");
+  planRows.forEach((row) => {
+    row.addEventListener("dblclick", () => {
+      const planKey = row.getAttribute("data-plan");
+      const planName = row.querySelector(".metric-title").textContent;
+      const currentValue = gameState.aiPlans[planKey] !== undefined ? gameState.aiPlans[planKey] : 0;
+
+      const newValueInput = prompt(
+        `Ajustar Uso de ${planName} (atual: ${currentValue}%).\nInsira um valor de 0 a 100:`,
+        currentValue,
+      );
+
+      if (newValueInput !== null) {
+        const newValue = parseInt(newValueInput, 10);
+        if (!isNaN(newValue) && newValue >= 0 && newValue <= 100) {
+          gameState.aiPlans[planKey] = newValue;
+          logHistoryEvent("metrica", `ai_plan_${planKey}`, `Uso ${planName}`, newValue);
+          saveGame();
+          updateAiPlansUI();
+        } else {
+          alert("Por favor, insira um número inteiro válido de 0 a 100.");
+        }
+      }
+    });
+  });
+}
+
 function saveGame() {
   localStorage.setItem("uberToDevSave", JSON.stringify(gameState));
 }
@@ -616,6 +667,25 @@ function loadGame() {
       };
     }
 
+    // Restore AI Plans
+    if (parsed.aiPlans) {
+      gameState.aiPlans = {
+        claude: parsed.aiPlans.claude !== undefined ? parsed.aiPlans.claude : 0,
+        codex: parsed.aiPlans.codex !== undefined ? parsed.aiPlans.codex : 0,
+        antigravity: parsed.aiPlans.antigravity !== undefined ? parsed.aiPlans.antigravity : 0,
+        openrouter: parsed.aiPlans.openrouter !== undefined ? parsed.aiPlans.openrouter : 0,
+        groq: parsed.aiPlans.groq !== undefined ? parsed.aiPlans.groq : 0,
+      };
+    } else {
+      gameState.aiPlans = {
+        claude: 0,
+        codex: 0,
+        antigravity: 0,
+        openrouter: 0,
+        groq: 0,
+      };
+    }
+
     // Restore mission status ONLY (keep text/xp from code)
     if (parsed.missions) {
       gameState.missions = gameState.missions.map((mission) => {
@@ -648,6 +718,13 @@ function loadGame() {
       aerobic: 1,
       punctuality: 1,
     };
+    gameState.aiPlans = {
+      claude: 0,
+      codex: 0,
+      antigravity: 0,
+      openrouter: 0,
+      groq: 0,
+    };
   }
 
   // Update Operator Name Element
@@ -660,6 +737,7 @@ function loadGame() {
   renderMissions();
   renderTasks();
   updateMetricsUI();
+  updateAiPlansUI();
 
   // Sync Agent Mode Visuals
   const statusText = document.getElementById("agent-status-text");
@@ -817,6 +895,7 @@ function renderTasks() {
 document.addEventListener("DOMContentLoaded", () => {
   loadGame();
   initMetricsListeners();
+  initAiPlansListeners();
   showRandomQuote();
   resetTimer(currentFocusTime, "focus"); // Init state
 
