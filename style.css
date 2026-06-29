@@ -489,8 +489,33 @@ body {
   color: var(--matrix-glow);
   border-bottom: 1px solid var(--matrix-dim);
   padding-bottom: 0.25rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.15rem; /* Reduzido de 0.5rem para aproximar a listagem da borda */
   opacity: 0.8;
+}
+
+.ai-plan-row {
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between;
+  gap: 0.5rem !important;
+  padding: 0.25rem 0.6rem !important;
+}
+
+.ai-plan-row .metric-title {
+  min-width: 75px;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+.ai-plan-row .metric-progress-wrapper {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.ai-plan-row .metric-value-label {
+  min-width: 32px;
+  text-align: right;
+  flex-shrink: 0;
 }
 
 /* Cores específicas para os planos de IA (Estética Cyberpunk) */
