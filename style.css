@@ -541,15 +541,26 @@ body {
   box-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
 }
 
-.ai-plan-row[data-plan="antigravity"] .metric-title,
-.ai-plan-row[data-plan="antigravity"] .metric-value-label,
-.ai-plan-row[data-plan="antigravity"] .metric-icon {
+.ai-plan-row[data-plan="agy_gemini"] .metric-title,
+.ai-plan-row[data-plan="agy_gemini"] .metric-value-label,
+.ai-plan-row[data-plan="agy_gemini"] .metric-icon {
   color: #b026ff;
   text-shadow: 0 0 3px rgba(176, 38, 255, 0.5);
 }
-.ai-plan-row[data-plan="antigravity"] .metric-progress-bar {
+.ai-plan-row[data-plan="agy_gemini"] .metric-progress-bar {
   background: linear-gradient(90deg, #440066, #b026ff);
   box-shadow: 0 0 8px rgba(176, 38, 255, 0.5);
+}
+
+.ai-plan-row[data-plan="agy_claude"] .metric-title,
+.ai-plan-row[data-plan="agy_claude"] .metric-value-label,
+.ai-plan-row[data-plan="agy_claude"] .metric-icon {
+  color: #ff007f;
+  text-shadow: 0 0 3px rgba(255, 0, 127, 0.5);
+}
+.ai-plan-row[data-plan="agy_claude"] .metric-progress-bar {
+  background: linear-gradient(90deg, #660033, #ff007f);
+  box-shadow: 0 0 8px rgba(255, 0, 127, 0.5);
 }
 
 .ai-plan-row[data-plan="openrouter"] .metric-title,
