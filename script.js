@@ -71,7 +71,8 @@ let gameState = {
   aiPlans: {
     claude: 0,
     codex: 0,
-    antigravity: 0,
+    agy_gemini: 0,
+    agy_claude: 0,
     openrouter: 0,
     groq: 0,
   },
@@ -532,7 +533,7 @@ function initMetricsListeners() {
 // Persistence
 // AI Plans Logic
 function updateAiPlansUI() {
-  const plans = ["claude", "codex", "antigravity", "openrouter", "groq"];
+  const plans = ["claude", "codex", "agy_gemini", "agy_claude", "openrouter", "groq"];
   plans.forEach((plan) => {
     const value = gameState.aiPlans[plan] !== undefined ? gameState.aiPlans[plan] : 0;
     const bar = document.getElementById(`ai-plan-bar-${plan}`);
@@ -673,7 +674,8 @@ function loadGame() {
       gameState.aiPlans = {
         claude: parsed.aiPlans.claude !== undefined ? parsed.aiPlans.claude : 0,
         codex: parsed.aiPlans.codex !== undefined ? parsed.aiPlans.codex : 0,
-        antigravity: parsed.aiPlans.antigravity !== undefined ? parsed.aiPlans.antigravity : 0,
+        agy_gemini: parsed.aiPlans.agy_gemini !== undefined ? parsed.aiPlans.agy_gemini : (parsed.aiPlans.antigravity !== undefined ? parsed.aiPlans.antigravity : 0),
+        agy_claude: parsed.aiPlans.agy_claude !== undefined ? parsed.aiPlans.agy_claude : 0,
         openrouter: parsed.aiPlans.openrouter !== undefined ? parsed.aiPlans.openrouter : 0,
         groq: parsed.aiPlans.groq !== undefined ? parsed.aiPlans.groq : 0,
       };
@@ -681,7 +683,8 @@ function loadGame() {
       gameState.aiPlans = {
         claude: 0,
         codex: 0,
-        antigravity: 0,
+        agy_gemini: 0,
+        agy_claude: 0,
         openrouter: 0,
         groq: 0,
       };
@@ -722,7 +725,8 @@ function loadGame() {
     gameState.aiPlans = {
       claude: 0,
       codex: 0,
-      antigravity: 0,
+      agy_gemini: 0,
+      agy_claude: 0,
       openrouter: 0,
       groq: 0,
     };
