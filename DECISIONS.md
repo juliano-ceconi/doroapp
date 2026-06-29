@@ -508,5 +508,23 @@ O usuário solicitou a inclusão de um painel de uso de Planos de IA contendo as
 - A experiência visual foi enriquecida através de cores exclusivas que se mantêm fixas e independentes do modo de cor geral do Doroapp (Foco, Pausa ou Agente).
 - A retrocompatibilidade de sessões e perfis salvos no navegador foi mantida com segurança.
 
+---
+
+## [2026-06-29] Resolução de Conflito de Seletores (Duplo Pop-up no Duplo Clique)
+
+### Contexto
+
+Ao testar a barra de uso de Planos de IA, o usuário relatou que, ao efetuar duplo clique em uma linha de IA para ajuste, eram exibidos dois pop-ups de prompt sequencialmente. Isso ocorria porque a classe `.metric-row` foi reutilizada para manter a consistência visual das barras de IA com as métricas de desempenho. Como resultado, o listener global de duplo clique de métricas (`initMetricsListeners`) e o de planos de IA (`initAiPlansListeners`) disparavam em paralelo.
+
+### Decisão
+
+1. **Refinamento do Seletor de Métricas:** Alterar a seleção em `initMetricsListeners()` para coletar apenas as métricas de desempenho originais através do seletor `.metric-row:not(.ai-plan-row)`.
+2. **Programação Defensiva:** Adicionar checagem precoce (`if (!metricKey) return;`) no processador de duplo clique de métricas para evitar comportamento inesperado caso alguma linha futura de `.metric-row` não possua o atributo `data-metric`.
+
+### Consequências
+
+- Eliminada a exibição de pop-ups duplicados ao ajustar o percentual de uso dos Planos de IA.
+- A consistência do design foi preservada sem a necessidade de duplicar ou alterar nomes de classes CSS do layout.
+
 
 
