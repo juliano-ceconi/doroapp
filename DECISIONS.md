@@ -666,15 +666,15 @@ Para incentivar o progresso e a dedicação do usuário nos Planos de IA, foi so
 
 ### Contexto
 
-Para melhorar a clareza e simetria do layout visual do Doroapp, o usuário solicitou centralizar os títulos dentro da caixa das colunas de tarefas (Foco de Hoje, Urgentes, Importantes) e adicionar o título "EVOLUÇÃO" logo acima das barras de progresso de desenvolvimento pessoal.
+Para melhorar a clareza e simetria do layout visual do Doroapp, o usuário solicitou centralizar os títulos dentro da caixa das colunas de tarefas (Foco de Hoje, Urgentes, Importantes) e adicionar o título "EVOLUÇÃO" logo acima das barras de progresso de desenvolvimento pessoal. Posteriormente, solicitou aproximar o título "EVOLUÇÃO" das barras de progresso.
 
 ### Decisão
 
 1. **Centralização dos Títulos de Tasks**: Adicionado um elemento `<span class="column-spacer"></span>` com largura de 24px no início de cada `.column-header` no arquivo `index.html` para servir de contra-peso ao botão de adicionar tarefa (`.btn-add-task`, também com 24px de largura). No arquivo `style.css`, atualizou-se `.column-title` com `text-align: center;` e `flex: 1;` para ocupar simetricamente o centro do contêiner flexbox.
-2. **Título de Evolução Pessoal**: Inserida a tag `<h3>EVOLUÇÃO</h3>` como primeiro filho da barra lateral de métricas (`.metrics-sidebar`) no arquivo `index.html`. O estilo correspondente já existia e foi aplicado automaticamente, inclusive o ordenamento flexível para visualização mobile.
+2. **Título de Evolução Pessoal e Ajuste de Espaçamento**: Inserida a tag `<h3>EVOLUÇÃO</h3>` no topo de `.metrics-sidebar` no arquivo `index.html`. Para aproximar a linha de borda inferior do título em relação às barras de progresso, reduzimos em `style.css` o `margin-bottom` de `.metrics-sidebar h3` (de `0.75rem` para `0.4rem` no desktop, e de `1rem` para `0.5rem` no mobile) e o `margin-top` de `.metrics-panel` (de `1rem` para `0.4rem`).
 
 ### Consequências
 
 - Os títulos das colunas de tarefas agora ficam perfeitamente centralizados horizontalmente nas caixas, mantendo a harmonia visual.
-- A barra lateral de métricas pessoais agora exibe o título "EVOLUÇÃO" no topo de forma limpa, consistente com as demais seções do painel.
+- A barra lateral de métricas pessoais exibe o título "EVOLUÇÃO" com um espaçamento muito mais compacto, integrado e harmônico acima das barras de progresso.
 

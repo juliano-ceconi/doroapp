@@ -228,7 +228,7 @@ body {
   color: var(--matrix-glow);
   border-bottom: 1px solid var(--matrix-dim);
   padding-bottom: 0.25rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.4rem;
   opacity: 0.8;
   text-align: center;
 }
@@ -405,7 +405,7 @@ body.break-mode-active .level-info h2 {
 
 /* Painel de Métricas */
 .metrics-panel {
-  margin-top: 1rem; /* Reduzido para 1rem */
+  margin-top: 0.4rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem; /* Menor espaçamento */
@@ -954,7 +954,7 @@ body.break-mode-active .level-info h2 {
     order: 7;
     text-align: center;
     font-size: 1.1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     border-top: 2px solid var(--matrix-dim);
     padding-top: 1.5rem;
     width: 100%;
