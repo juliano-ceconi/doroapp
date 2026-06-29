@@ -870,6 +870,7 @@ function renderTasks() {
         const card = document.createElement("div");
         card.className = `task-card ${task.done ? "done" : ""}`;
         card.dataset.taskId = task.id;
+        card.setAttribute("draggable", "true");
 
         const pomodoroBadge = task.pomodoroCount > 0
           ? `<span class="pomodoro-badge">${task.pomodoroCount}</span>`
@@ -896,15 +897,185 @@ function renderTasks() {
           deleteTask(task.id);
         });
 
+        // Evento de edição inline (duplo-clique)
+        const taskTextEl = card.querySelector(".task-text");
+        taskTextEl.addEventListener("dblclick", (e) => {
+          e.stopPropagation();
+          startInlineEdit(task, taskTextEl, card);
+        });
+
+        // Eventos de drag no próprio card
+        card.addEventListener("dragstart", (e) => {
+          card.classList.add("dragging");
+          e.dataTransfer.setData("text/plain", task.id);
+        });
+
+        card.addEventListener("dragend", () => {
+          card.classList.remove("dragging");
+          document.querySelectorAll(".task-list").forEach((list) => {
+            list.classList.remove("drag-over");
+          });
+          saveTasksOrderFromDOM();
+        });
+
         listEl.appendChild(card);
       });
     }
   });
 }
 
+// Funções auxiliares para Drag & Drop e Edição Inline
+function getDragAfterElement(container, y) {
+  const draggableElements = [...container.querySelectorAll('.task-card:not(.dragging)')];
+
+  return draggableElements.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height / 2;
+    if (offset < 0 && offset > closest.offset) {
+      return { offset: offset, element: child };
+    } else {
+      return closest;
+    }
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+function saveTasksOrderFromDOM() {
+  const newTasks = [];
+  const priorities = ["diaria", "urgente", "importante"];
+
+  priorities.forEach((priority) => {
+    const listEl = document.getElementById(`list-${priority}`);
+    if (!listEl) return;
+    const cards = listEl.querySelectorAll(".task-card");
+    cards.forEach((card) => {
+      const taskId = card.dataset.taskId;
+      const task = gameState.tasks.find((t) => t.id === taskId);
+      if (task) {
+        if (task.priority !== priority) {
+          task.priority = priority;
+          task.xpReward = priority === "urgente" ? 100 : priority === "importante" ? 75 : 50;
+          logHistoryEvent("task", task.id, task.text, `movida para ${priority}`, 0);
+        }
+        newTasks.push(task);
+      }
+    });
+  });
+
+  // Garante que nenhuma tarefa externa ativa se perca por segurança
+  gameState.tasks.forEach((task) => {
+    if (!newTasks.some((t) => t.id === task.id)) {
+      newTasks.push(task);
+    }
+  });
+
+  gameState.tasks = newTasks;
+  saveGame();
+  renderTasks();
+}
+
+function initKanbanDragAndDrop() {
+  const priorities = ["diaria", "urgente", "importante"];
+  priorities.forEach((priority) => {
+    const listEl = document.getElementById(`list-${priority}`);
+    if (!listEl) return;
+
+    listEl.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      const draggingCard = document.querySelector(".task-card.dragging");
+      if (!draggingCard) return;
+
+      listEl.classList.add("drag-over");
+
+      const emptyState = listEl.querySelector(".empty-state");
+      if (emptyState) {
+        emptyState.remove();
+      }
+
+      const afterElement = getDragAfterElement(listEl, e.clientY);
+      if (afterElement == null) {
+        listEl.appendChild(draggingCard);
+      } else {
+        listEl.insertBefore(draggingCard, afterElement);
+      }
+    });
+
+    listEl.addEventListener("dragleave", () => {
+      listEl.classList.remove("drag-over");
+    });
+
+    listEl.addEventListener("drop", (e) => {
+      e.preventDefault();
+      listEl.classList.remove("drag-over");
+      saveTasksOrderFromDOM();
+    });
+  });
+}
+
+function startInlineEdit(task, textEl, cardEl) {
+  if (cardEl.classList.contains("editing")) return;
+
+  cardEl.classList.add("editing");
+  cardEl.setAttribute("draggable", "false");
+
+  const currentText = task.text;
+  const tagsText = task.tags && task.tags.length > 0
+    ? " " + task.tags.map((t) => `#${t}`).join(" ")
+    : "";
+  const fullTextToEdit = currentText + tagsText;
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "task-edit-input";
+  input.value = fullTextToEdit;
+
+  textEl.innerHTML = "";
+  textEl.appendChild(input);
+  input.focus();
+  input.select();
+
+  let finished = false;
+
+  const commitEdit = () => {
+    if (finished) return;
+    finished = true;
+
+    const newTextRaw = input.value.trim();
+    if (newTextRaw && newTextRaw !== fullTextToEdit) {
+      const tags = extractTags(newTextRaw);
+      const cleanText = newTextRaw.replace(/#(\w+)/g, "").trim();
+
+      task.text = cleanText;
+      task.tags = tags;
+
+      logHistoryEvent("task", task.id, task.text, "editada", 0);
+      saveGame();
+    }
+
+    cardEl.classList.remove("editing");
+    cardEl.setAttribute("draggable", "true");
+    renderTasks();
+  };
+
+  const cancelEdit = () => {
+    if (finished) return;
+    finished = true;
+    cardEl.classList.remove("editing");
+    cardEl.setAttribute("draggable", "true");
+    renderTasks();
+  };
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") commitEdit();
+    if (e.key === "Escape") cancelEdit();
+  });
+
+  input.addEventListener("blur", commitEdit);
+}
+
 // Init
 document.addEventListener("DOMContentLoaded", () => {
   loadGame();
+  initKanbanDragAndDrop();
   initMetricsListeners();
   initAiPlansListeners();
   showRandomQuote();
