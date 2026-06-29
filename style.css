@@ -513,6 +513,7 @@ body {
 }
 
 .ai-plan-row .metric-value-label {
+  font-size: 0.8rem;
   min-width: 32px;
   text-align: right;
   flex-shrink: 0;
