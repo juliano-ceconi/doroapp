@@ -640,3 +640,23 @@ Para refinar a experiência visual do usuário e reduzir a poluição cromática
 
 - Redução da fadiga visual geral ao utilizar o painel de tarefas e acompanhar o progresso diário.
 - Melhoria do alinhamento cromático do título do nível com o tom verde clássico do projeto.
+
+---
+
+## [2026-06-29] Bônus de 500 XP ao Atingir 100% de Uso nos Planos de IA
+
+### Contexto
+
+Para incentivar o progresso e a dedicação do usuário nos Planos de IA, foi solicitada a adição de uma bonificação de 500 XP sempre que o progresso de qualquer um dos planos (Claude, Codex, AGY Gemini, AGY Claude, OpenRouter, Groq) atingir a marca de 100%.
+
+### Decisão
+
+1. **Implementação de Bônus de XP**: Na função `initAiPlansListeners()` do `script.js`, adicionamos uma verificação. Se o novo valor inserido for igual a 100 e o valor anterior for inferior a 100, é adicionada a quantidade de 500 XP ao estado do jogo (`gameState.xp`).
+2. **Prevenção de Exploit**: A verificação garante que a bonificação de 500 XP só seja disparada quando o plano "atinge" 100% (ou seja, quando sai de um valor inferior a 100 e atinge 100). Atualizações consecutivas de 100 para 100 não geram XP extra.
+3. **Feedback Visual e de Histórico**: É disparado um alerta customizado ao usuário sobre a conquista do bônus e o ganho de 500 XP é registrado no parâmetro correspondente da função `logHistoryEvent()`, garantindo que o histórico local mapeie a recompensa.
+
+### Consequências
+
+- Gamificação do uso das ferramentas de IA mais atraente com recompensas mais expressivas de progresso.
+- Histórico de eventos consistente com o XP ganho.
+
