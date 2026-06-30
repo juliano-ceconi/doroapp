@@ -723,4 +723,22 @@ Na versão mobile, o painel de "Planos de IA" estava em posição não definida 
 - No mobile, a hierarquia agora é: Profile -> Hero Header -> Timer -> Planos de IA -> Quadro de Tarefas (Tasks) -> Frase Diária -> Missões -> Evolução (Métricas) -> Registro Histórico.
 - Layout limpo, responsivo e que atende exatamente ao fluxo intuitivo de acompanhamento solicitado pelo usuário.
 
+---
+
+## [2026-06-29] Alteração do Título do Nível 0 (Lvl 1)
+
+### Contexto
+
+O usuário solicitou a alteração do título do primeiro nível (nível 0 no array, mas exibido/identificado como o primeiro nível) de "MOTORISTA 5 ESTRELAS" para "PERDIDO NA TOCA DO COELHO" para alinhar melhor o tema de progressão à atmosfera do sistema.
+
+### Decisão
+
+1. **Atualização no Array de Níveis**: Alteramos a string no array `LEVELS` em `script.js` de `"Motorista 5 Estrelas"` para `"Perdido na Toca do Coelho"`.
+2. **Atualização da Documentação**: Atualizamos as referências correspondentes no arquivo `levels.md` (lista de referência) e no `README.md` (seção de Funcionalidades Elite).
+
+### Consequências
+
+- O primeiro nível de progressão do usuário agora é exibido como "Perdido na Toca do Coelho", estabelecendo uma identidade mais próxima à temática cibernética e de imersão ("toca do coelho" da Matrix).
+
+
 

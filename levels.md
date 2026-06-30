@@ -34,7 +34,7 @@ Altere as variáveis no topo do `script.js`:
 ## Lista de Níveis (Para Referência)
 Os níveis atuais no sistema são:
 
-0. Motorista 5 Estrelas
+0. Perdido na Toca do Coelho
 1. Iniciado na Matrix
 2. Estudante de Lógica
 3. Iniciado em JSON

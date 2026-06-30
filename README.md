@@ -20,7 +20,7 @@ código.
 ### 🎮 Gamificação Real-Time
 
 - **Sistema de XP:** Ganhe +100 XP por cada ciclo de foco concluído.
-- **Níveis Evolutivos (50 Níveis):** Comece como *Motorista 5 Estrelas* (Level 0)
+- **Níveis Evolutivos (50 Níveis):** Comece como *Perdido na Toca do Coelho* (Level 0)
   e escale a hierarquia até se tornar uma *Lenda do Vale do Silício* (Level 50).
 - **Log de Missões:** Missões específicas com recompensas de XP para acelerar
   sua evolução.

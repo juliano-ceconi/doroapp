@@ -91,7 +91,7 @@ function getRequiredXP(levelIndex) {
 }
 
 const LEVELS = [
-  "Motorista 5 Estrelas",
+  "Perdido na Toca do Coelho",
   "Iniciado na Matrix",
   "Estudante de Lógica",
   "Iniciado em JSON",
