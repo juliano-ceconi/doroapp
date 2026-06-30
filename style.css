@@ -931,18 +931,25 @@ body.break-mode-active .level-info h2 {
     width: 100%;
     padding: 0 1rem;
   }
-  .board-section {
+  .ai-plans-panel {
     order: 4;
+    width: 100%;
+    padding: 1rem 1rem 0 1rem;
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--matrix-dim);
+  }
+  .board-section {
+    order: 5;
     padding: 1.5rem 1rem 0 1rem;
     margin-top: 2.2rem;
     border-top: 1px solid var(--matrix-dim);
   }
   .daily-quote {
-    order: 5;
+    order: 6;
     margin: 2rem 1rem;
   }
   .mission-log {
-    order: 6;
+    order: 7;
     margin-top: 1rem;
     width: 100%;
     padding: 1.5rem 1rem;
@@ -951,7 +958,7 @@ body.break-mode-active .level-info h2 {
   }
 
   .metrics-sidebar h3 {
-    order: 7;
+    order: 8;
     text-align: center;
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
@@ -962,14 +969,14 @@ body.break-mode-active .level-info h2 {
   }
 
   .metrics-panel {
-    order: 8;
+    order: 9;
     padding: 0 1rem 2rem 1rem;
     width: 100%;
     background: rgba(0, 10, 0, 0.4);
   }
 
   .history-actions {
-    order: 9;
+    order: 10;
     width: 100%;
     background: rgba(0, 10, 0, 0.4) !important;
     padding: 1.5rem 1rem !important;

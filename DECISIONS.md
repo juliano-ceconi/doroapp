@@ -698,3 +698,29 @@ O usuário solicitou a capacidade de arrastar tarefas no quadro Kanban para alte
 - Persistência e integridade do estado e do XP garantidos ao reordenar, reclassificar e editar tarefas de forma fluida.
 - Zero dependência externa, mantendo a aplicação estática extremamente rápida e leve.
 
+---
+
+## [2026-06-29] Reordenação do Painel de Planos de IA no Layout Mobile
+
+### Contexto
+
+Na versão mobile, o painel de "Planos de IA" estava em posição não definida especificamente, tornando a ordem de leitura confusa e inconsistente. O usuário solicitou que, na visualização mobile, o painel de Planos de IA fosse posicionado logo abaixo da seção do Timer (Foco de Hoje / timer-container) e acima do quadro de tarefas (Kanban / board-section).
+
+### Decisão
+
+1. **Ajuste de Ordem no Flexbox Mobile**: No bloco `@media (max-width: 768px)` do arquivo [style.css](file:///d:/projetos/juliano-ceconi/05_Vida/doroapp/style.css), definimos explicitamente `.ai-plans-panel` com `order: 4`.
+2. **Deslocamento dos Componentes Seguintes**: Ajustamos o valor de `order` de todos os elementos subsequentes para acomodar a inserção:
+   - `.board-section` mudou de `order: 4` para `order: 5`.
+   - `.daily-quote` mudou de `order: 5` para `order: 6`.
+   - `.mission-log` mudou de `order: 6` para `order: 7`.
+   - `.metrics-sidebar h3` mudou de `order: 7` para `order: 8`.
+   - `.metrics-panel` mudou de `order: 8` para `order: 9`.
+   - `.history-actions` mudou de `order: 9` para `order: 10`.
+3. **Consistência Estética e Espaçamento**: Adicionamos propriedades ao `.ai-plans-panel` sob mobile (`width: 100%`, `padding` e `border-top` sutil) para que a separação visual continue fluida e alinhada à estética Cyberpunk/Matrix.
+
+### Consequências
+
+- No mobile, a hierarquia agora é: Profile -> Hero Header -> Timer -> Planos de IA -> Quadro de Tarefas (Tasks) -> Frase Diária -> Missões -> Evolução (Métricas) -> Registro Histórico.
+- Layout limpo, responsivo e que atende exatamente ao fluxo intuitivo de acompanhamento solicitado pelo usuário.
+
+
