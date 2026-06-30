@@ -17,8 +17,8 @@
   --alert: #ff0000;
   --agent-purple: #b026ff;
   --agent-purple-glow: rgba(176, 38, 255, 0.5);
-  --quote-yellow: #fff3a8;
-  --quote-yellow-glow: rgba(255, 243, 168, 0.08);
+  --quote-ice-white: #edf4f5; /* Branco Gelo */
+  --quote-ice-white-glow: rgba(237, 244, 245, 0.08);
 
   /* Semantic Priorities */
   --urgente: #ef4444;
@@ -375,12 +375,12 @@ body.break-mode-active .level-info h2 {
   margin-top: 1rem; /* Reduzido para 1rem */
   background: black;
   padding: 0.4rem 0.6rem;
-  border: 1px solid var(--quote-yellow);
+  border: 1px solid var(--quote-ice-white);
   font-size: 0.85rem;
-  color: var(--quote-yellow);
+  color: var(--quote-ice-white);
   line-height: 1.4;
   flex-shrink: 0;
-  box-shadow: 0 0 10px var(--quote-yellow-glow);
+  box-shadow: 0 0 10px var(--quote-ice-white-glow);
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
@@ -394,7 +394,7 @@ body.break-mode-active .level-info h2 {
 }
 
 .daily-quote .terminal-prompt {
-  color: var(--quote-yellow);
+  color: var(--quote-ice-white);
 }
 
 @keyframes blink {

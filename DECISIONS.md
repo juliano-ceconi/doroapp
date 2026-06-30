@@ -740,5 +740,23 @@ O usuário solicitou a alteração do título do primeiro nível (nível 0 no ar
 
 - O primeiro nível de progressão do usuário agora é exibido como "Perdido na Toca do Coelho", estabelecendo uma identidade mais próxima à temática cibernética e de imersão ("toca do coelho" da Matrix).
 
+---
+
+## [2026-06-29] Alteração da Cor da Frase Aleatória para Branco Gelo
+
+### Contexto
+
+O usuário solicitou alterar a cor da frase motivacional aleatória exibida na barra lateral para branco gelo, mantendo-se constante independentemente do modo ativo (Foco, Pausa ou Agente).
+
+### Decisão
+
+1. **Definição de Variáveis para Branco Gelo**: Substituímos as variáveis de cor amarelas antigas (`--quote-yellow` e `--quote-yellow-glow`) no `:root` do [style.css](file:///d:/projetos/juliano-ceconi/05_Vida/doroapp/style.css) pelas novas variáveis do tom branco gelo com suave brilho azulado/frio (`--quote-ice-white: #edf4f5` e `--quote-ice-white-glow: rgba(237, 244, 245, 0.08)`).
+2. **Atualização das Regras de Estilo**: Alteramos a borda, a cor do texto, a sombra do box `.daily-quote` e a cor do prompt do terminal interno para utilizar as novas variáveis de branco gelo.
+
+### Consequências
+
+- O contêiner da frase motivacional aleatória agora possui uma aparência "branco gelo" nítida e futurista, integrada ao tema Cyberpunk de forma sóbria e sem alterar de cor nas trocas de modo do Pomodoro.
+
+
 
 
