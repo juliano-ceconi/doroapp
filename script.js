@@ -1291,4 +1291,134 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Histórico de logs limpo com sucesso.");
     }
   };
+
+  // Configurar lembrete de água a cada hora (das 08:00 às 21:00)
+  if (typeof Notification !== "undefined" && Notification.permission === "default") {
+    Notification.requestPermission();
+  }
+
+  // Verifica a cada 30 segundos se deve disparar o alerta de água
+  setInterval(() => {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const todayStr = now.toLocaleDateString('sv');
+
+    // Das 08:00 às 21:00
+    if (currentHour >= 8 && currentHour <= 21) {
+      let waterAlerts = { date: "", hoursAlerted: [] };
+      try {
+        const savedAlerts = localStorage.getItem("doroapp_water_alerts");
+        if (savedAlerts) {
+          waterAlerts = JSON.parse(savedAlerts);
+        }
+      } catch (e) {
+        console.error("Erro ao ler doroapp_water_alerts:", e);
+      }
+
+      // Se virou o dia, resetar horas alertadas
+      if (waterAlerts.date !== todayStr) {
+        waterAlerts.date = todayStr;
+        waterAlerts.hoursAlerted = [];
+      }
+
+      // Se a hora atual não recebeu alerta ainda
+      if (!waterAlerts.hoursAlerted.includes(currentHour)) {
+        waterAlerts.hoursAlerted.push(currentHour);
+        localStorage.setItem("doroapp_water_alerts", JSON.stringify(waterAlerts));
+        showWaterNotification();
+      }
+    }
+  }, 30000);
 });
+
+// Função para exibir a notificação visual (modal) e do sistema para hidratação
+function showWaterNotification() {
+  // 1. Tocar som de alerta
+  playSound("finish");
+
+  // 2. Disparar notificação nativa do sistema, se permitido
+  if (typeof Notification !== "undefined" && Notification.permission === "granted") {
+    new Notification("Protocolo Hidratação", {
+      body: "Hora de beber água! 💧",
+      icon: "imagens/icons8-neo.svg"
+    });
+  }
+
+  // 3. Criar e injetar o modal Cyberpunk não-bloqueante
+  const modalId = "water-alert-modal";
+  if (document.getElementById(modalId)) return; // Evita modais duplicados
+
+  const modal = document.createElement("div");
+  modal.id = modalId;
+  modal.style.position = "fixed";
+  modal.style.top = "0";
+  modal.style.left = "0";
+  modal.style.width = "100vw";
+  modal.style.height = "100vh";
+  modal.style.backgroundColor = "rgba(2, 2, 3, 0.85)";
+  modal.style.display = "flex";
+  modal.style.justifyContent = "center";
+  modal.style.alignItems = "center";
+  modal.style.zIndex = "10000";
+  modal.style.backdropFilter = "blur(4px)";
+
+  const content = document.createElement("div");
+  content.style.backgroundColor = "var(--matrix-dark)";
+  content.style.border = "2px solid var(--matrix-green)";
+  content.style.boxShadow = "0 0 20px var(--matrix-glow)";
+  content.style.padding = "2rem";
+  content.style.borderRadius = "var(--radius)";
+  content.style.maxWidth = "400px";
+  content.style.width = "90%";
+  content.style.textAlign = "center";
+  content.style.fontFamily = "var(--font-mono)";
+  content.style.color = "var(--matrix-green)";
+  content.style.animation = "glitch-alert 0.3s ease";
+
+  content.innerHTML = `
+    <h2 style="font-family: var(--font-terminal); font-size: 2rem; margin-bottom: 1rem; color: var(--matrix-green); text-shadow: 0 0 5px var(--matrix-glow);">⚠️ PROTOCOLO HIDRATAÇÃO ⚠️</h2>
+    <p style="font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.4;">Está na hora de tomar água! 💧 Mantenha o sistema biológico em alta performance.</p>
+    <div style="display: flex; gap: 1rem; justify-content: center;">
+      <button id="btn-water-confirm" style="background-color: var(--matrix-green); color: var(--matrix-bg); border: none; padding: 10px 20px; font-family: var(--font-mono); font-weight: bold; cursor: pointer; border-radius: var(--radius); text-shadow: none; box-shadow: 0 0 10px var(--matrix-glow); transition: all 0.2s;">BEBER ÁGUA (+XP)</button>
+      <button id="btn-water-close" style="background-color: transparent; color: var(--matrix-green); border: 1px solid var(--matrix-green); padding: 10px 20px; font-family: var(--font-mono); cursor: pointer; border-radius: var(--radius); transition: all 0.2s;">IGNORAR</button>
+    </div>
+  `;
+
+  modal.appendChild(content);
+  document.body.appendChild(modal);
+
+  // Injetar estilos css específicos se ainda não existirem
+  if (!document.getElementById("water-modal-styles")) {
+    const style = document.createElement("style");
+    style.id = "water-modal-styles";
+    style.textContent = `
+      @keyframes glitch-alert {
+        0% { transform: scale(0.9) rotate(-1deg); filter: hue-rotate(90deg); }
+        50% { transform: scale(1.02) rotate(1deg); filter: hue-rotate(-90deg); }
+        100% { transform: scale(1) rotate(0deg); }
+      }
+      #btn-water-confirm:hover {
+        background-color: var(--matrix-bg) !important;
+        color: var(--matrix-green) !important;
+        border: 1px solid var(--matrix-green) !important;
+        box-shadow: 0 0 15px var(--matrix-glow) !important;
+      }
+      #btn-water-close:hover {
+        background-color: rgba(0, 255, 65, 0.1) !important;
+        box-shadow: 0 0 10px var(--matrix-glow) !important;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // Configurar ações dos botões do modal
+  document.getElementById("btn-water-confirm").onclick = () => {
+    // Incrementa a missão de água (ID 4) em 1 passo
+    incrementMissionProgress(4, 1);
+    document.body.removeChild(modal);
+  };
+
+  document.getElementById("btn-water-close").onclick = () => {
+    document.body.removeChild(modal);
+  };
+}

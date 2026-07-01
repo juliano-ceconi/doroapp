@@ -757,6 +757,27 @@ O usuário solicitou alterar a cor da frase motivacional aleatória exibida na b
 
 - O contêiner da frase motivacional aleatória agora possui uma aparência "branco gelo" nítida e futurista, integrada ao tema Cyberpunk de forma sóbria e sem alterar de cor nas trocas de modo do Pomodoro.
 
+---
+
+## [2026-06-30] Implementação de Alerta de Hidratação a cada Hora (08:00 às 21:00)
+
+### Contexto
+
+O usuário solicitou um mecanismo de lembrete constante de beber água a cada hora cheia no intervalo de 08:00 às 21:00, incentivando a hidratação e a disciplina de forma integrada à gamificação do Doroapp.
+
+### Decisão
+
+1. **Modal de Alerta Customizado**: Criamos uma notificação visual integrada no `script.js` em formato de modal HTML injetado dinamicamente no DOM. Isso evita congelamento do thread principal do temporizador (como ocorreria com o uso de `alert()` nativo do JavaScript) e preserva as variáveis estéticas e de cor dinâmicas do Doroapp (Verde Matrix, Roxo Agente ou Azul Pausa).
+2. **Notificação de Sistema (Web Notifications)**: Implementamos a integração com a API nativa de `Notification` do navegador para disparar avisos no sistema operacional caso o usuário esteja trabalhando em outra aba do navegador, mediante permissão solicitada no primeiro carregamento do app.
+3. **Persistência de Estados de Alerta**: Para garantir que cada hora no intervalo (8h até 21h) dispare apenas um único alerta, adicionamos persistência local sob a chave `doroapp_water_alerts` no `localStorage`. Isso previne repetições de alertas ao recarregar a página dentro da mesma hora cheia e reseta automaticamente na virada do dia.
+4. **Integração de Gamificação**: Ao confirmar no modal clicando em "BEBER ÁGUA (+XP)", o progresso da missão diária de água (ID 4) é incrementado automaticamente em 1 unidade via `incrementMissionProgress(4, 1)`, gerando as recompensas de XP normais e de bônus do aplicativo de forma integrada.
+
+### Consequências
+
+- Lembrança ativa de hidratação a cada hora no intervalo solicitado.
+- Preservação da integridade do timer de Pomodoro e de todo o fluxo de foco principal.
+- Integração gamificada perfeita com as missões de saúde biológica já existentes.
+
 
 
 
