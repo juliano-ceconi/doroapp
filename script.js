@@ -75,6 +75,7 @@ let gameState = {
     agy_claude: 0,
     openrouter: 0,
     groq: 0,
+    opencode: 0,
   },
 };
 
@@ -533,7 +534,7 @@ function initMetricsListeners() {
 // Persistence
 // AI Plans Logic
 function updateAiPlansUI() {
-  const plans = ["claude", "codex", "agy_gemini", "agy_claude", "openrouter", "groq"];
+  const plans = ["claude", "codex", "agy_gemini", "agy_claude", "openrouter", "groq", "opencode"];
   plans.forEach((plan) => {
     const value = gameState.aiPlans[plan] !== undefined ? gameState.aiPlans[plan] : 0;
     const bar = document.getElementById(`ai-plan-bar-${plan}`);
@@ -684,6 +685,7 @@ function loadGame() {
         agy_claude: parsed.aiPlans.agy_claude !== undefined ? parsed.aiPlans.agy_claude : 0,
         openrouter: parsed.aiPlans.openrouter !== undefined ? parsed.aiPlans.openrouter : 0,
         groq: parsed.aiPlans.groq !== undefined ? parsed.aiPlans.groq : 0,
+        opencode: parsed.aiPlans.opencode !== undefined ? parsed.aiPlans.opencode : 0,
       };
     } else {
       gameState.aiPlans = {
@@ -693,6 +695,7 @@ function loadGame() {
         agy_claude: 0,
         openrouter: 0,
         groq: 0,
+        opencode: 0,
       };
     }
 
@@ -735,6 +738,7 @@ function loadGame() {
       agy_claude: 0,
       openrouter: 0,
       groq: 0,
+      opencode: 0,
     };
   }
 

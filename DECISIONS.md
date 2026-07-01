@@ -778,6 +778,26 @@ O usuário solicitou um mecanismo de lembrete constante de beber água a cada ho
 - Preservação da integridade do timer de Pomodoro e de todo o fluxo de foco principal.
 - Integração gamificada perfeita com as missões de saúde biológica já existentes.
 
+---
+
+## [2026-07-01] Inclusão do OpenCode nos Planos de IA
+
+### Contexto
+
+O usuário solicitou adicionar o modelo/plano de IA **OpenCode** à lista de Planos de IA monitorados na barra lateral.
+
+### Decisão
+
+1. **Alteração na Interface**: Adicionada a linha do OpenCode no arquivo `index.html` logo abaixo do plano Groq, com o identificador `opencode`.
+2. **Atualização da Lógica e Persistência**: Adicionado `opencode` na lista de planos em `script.js`, no estado padrão (`gameState.aiPlans`), nas rotinas de carregamento e reinicialização de dados.
+
+### Consequências
+
+- O progresso do plano OpenCode passa a ser renderizado na interface.
+- O usuário pode realizar duplo clique no OpenCode para ajustar o seu percentual de uso, que será persistido no `localStorage`.
+- Atingir 100% no OpenCode concederá o bônus padrão de +500 XP.
+
+
 
 
 
