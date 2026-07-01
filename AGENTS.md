@@ -54,4 +54,4 @@
 ### Documentacao
 
 - Ao atualizar o `README.md` ou outros documentos, mantenha o tom
-  motivacional e a estetica do projeto (Uber -> Dev / Cyberpunk).
+  motivacional e a estetica do projeto (Cyberpunk / Dev / Matrix).

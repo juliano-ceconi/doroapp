@@ -654,7 +654,7 @@ function initAiPlansListeners() {
 }
 
 function saveGame() {
-  localStorage.setItem("uberToDevSave", JSON.stringify(gameState));
+  localStorage.setItem("doroappSave", JSON.stringify(gameState));
 }
 
 // Device detection helper
@@ -705,7 +705,16 @@ function updateHistoryCountUI() {
 
 
 function loadGame() {
-  const saved = localStorage.getItem("uberToDevSave");
+  let saved = localStorage.getItem("doroappSave");
+  if (!saved) {
+    // Migração transparente de versão anterior
+    const oldSaved = localStorage.getItem("uberToDevSave");
+    if (oldSaved) {
+      saved = oldSaved;
+      localStorage.setItem("doroappSave", oldSaved);
+      localStorage.removeItem("uberToDevSave");
+    }
+  }
   if (saved) {
     const parsed = JSON.parse(saved);
 

@@ -1,19 +1,19 @@
 # 📟 DOROAPP | PROTOCOLO: DEEP FOCUS
 
 > **Status:** OPERAÇÃO ATIVA  
-> **Objetivo:** ESCAPE THE CAR. BUILD YOUR FUTURE.
+> **Objetivo:** ESCAPE THE MATRIX. BUILD YOUR FUTURE.
 
 ![Doroapp Preview](https://img.shields.io/badge/Aesthetic-Cyberpunk-red?style=for-the-badge)
 ![Tech](https://img.shields.io/badge/Stack-Vanilla_JS_|_CSS_3-yellow?style=for-the-badge)
 ![Goal](https://img.shields.io/badge/Mission-Escape_the_Matrix-green?style=for-the-badge)
 
-## 🏁 A Jornada: Do Volante ao Teclado
+## 🏁 A Jornada: Da Matrix ao Domínio do Código
 
 O **Doroapp** (Protocolo: Deep Focus) não é apenas um timer de Pomodoro. É uma
-ferramenta de sobrevivência para quem está na transição de carreira de **Uber para
-Desenvolvedor(a)**. Inspirado na estética Cyberpunk e na filosofia Matrix, cada
-ciclo de foco concluído é um passo a menos no trânsito e um passo a mais no
-código.
+ferramenta de foco absoluto para quem está trilhando o caminho do
+desenvolvimento de software e IA. Inspirado na estética Cyberpunk e na filosofia Matrix, cada
+ciclo de foco concluído é um passo a menos na procrastinação e um passo a mais no
+domínio do sistema.
 
 ## 🚀 Funcionalidades Elite
 

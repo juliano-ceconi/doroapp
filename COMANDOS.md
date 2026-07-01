@@ -21,7 +21,7 @@ reset total customizado.
 
 ```javascript
 // Altere os valores conforme necessário
-localStorage.setItem('uberToDevSave', JSON.stringify({
+localStorage.setItem('doroappSave', JSON.stringify({
     xp: 5000, 
     level: 0, 
     missions: [], 
@@ -41,8 +41,8 @@ Cole estes comandos no console para ajustes rápidos:
 Define o XP para 1200 (Mestre dos Workflows).
 
 ```javascript
-localStorage.setItem('uberToDevSave', JSON.stringify({
-    ...JSON.parse(localStorage.getItem('uberToDevSave') || '{"xp":0}'), 
+localStorage.setItem('doroappSave', JSON.stringify({
+    ...JSON.parse(localStorage.getItem('doroappSave') || '{"xp":0}'), 
     xp: 1200
 })); 
 location.reload();
@@ -54,9 +54,9 @@ Soma 200 ao XP que você já tem.
 
 ```javascript
 (function() {
-    let d = JSON.parse(localStorage.getItem('uberToDevSave') || '{"xp":0}');
+    let d = JSON.parse(localStorage.getItem('doroappSave') || '{"xp":0}');
     d.xp = (d.xp || 0) + 200;
-    localStorage.setItem('uberToDevSave', JSON.stringify(d));
+    localStorage.setItem('doroappSave', JSON.stringify(d));
     location.reload();
 })();
 ```
@@ -67,11 +67,11 @@ Limpa apenas o status das missões atuais.
 
 ```javascript
 (function() {
-    let d = JSON.parse(localStorage.getItem('uberToDevSave') || '{"xp":0}');
+    let d = JSON.parse(localStorage.getItem('doroappSave') || '{"xp":0}');
     if (d.missions) {
         d.missions = d.missions.map(m => ({ ...m, completed: false }));
     }
-    localStorage.setItem('uberToDevSave', JSON.stringify(d));
+    localStorage.setItem('doroappSave', JSON.stringify(d));
     location.reload();
 })();
 ```
@@ -79,8 +79,8 @@ Limpa apenas o status das missões atuais.
 ### 4. Modo Lenda (XP Máximo)
 
 ```javascript
-localStorage.setItem('uberToDevSave', JSON.stringify({
-    ...JSON.parse(localStorage.getItem('uberToDevSave') || '{"xp":0}'),
+localStorage.setItem('doroappSave', JSON.stringify({
+    ...JSON.parse(localStorage.getItem('doroappSave') || '{"xp":0}'),
     xp: 300000
 }));
 location.reload();
@@ -89,8 +89,8 @@ location.reload();
 ### 5. Restaurar Streak (Ofensiva)
 
 ```javascript
-localStorage.setItem('uberToDevSave', JSON.stringify({
-    ...JSON.parse(localStorage.getItem('uberToDevSave') || '{"xp":0}'),
+localStorage.setItem('doroappSave', JSON.stringify({
+    ...JSON.parse(localStorage.getItem('doroappSave') || '{"xp":0}'),
     streak: 15
 }));
 location.reload();
@@ -103,6 +103,6 @@ location.reload();
 CUIDADO: Isso apaga todo o seu progresso local.
 
 ```javascript
-localStorage.removeItem('uberToDevSave');
+localStorage.removeItem('doroappSave');
 location.reload();
 ```
