@@ -830,17 +830,17 @@ O usuário solicitou que a missão diária de tomar água (ID 4) ficasse vermelh
 
 ### Contexto
 
-O usuário solicitou adicionar 20 novas frases motivacionais inteligentes à lista `QUOTES` do Doroapp, seguindo os temas de Programação, Matrix, IA e Motivação, distanciando-se de clichês superficiais.
+O usuário solicitou adicionar frases motivacionais inteligentes à lista `QUOTES` do Doroapp, focando em Programação, Matrix, IA e Motivação, e distanciando-se de clichês superficiais.
 
 ### Decisão
 
-1. **Seleção de Frases**: Elaboramos uma lista de 20 frases contendo analogias cibernéticas, filosóficas e práticas sobre engenharia de software, modelos de IA, simulações de realidade (Matrix) e o valor da disciplina de foco.
-2. **Integração no Estado**: Expandimos o array global `QUOTES` em `script.js` com a inserção das 20 frases selecionadas.
+1. **Seleção e Refinamento**: Propusemos uma lista de 20 frases intelectuais baseadas em analogias cibernéticas. Após feedback do operador, foram removidas 7 frases consideradas dispensáveis (números 1, 3, 4, 5, 8, 14 e 18), restando 13 frases de alto impacto.
+2. **Integração no Estado**: Expandimos o array global `QUOTES` em `script.js` com a inserção das 13 frases definitivas.
 
 ### Consequências
 
 - O painel de frase aleatória diária/por foco do Doroapp ganha maior diversidade e relevância intelectual.
-- O tema Cyberpunk e de desenvolvimento de agentes é reforçado por meio de analogias com compiladores, código legado, redes neurais e simulações digitais.
+- O tema Cyberpunk e de desenvolvimento de agentes é reforçado sem poluir o estado com frases repetitivas ou de menor ressonância.
 
 
 
