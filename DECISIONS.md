@@ -790,10 +790,12 @@ O usuário solicitou adicionar o modelo/plano de IA **OpenCode** à lista de Pla
 
 1. **Alteração na Interface**: Adicionada a linha do OpenCode no arquivo `index.html` logo abaixo do plano Groq, com o identificador `opencode`.
 2. **Atualização da Lógica e Persistência**: Adicionado `opencode` na lista de planos em `script.js`, no estado padrão (`gameState.aiPlans`), nas rotinas de carregamento e reinicialização de dados.
+3. **Estilização Dedicada**: Criada uma paleta de cores específica para o OpenCode no arquivo `style.css`, aplicando um tom azul futurista/cyberpunk (`#4d8afd`) com efeitos de sombra e gradiente na barra de progresso.
 
 ### Consequências
 
 - O progresso do plano OpenCode passa a ser renderizado na interface.
+- O plano OpenCode possui cor fixa (azul gelo cyberpunk) consistente com os demais planos de IA, mantendo a integridade estética da barra lateral.
 - O usuário pode realizar duplo clique no OpenCode para ajustar o seu percentual de uso, que será persistido no `localStorage`.
 - Atingir 100% no OpenCode concederá o bônus padrão de +500 XP.
 
