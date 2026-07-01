@@ -160,16 +160,16 @@ const QUOTES = [
   "Seja o arquiteto do seu próprio sistema, não apenas um processo herdado de outro.",
   "Os sistemas mais complexos e resilientes começam simples e iteram de forma consistente.",
   "O ruído da Matrix tenta nos distrair; o sinal exige silêncio, foco absoluto e execução.",
-  "A diferença entre o código legado e a sua vida é que você tem o poder de refatorar a sua trajetória hoje.",
-  "Liberte sua mente. Mas lembre-se: a porta só pode ser aberta por quem detém a chave criptográfica da disciplina.",
-  "O cansaço da execução é temporário, mas o conhecimento depurado se torna parte permanente da sua arquitetura.",
-  "Assim como as redes neurais convergem após milhares de ciclos com pesos errados, você também evolui com cada erro cometido.",
+  "Ao contrário do código legado, você pode refatorar a sua própria trajetória hoje.",
+  "Liberte sua mente, mas lembre-se: a porta só se abre com a chave da disciplina.",
+  "O esforço é temporário, mas o aprendizado depurado se torna parte da sua arquitetura.",
+  "Assim como redes neurais convergem após ciclos de erro, você também evolui com cada falha.",
   "Há uma diferença crucial entre conhecer o caminho do código e realmente codificar o caminho.",
-  "A ilusão de controle nos mantém estáveis na Matrix; a verdadeira evolução exige depurar o caos da incerteza.",
-  "Toda grande automação que economiza horas de trabalho começou com uma tarefa manual repetitiva que alguém decidiu resolver.",
+  "A ilusão de controle estabiliza a Matrix; a evolução exige depurar o caos da incerteza.",
+  "Toda automação que economiza horas era uma tarefa manual repetitiva que alguém decidiu resolver.",
   "Sua atenção é o recurso mais disputado na economia dos dados. Proteja seu sandbox a todo custo.",
-  "O que chamamos de destino é apenas um algoritmo complexo cujas variáveis de entrada ainda não deciframos.",
-  "Na Matrix do dia a dia, a consistência em blocos de foco é a única anomalia capaz de quebrar o sistema de procrastinação."
+  "O destino é apenas um algoritmo cujas variáveis de entrada ainda não deciframos.",
+  "Na Matrix, a consistência no foco é a única anomalia que quebra a procrastinação."
 ];
 
 // Audio Context for Beeps

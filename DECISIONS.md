@@ -830,17 +830,19 @@ O usuário solicitou que a missão diária de tomar água (ID 4) ficasse vermelh
 
 ### Contexto
 
-O usuário solicitou adicionar frases motivacionais inteligentes à lista `QUOTES` do Doroapp, focando em Programação, Matrix, IA e Motivação, e distanciando-se de clichês superficiais.
+O usuário solicitou adicionar frases motivacionais inteligentes à lista `QUOTES` do Doroapp, focando em Programação, Matrix, IA e Motivação, e distanciando-se de clichês superficiais. Posteriormente, notou-se que frases longas quebravam o layout da sidebar em muitas linhas.
 
 ### Decisão
 
 1. **Seleção e Refinamento**: Propusemos uma lista de 20 frases intelectuais baseadas em analogias cibernéticas. Após feedback do operador, foram removidas 7 frases consideradas dispensáveis (números 1, 3, 4, 5, 8, 14 e 18), restando 13 frases de alto impacto.
-2. **Integração no Estado**: Expandimos o array global `QUOTES` em `script.js` com a inserção das 13 frases definitivas.
+2. **Compactação de Frases Longas**: Revisamos e reduzimos o comprimento das frases que excediam 100 caracteres (como a frase sobre automação e a frase sobre redes neurais) para mantê-las curtas, compactas e ideais para leitura na sidebar, preservando totalmente seu sentido.
+3. **Integração no Estado**: Expandimos o array global `QUOTES` em `script.js` com a inserção das 13 frases definitivas ajustadas.
 
 ### Consequências
 
 - O painel de frase aleatória diária/por foco do Doroapp ganha maior diversidade e relevância intelectual.
-- O tema Cyberpunk e de desenvolvimento de agentes é reforçado sem poluir o estado com frases repetitivas ou de menor ressonância.
+- O layout da sidebar é preservado sem quebras excessivas de linha, mantendo a estética minimalista e Cyberpunk.
+- O tema Cyberpunk e de desenvolvimento de agentes é reforçado de maneira leve e direta.
 
 
 
