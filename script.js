@@ -46,6 +46,7 @@ let gameState = {
       bonusXp: 200, // Bonus when reaching 4
       currentProgress: 0,
       targetProgress: 4,
+      lastDoneDate: null
     },
     { id: 5, text: "Pranayama", completed: false, xp: 200 },
     { id: 6, text: "Malhar", completed: false, xp: 500 },
@@ -368,6 +369,53 @@ function hasMedicineTriggered(triggerTime) {
   return false;
 }
 
+function isWaterAlertActive(mission) {
+  if (mission.id !== 4) return false;
+  if (mission.completed) return false;
+
+  const now = new Date();
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+  const currentTotalMinutes = currentHour * 60 + currentMinute;
+
+  let requiredGlasses = 0;
+  if (currentTotalMinutes >= 960) { // 16:00
+    requiredGlasses = 4;
+  } else if (currentTotalMinutes >= 690) { // 11:30
+    requiredGlasses = 3;
+  } else if (currentTotalMinutes >= 600) { // 10:00
+    requiredGlasses = 2;
+  } else if (currentTotalMinutes >= 420) { // 07:00
+    requiredGlasses = 1;
+  }
+
+  return mission.currentProgress < requiredGlasses;
+}
+
+function checkDailyMissionsReset() {
+  let updated = false;
+  const todayStr = new Date().toLocaleDateString('sv');
+  gameState.missions.forEach((mission) => {
+    if (mission.isMedicine) {
+      if (mission.lastDoneDate !== todayStr && mission.completed) {
+        mission.completed = false;
+        updated = true;
+      }
+    }
+    if (mission.id === 4) {
+      if (mission.lastDoneDate !== todayStr) {
+        mission.currentProgress = 0;
+        mission.completed = false;
+        mission.lastDoneDate = todayStr;
+        updated = true;
+      }
+    }
+  });
+  if (updated) {
+    saveGame();
+  }
+}
+
 // Missions
 function renderMissions() {
   const list = document.getElementById("mission-list");
@@ -396,7 +444,17 @@ function renderMissions() {
         progressText = ` (${mission.currentProgress}/${mission.targetProgress})`;
       }
       const xpToShow = mission.id === 1 ? mission.bonusXp : mission.xp;
-      li.innerText = `${mission.text}${progressText} [${xpToShow} XP]`;
+      
+      let missionText = mission.text;
+      if (mission.id === 4) {
+        missionText = `${mission.text} (07h, 10h, 11h30, 16h)`;
+      }
+      
+      li.innerText = `${missionText}${progressText} [${xpToShow} XP]`;
+
+      if (mission.id === 4 && isWaterAlertActive(mission)) {
+        li.classList.add("medicine-alert");
+      }
     }
 
     li.onclick = () => toggleMission(mission.id);
@@ -408,6 +466,7 @@ function incrementMissionProgress(id, amount = 1) {
   const mission = gameState.missions.find((m) => m.id === id);
   if (mission && !mission.completed && mission.targetProgress) {
     mission.currentProgress += amount;
+    mission.lastDoneDate = new Date().toLocaleDateString('sv');
 
     // Give XP per step (if defined)
     if (mission.xp > 0) {
@@ -749,6 +808,7 @@ function loadGame() {
   }
 
   updateLevel();
+  checkDailyMissionsReset();
   renderMissions();
   renderTasks();
   updateMetricsUI();
@@ -1102,21 +1162,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Intervalo periódico de atualização de remédios
+  // Intervalo periódico de atualização de remédios e água
   setInterval(() => {
-    let updated = false;
-    const todayStr = new Date().toLocaleDateString('sv');
-    gameState.missions.forEach((mission) => {
-      if (mission.isMedicine) {
-        if (mission.lastDoneDate !== todayStr && mission.completed) {
-          mission.completed = false;
-          updated = true;
-        }
-      }
-    });
-    if (updated) {
-      saveGame();
-    }
+    checkDailyMissionsReset();
     renderMissions();
   }, 10000);
 

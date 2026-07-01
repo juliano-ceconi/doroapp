@@ -799,6 +799,31 @@ O usuário solicitou adicionar o modelo/plano de IA **OpenCode** à lista de Pla
 - O usuário pode realizar duplo clique no OpenCode para ajustar o seu percentual de uso, que será persistido no `localStorage`.
 - Atingir 100% no OpenCode concederá o bônus padrão de +500 XP.
 
+---
+
+## [2026-07-01] Alerta Visual por Horário na Missão de Água
+
+### Contexto
+
+O usuário solicitou que a missão diária de tomar água (ID 4) ficasse vermelha (em alerta piscante) nos horários específicos de 07:00, 10:00, 11:30 e 16:00, até que o respectivo clique de confirmação de consumo de água fosse efetuado.
+
+### Decisão
+
+1. **Associação de Metas Horárias**: Mapeamos os 4 horários para as metas progressivas da missão de água (de 0 a 4 copos):
+   - A partir das 07:00: mínimo de 1 copo;
+   - A partir das 10:00: mínimo de 2 copos;
+   - A partir das 11:30: mínimo de 3 copos;
+   - A partir das 16:00: mínimo de 4 copos.
+2. **Alerta Visual Estético**: Integramos a função helper `isWaterAlertActive(mission)` para verificar se a hora atual exige um progresso maior do que o atual. Em caso positivo (o usuário está atrasado na hidratação), adicionamos a classe CSS `.medicine-alert` à linha da missão no `renderMissions()`, fazendo-a pulsar em vermelho neon em perfeita harmonia com o tema Cyberpunk do aplicativo.
+3. **Indicação de Horários**: Modificamos a string de exibição da missão para adicionar a informação dos horários de disparo das cobranças de forma explícita na UI: `Beber 500ml de água (07h, 10h, 11h30, 16h)`.
+4. **Reset Diário de Água**: Criamos a função unificada `checkDailyMissionsReset()` para centralizar o reset de remédios e resetar o progresso de água (`currentProgress = 0`, `completed = false`) no início de cada dia de forma robusta, atualizando a propriedade `lastDoneDate`.
+
+### Consequências
+
+- O usuário recebe avisos visuais imediatos e intuitivos caso atrase o cronograma de hidratação definido.
+- O clique de confirmação retira o alerta de forma imediata (reatividade local).
+- O progresso de água passa a ser redefinido para zero em cada nova data do sistema.
+
 
 
 
