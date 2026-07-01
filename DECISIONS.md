@@ -824,6 +824,24 @@ O usuário solicitou que a missão diária de tomar água (ID 4) ficasse vermelh
 - O clique de confirmação retira o alerta de forma imediata (reatividade local).
 - O progresso de água passa a ser redefinido para zero em cada nova data do sistema.
 
+---
+
+## [2026-07-01] Expansão da Lista de Quotes com Frases Inteligentes
+
+### Contexto
+
+O usuário solicitou adicionar 20 novas frases motivacionais inteligentes à lista `QUOTES` do Doroapp, seguindo os temas de Programação, Matrix, IA e Motivação, distanciando-se de clichês superficiais.
+
+### Decisão
+
+1. **Seleção de Frases**: Elaboramos uma lista de 20 frases contendo analogias cibernéticas, filosóficas e práticas sobre engenharia de software, modelos de IA, simulações de realidade (Matrix) e o valor da disciplina de foco.
+2. **Integração no Estado**: Expandimos o array global `QUOTES` em `script.js` com a inserção das 20 frases selecionadas.
+
+### Consequências
+
+- O painel de frase aleatória diária/por foco do Doroapp ganha maior diversidade e relevância intelectual.
+- O tema Cyberpunk e de desenvolvimento de agentes é reforçado por meio de analogias com compiladores, código legado, redes neurais e simulações digitais.
+
 
 
 
