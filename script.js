@@ -429,6 +429,56 @@ function checkDailyMissionsReset() {
 }
 
 // Missions
+function editMission(id) {
+  const mission = gameState.missions.find((m) => m.id === id);
+  if (!mission) return;
+
+  const newText = prompt(`Editar nome da missão:`, mission.text);
+  if (newText === null) return; // Cancelado
+
+  const cleanText = newText.trim();
+  if (cleanText === "") {
+    alert("O nome da missão não pode ser vazio.");
+    return;
+  }
+
+  mission.text = cleanText;
+
+  // Ajuste do XP
+  if (mission.bonusXp !== undefined) {
+    if (mission.xp > 0) {
+      // Ex: Beber água (tem xp unitário e bonusXp)
+      const newUnitXp = prompt(`Editar XP por unidade (atual: ${mission.xp} XP):`, mission.xp);
+      if (newUnitXp !== null) {
+        const val = parseInt(newUnitXp, 10);
+        if (!isNaN(val) && val >= 0) {
+          mission.xp = val;
+        }
+      }
+    }
+    const newBonusXp = prompt(`Editar XP bônus de conclusão (atual: ${mission.bonusXp} XP):`, mission.bonusXp);
+    if (newBonusXp !== null) {
+      const val = parseInt(newBonusXp, 10);
+      if (!isNaN(val) && val >= 0) {
+        mission.bonusXp = val;
+      }
+    }
+  } else {
+    // Missões clássicas
+    const newXp = prompt(`Editar XP da missão (atual: ${mission.xp} XP):`, mission.xp);
+    if (newXp !== null) {
+      const val = parseInt(newXp, 10);
+      if (!isNaN(val) && val >= 0) {
+        mission.xp = val;
+      }
+    }
+  }
+
+  logHistoryEvent("missao", mission.id, mission.text, "editada", 0);
+  saveGame();
+  renderMissions();
+}
+
 function renderMissions() {
   const list = document.getElementById("mission-list");
   if (!list) return;
@@ -439,6 +489,7 @@ function renderMissions() {
   gameState.missions.forEach((mission) => {
     const li = document.createElement("li");
     li.className = `mission-item ${mission.completed ? "completed" : ""}`;
+    li.title = "Clique simples para concluir/progredir | Duplo-clique para editar";
 
     if (mission.isMedicine) {
       if (mission.lastDoneDate !== todayStr) {
@@ -469,7 +520,21 @@ function renderMissions() {
       }
     }
 
-    li.onclick = () => toggleMission(mission.id);
+    let clickTimeout = null;
+    li.onclick = (e) => {
+      e.stopPropagation();
+      if (e.detail === 1) {
+        clickTimeout = setTimeout(() => {
+          toggleMission(mission.id);
+        }, 250);
+      } else if (e.detail === 2) {
+        if (clickTimeout) {
+          clearTimeout(clickTimeout);
+          clickTimeout = null;
+        }
+        editMission(mission.id);
+      }
+    };
     list.appendChild(li);
   });
 }
@@ -779,15 +844,18 @@ function loadGame() {
       };
     }
 
-    // Restore mission status ONLY (keep text/xp from code)
+    // Restore mission status, text and XP (loaded from localStorage)
     if (parsed.missions) {
       gameState.missions = gameState.missions.map((mission) => {
         // Find saved version of this mission by ID
         const savedMission = parsed.missions.find((m) => m.id === mission.id);
         if (savedMission) {
-          // Update ONLY the completed status, progress and lastDoneDate
+          // Update completed status, progress, lastDoneDate, text, and XP values
           return {
             ...mission,
+            text: savedMission.text !== undefined ? savedMission.text : mission.text,
+            xp: savedMission.xp !== undefined ? savedMission.xp : mission.xp,
+            bonusXp: savedMission.bonusXp !== undefined ? savedMission.bonusXp : mission.bonusXp,
             completed: savedMission.completed,
             currentProgress: savedMission.currentProgress || 0,
             lastDoneDate: savedMission.lastDoneDate || null,

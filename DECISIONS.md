@@ -844,6 +844,27 @@ O usuário solicitou adicionar frases motivacionais inteligentes à lista `QUOTE
 - O layout da sidebar é preservado sem quebras excessivas de linha, mantendo a estética minimalista e Cyberpunk.
 - O tema Cyberpunk e de desenvolvimento de agentes é reforçado de maneira leve e direta.
 
+---
+
+## [2026-07-02] Implementação de Missões Editáveis (Nome e XP)
+
+### Contexto
+
+O usuário solicitou a capacidade de transformar as Missões em editáveis diretamente na interface do Doroapp, permitindo alterar tanto o nome da Missão quanto os valores de XP associados a elas, e garantir que essas edições sejam salvas permanentemente no navegador.
+
+### Decisão
+
+1. **Persistência de Edições no localStorage**: Modificamos a função `loadGame()` no arquivo [script.js](file:///d:/projetos/juliano-ceconi/05_Vida/doroapp/script.js) para restaurar os campos `text`, `xp` e `bonusXp` de missões carregados do `localStorage` (se existirem), em vez de redefini-los todas as vezes pelos valores estáticos definidos no código.
+2. **Diferenciação de Eventos de Clique**: Como o clique simples (`onclick`) em um item de missão executa uma ação instantânea de conclusão ou progresso, implementamos um atraso (`setTimeout` de 250ms) no clique simples combinado com o uso da propriedade `e.detail` para identificar cliques duplos. Caso um duplo clique seja detectado (`e.detail === 2`), o timeout do clique simples é cancelado e a edição é disparada sem acionar a conclusão da missão.
+3. **Fluxo de Edição Inline (`editMission`)**: Criamos a função `editMission(id)` no `script.js` que solicita o novo nome da missão via prompt do navegador e, sequencialmente, solicita os novos valores de XP. A lógica diferencia missões que possuem `bonusXp` (como Foco e Água) e missões comuns, oferecendo prompts específicos para cada tipo.
+4. **Indicação Visual**: Adicionamos o atributo `title` a cada item de missão renderizado, explicando o comportamento para facilitar a usabilidade: *"Clique simples para concluir/progredir | Duplo-clique para editar"*.
+
+### Consequências
+
+- O usuário consegue personalizar as missões (nome e XP) em tempo de execução sem mexer no código-fonte.
+- As missões personalizadas são salvas no `localStorage` e recarregadas corretamente ao atualizar a página.
+- A experiência de usabilidade mantém o mesmo padrão estático e cyberpunk do Doroapp (sem poluição visual de botões de edição, utilizando o prompt clássico já usado nas métricas e nome do operador).
+
 
 
 
