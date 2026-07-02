@@ -18,7 +18,7 @@ tags: [projeto, area/inteligência, status/backlog]
 
 ## 🔗 Links Importantes
 
-- [README local](file:///c:/projetos/juliano-ceconi/doroapp/README.md)
+- [README local](./README.md)
 - [Repositório GitHub](https://github.com/juliano-ceconi/doroapp)
 
 ## 📝 Notas & Contexto

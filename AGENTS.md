@@ -40,7 +40,7 @@
 
 - **Regra:** Nao utilize comentarios extensos no codigo para explicar decisoes
   arquiteturais.
-- **Acao:** Registre todas as mudancas importantes e seus "porques" no arquivo [DECISIONS.md](file:///c:/projetos/juliano-ceconi/doroapp/DECISIONS.md).
+- **Acao:** Registre todas as mudancas importantes e seus "porques" no arquivo [DECISIONS.md](./DECISIONS.md).
 
 ## Padroes de Comunicacao e Git
 
