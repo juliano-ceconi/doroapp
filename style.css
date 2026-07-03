@@ -944,6 +944,10 @@ body {
   margin-left: 4px;
 }
 
+body:not(.agent-mode-active) .agent-colors {
+  display: none;
+}
+
 .color-swatch {
   width: 12px;
   height: 12px;
