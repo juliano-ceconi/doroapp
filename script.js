@@ -88,7 +88,7 @@ let gameState = {
 const AGENT_COLORS = {
   purple: { main: '#b026ff', glow: 'rgba(176,38,255,0.5)', dim: '#4c0082', dimMedium: '#7e12c0' },
   red:    { main: '#ff2b2b', glow: 'rgba(255,43,43,0.5)',   dim: '#4c0000', dimMedium: '#7e1212' },
-  cyan:   { main: '#00e5ff', glow: 'rgba(0,229,255,0.5)',   dim: '#004d66', dimMedium: '#007a99' },
+  blue:   { main: '#3b82f6', glow: 'rgba(59,130,246,0.5)',  dim: '#1e3a5f', dimMedium: '#2d5aa0' },
   orange: { main: '#ff8c00', glow: 'rgba(255,140,0,0.5)',   dim: '#4c2a00', dimMedium: '#7e4600' },
   pink:   { main: '#ff4081', glow: 'rgba(255,64,129,0.5)',  dim: '#4c0026', dimMedium: '#7e1241' },
   white:  { main: '#e8e8e8', glow: 'rgba(232,232,232,0.5)', dim: '#4c4c4c', dimMedium: '#7e7e7e' },
