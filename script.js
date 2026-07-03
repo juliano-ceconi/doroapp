@@ -1469,38 +1469,37 @@ document.addEventListener("DOMContentLoaded", () => {
     Notification.requestPermission();
   }
 
-  // Verifica a cada 30 segundos se deve disparar o alerta de água
+  // Verifica a cada 15s se deve disparar alerta de água nos checkpoints
   setInterval(() => {
     const now = new Date();
-    const currentHour = now.getHours();
     const todayStr = now.toLocaleDateString('sv');
+    const hhmm = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    const CHECKPOINTS = ["07:00","10:00","11:30","16:00"];
 
-    // Das 08:00 às 21:00
-    if (currentHour >= 8 && currentHour <= 21) {
-      let waterAlerts = { date: "", hoursAlerted: [] };
-      try {
-        const savedAlerts = localStorage.getItem("doroapp_water_alerts");
-        if (savedAlerts) {
-          waterAlerts = JSON.parse(savedAlerts);
-        }
-      } catch (e) {
-        console.error("Erro ao ler doroapp_water_alerts:", e);
-      }
+    if (!CHECKPOINTS.includes(hhmm)) return;
 
-      // Se virou o dia, resetar horas alertadas
-      if (waterAlerts.date !== todayStr) {
-        waterAlerts.date = todayStr;
-        waterAlerts.hoursAlerted = [];
-      }
+    const mission = gameState.missions.find(m => m.id === 4);
+    if (!mission || mission.completed || !isWaterAlertActive(mission)) return;
 
-      // Se a hora atual não recebeu alerta ainda
-      if (!waterAlerts.hoursAlerted.includes(currentHour)) {
-        waterAlerts.hoursAlerted.push(currentHour);
-        localStorage.setItem("doroapp_water_alerts", JSON.stringify(waterAlerts));
-        showWaterNotification();
-      }
+    let waterAlerts = { date: "", alerted: [] };
+    try {
+      const saved = localStorage.getItem("doroapp_water_alerts");
+      if (saved) waterAlerts = JSON.parse(saved);
+    } catch (e) {
+      console.error("Erro ao ler doroapp_water_alerts:", e);
     }
-  }, 30000);
+
+    if (waterAlerts.date !== todayStr) {
+      waterAlerts.date = todayStr;
+      waterAlerts.alerted = [];
+    }
+
+    if (!waterAlerts.alerted.includes(hhmm)) {
+      waterAlerts.alerted.push(hhmm);
+      localStorage.setItem("doroapp_water_alerts", JSON.stringify(waterAlerts));
+      showWaterNotification();
+    }
+  }, 15000);
 });
 
 // Função para exibir a notificação visual (modal) e do sistema para hidratação
