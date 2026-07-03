@@ -15,8 +15,10 @@
   --primary: var(--matrix-green);
   --dim: var(--matrix-dim);
   --alert: #ff0000;
-  --agent-purple: #b026ff;
-  --agent-purple-glow: rgba(176, 38, 255, 0.5);
+  --agent-color-main: #b026ff;
+  --agent-color-glow: rgba(176, 38, 255, 0.5);
+  --agent-color-dim: #4c0082;
+  --agent-color-dim-medium: #7e12c0;
   --quote-ice-white: #edf4f5; /* Branco Gelo */
   --quote-ice-white-glow: rgba(237, 244, 245, 0.08);
 
@@ -44,10 +46,10 @@
 }
 
 body.agent-mode-active {
-  --matrix-green: var(--agent-purple);
-  --matrix-glow: var(--agent-purple-glow);
-  --matrix-dim: #4c0082; /* Indigo/Deep Purple for dim elements */
-  --matrix-dim-medium: #7e12c0; /* Meio termo para Registro Histórico */
+  --matrix-green: var(--agent-color-main);
+  --matrix-glow: var(--agent-color-glow);
+  --matrix-dim: var(--agent-color-dim);
+  --matrix-dim-medium: var(--agent-color-dim-medium);
 }
 
 body.break-mode-active {
@@ -941,6 +943,36 @@ body.break-mode-active .level-info h2 {
   background: var(--matrix-green);
   color: white;
   box-shadow: 0 6px 15px var(--matrix-green);
+}
+
+.agent-colors {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-left: 4px;
+}
+
+.color-swatch {
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--matrix-dim);
+  border-radius: 2px;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.3;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.color-swatch:hover {
+  opacity: 0.8;
+  transform: scale(1.3);
+}
+
+.color-swatch.active {
+  opacity: 1;
+  border-color: var(--matrix-green);
+  box-shadow: 0 0 6px var(--matrix-glow);
 }
 
 @media (max-width: 768px) {

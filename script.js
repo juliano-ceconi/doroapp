@@ -56,6 +56,7 @@ let gameState = {
   streak: 0,
   lastLogin: null,
   agentMode: false,
+  agentColor: 'purple',
   tasks: [],
   metrics: {
     productivity: 1,
@@ -82,6 +83,15 @@ let gameState = {
     nvidia: 0,
     sambanova: 0,
   },
+};
+
+const AGENT_COLORS = {
+  purple: { main: '#b026ff', glow: 'rgba(176,38,255,0.5)', dim: '#4c0082', dimMedium: '#7e12c0' },
+  red:    { main: '#ff2b2b', glow: 'rgba(255,43,43,0.5)',   dim: '#4c0000', dimMedium: '#7e1212' },
+  cyan:   { main: '#00e5ff', glow: 'rgba(0,229,255,0.5)',   dim: '#004d66', dimMedium: '#007a99' },
+  orange: { main: '#ff8c00', glow: 'rgba(255,140,0,0.5)',   dim: '#4c2a00', dimMedium: '#7e4600' },
+  pink:   { main: '#ff4081', glow: 'rgba(255,64,129,0.5)',  dim: '#4c0026', dimMedium: '#7e1241' },
+  white:  { main: '#e8e8e8', glow: 'rgba(232,232,232,0.5)', dim: '#4c4c4c', dimMedium: '#7e7e7e' },
 };
 
 // Config
@@ -793,6 +803,7 @@ function loadGame() {
     gameState.streak = parsed.streak || 0;
     gameState.lastLogin = parsed.lastLogin;
     gameState.agentMode = parsed.agentMode || false;
+    gameState.agentColor = parsed.agentColor || 'purple';
     gameState.tasks = parsed.tasks || [];
     gameState.operatorName = parsed.operatorName || "Juliano Ceconi";
 
@@ -913,14 +924,25 @@ function loadGame() {
     statusText.innerText = gameState.agentMode ? "ON" : "OFF";
     toggleAgentModeVisuals(gameState.agentMode);
   }
+  applyAgentColor(gameState.agentColor);
 }
 
 function toggleAgentModeVisuals(active) {
-  if (active) {
-    document.body.classList.add("agent-mode-active");
-  } else {
-    document.body.classList.remove("agent-mode-active");
-  }
+  document.body.classList.toggle("agent-mode-active", active);
+  if (active) applyAgentColor(gameState.agentColor);
+}
+
+function applyAgentColor(colorId) {
+  const c = AGENT_COLORS[colorId];
+  if (!c) return;
+  const root = document.documentElement;
+  root.style.setProperty('--agent-color-main', c.main);
+  root.style.setProperty('--agent-color-glow', c.glow);
+  root.style.setProperty('--agent-color-dim', c.dim);
+  root.style.setProperty('--agent-color-dim-medium', c.dimMedium);
+  document.querySelectorAll('.color-swatch').forEach(el => {
+    el.classList.toggle('active', el.dataset.color === colorId);
+  });
 }
 
 function toggleBreakModeVisuals(active) {
@@ -1366,6 +1388,15 @@ document.addEventListener("DOMContentLoaded", () => {
       : "OFF";
     toggleAgentModeVisuals(gameState.agentMode);
     saveGame();
+  });
+
+  // Color swatch selector
+  document.querySelectorAll('.color-swatch').forEach(el => {
+    el.addEventListener('click', () => {
+      gameState.agentColor = el.dataset.color;
+      applyAgentColor(gameState.agentColor);
+      saveGame();
+    });
   });
 
   // Configurar botões de adicionar tarefa no Kanban
