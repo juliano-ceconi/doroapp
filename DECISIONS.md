@@ -865,7 +865,28 @@ O usuário solicitou a capacidade de transformar as Missões em editáveis diret
 - As missões personalizadas são salvas no `localStorage` e recarregadas corretamente ao atualizar a página.
 - A experiência de usabilidade mantém o mesmo padrão estático e cyberpunk do Doroapp (sem poluição visual de botões de edição, utilizando o prompt clássico já usado nas métricas e nome do operador).
 
+## [2026-07-03] Expansao Planos de IA (Google AI Studio, Cerebras, NVIDIA, SambaNova)
 
+### Contexto
 
+Adicionados 4 novos provedores de IA ao painel de Planos de IA, cada um com cor propria discreta e elegante.
 
+### Mudancas
 
+1. **`script.js`**: Estado inicial `aiPlans` ganhou chaves `google_ai_studio`, `cerebras`, `nvidia`, `sambanova` (valor 0). Array de iteracao em `updateAiPlansUI` estendido.
+2. **`index.html`**: 4 novas linhas `.ai-plan-row` inseridas apos OpenCode.
+3. **`style.css`**: Blocos de cor para cada novo plano.
+
+### Paleta de Cores
+
+| Plano | Cor (texto/barra) | Gradiente escuro |
+|---|---|---|
+| Google AI Studio | Coral `#e06c75` | `#5c2a2e` |
+| Cerebras | Teal `#4db8a0` | `#1e4038` |
+| NVIDIA | Verde lima `#7ab04a` | `#334a1e` |
+| SambaNova | Violeta `#b07cc9` | `#3d2552` |
+
+### Consequencias
+
+- Painel passou de 7 para 11 planos.
+- Compatibilidade retroativa mantida (planos novos iniciam em 0 se carregados de save anterior).

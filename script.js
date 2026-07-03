@@ -77,6 +77,10 @@ let gameState = {
     openrouter: 0,
     groq: 0,
     opencode: 0,
+    google_ai_studio: 0,
+    cerebras: 0,
+    nvidia: 0,
+    sambanova: 0,
   },
 };
 
@@ -670,7 +674,7 @@ function initMetricsListeners() {
 // Persistence
 // AI Plans Logic
 function updateAiPlansUI() {
-  const plans = ["claude", "codex", "agy_gemini", "agy_claude", "openrouter", "groq", "opencode"];
+  const plans = ["claude", "codex", "agy_gemini", "agy_claude", "openrouter", "groq", "opencode", "google_ai_studio", "cerebras", "nvidia", "sambanova"];
   plans.forEach((plan) => {
     const value = gameState.aiPlans[plan] !== undefined ? gameState.aiPlans[plan] : 0;
     const bar = document.getElementById(`ai-plan-bar-${plan}`);
