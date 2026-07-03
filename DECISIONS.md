@@ -873,7 +873,7 @@ Adicionados 4 novos provedores de IA ao painel de Planos de IA, cada um com cor 
 
 ### Mudancas
 
-1. **`script.js`**: Estado inicial `aiPlans` ganhou chaves `google_ai_studio`, `cerebras`, `nvidia`, `sambanova` (valor 0). Array de iteracao em `updateAiPlansUI` estendido.
+1. **`script.js`**: Estado inicial `aiPlans` ganhou chaves `ai_studio`, `cerebras`, `nvidia`, `sambanova` (valor 0). Array de iteracao em `updateAiPlansUI` estendido.
 2. **`index.html`**: 4 novas linhas `.ai-plan-row` inseridas apos OpenCode.
 3. **`style.css`**: Blocos de cor para cada novo plano.
 
@@ -881,7 +881,7 @@ Adicionados 4 novos provedores de IA ao painel de Planos de IA, cada um com cor 
 
 | Plano | Cor (texto/barra) | Gradiente escuro |
 |---|---|---|
-| Google AI Studio | Coral `#e06c75` | `#5c2a2e` |
+| AI Studio | Coral `#e06c75` | `#5c2a2e` |
 | Cerebras | Teal `#4db8a0` | `#1e4038` |
 | NVIDIA | Verde lima `#7ab04a` | `#334a1e` |
 | SambaNova | Violeta `#b07cc9` | `#3d2552` |

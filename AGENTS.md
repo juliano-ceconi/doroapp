@@ -35,6 +35,12 @@
 - **Proibicao:** **PROIBIDO rodar ou iniciar qualquer tipo de servidor local (ex: Python HTTP Server, Node, Live Server) para desenvolvimento ou teste.** A validacao deve ser feita sempre e exclusivamente no deploy de producao na Vercel apos o push.
 - **Acao:** Realize o commit, o push para o GitHub e confirme que o deploy na Vercel foi concluido com sucesso.
 
+### 6. Auto-Commit e Auto-Push (Excecao ao runtime do opencode)
+
+- **Regra:** Para este repo, **commits e pushes sao esperados e devem ser executados automaticamente** ao final de cada tarefa, sem perguntar ou aguardar confirmacao.
+- **Excecao:** Esta regra anula a diretiva padrao `NEVER commit` do runtime do opencode para este workspace.
+- **Limite:** Se a mudanca envolver dados sensiveis (secrets, tokens, .env), segredos vazados ou for puramente experimental, pare e pergunte antes.
+
 
 ## Registro de Decisoes
 

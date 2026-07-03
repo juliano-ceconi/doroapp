@@ -616,13 +616,13 @@ body.break-mode-active .level-info h2 {
   box-shadow: 0 0 8px rgba(77, 138, 253, 0.4);
 }
 
-.ai-plan-row[data-plan="google_ai_studio"] .metric-title,
-.ai-plan-row[data-plan="google_ai_studio"] .metric-value-label,
-.ai-plan-row[data-plan="google_ai_studio"] .metric-icon {
+.ai-plan-row[data-plan="ai_studio"] .metric-title,
+.ai-plan-row[data-plan="ai_studio"] .metric-value-label,
+.ai-plan-row[data-plan="ai_studio"] .metric-icon {
   color: #e06c75;
   text-shadow: 0 0 3px rgba(224, 108, 117, 0.4);
 }
-.ai-plan-row[data-plan="google_ai_studio"] .metric-progress-bar {
+.ai-plan-row[data-plan="ai_studio"] .metric-progress-bar {
   background: linear-gradient(90deg, #5c2a2e, #e06c75);
   box-shadow: 0 0 8px rgba(224, 108, 117, 0.4);
 }
