@@ -1,6 +1,6 @@
 // Game State
 let gameState = {
-  xp: 1700,
+  xp: 1,
   level: 0,
   operatorName: "Juliano Ceconi",
   missions: [
@@ -33,7 +33,7 @@ let gameState = {
     },
     {
       id: 2,
-      text: "Marco: Evolução do Agente",
+      text: "Marco: Objetivo Atingido",
       completed: false,
       xp: 500,
     },
@@ -48,7 +48,7 @@ let gameState = {
       targetProgress: 4,
       lastDoneDate: null
     },
-    { id: 5, text: "Pranayama", completed: false, xp: 200 },
+    { id: 5, text: "Meditar", completed: false, xp: 500 },
     { id: 6, text: "Malhar", completed: false, xp: 500 },
     { id: 7, text: "Aeróbico", completed: false, xp: 500 },
   ],
@@ -798,7 +798,7 @@ function loadGame() {
     const parsed = JSON.parse(saved);
 
     // Restore numeric stats
-    gameState.xp = parsed.xp !== undefined ? parsed.xp : 1700;
+    gameState.xp = parsed.xp !== undefined ? parsed.xp : 1;
     gameState.level = parsed.level || 0;
     gameState.streak = parsed.streak || 0;
     gameState.lastLogin = parsed.lastLogin;
