@@ -865,12 +865,8 @@ function loadGame() {
         // Find saved version of this mission by ID
         const savedMission = parsed.missions.find((m) => m.id === mission.id);
         if (savedMission) {
-          // Update completed status, progress, lastDoneDate, text, and XP values
           return {
             ...mission,
-            text: savedMission.text !== undefined ? savedMission.text : mission.text,
-            xp: savedMission.xp !== undefined ? savedMission.xp : mission.xp,
-            bonusXp: savedMission.bonusXp !== undefined ? savedMission.bonusXp : mission.bonusXp,
             completed: savedMission.completed,
             currentProgress: savedMission.currentProgress || 0,
             lastDoneDate: savedMission.lastDoneDate || null,
