@@ -6,7 +6,7 @@ let gameState = {
   missions: [
     {
       id: "venvanse",
-      text: "Venvanse",
+      text: "Hora do Foco",
       completed: false,
       xp: 100,
       isMedicine: true,
@@ -15,7 +15,7 @@ let gameState = {
     },
     {
       id: "sertralina",
-      text: "Sertralina",
+      text: "Hora do Foco",
       completed: false,
       xp: 100,
       isMedicine: true,
