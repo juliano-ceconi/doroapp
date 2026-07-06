@@ -765,6 +765,27 @@ function initAiPlansListeners() {
   });
 }
 
+function initAiPlansCollapse() {
+  const panel = document.getElementById("ai-plans-panel");
+  const btn = document.getElementById("btn-toggle-ai-plans");
+  if (!panel || !btn) return;
+
+  const isCollapsed = localStorage.getItem("doroapp_ai_plans_collapsed") === "true";
+  if (isCollapsed) {
+    panel.classList.add("collapsed");
+    btn.innerText = "[+]";
+  } else {
+    panel.classList.remove("collapsed");
+    btn.innerText = "[−]";
+  }
+
+  btn.addEventListener("click", () => {
+    const collapsedNow = panel.classList.toggle("collapsed");
+    localStorage.setItem("doroapp_ai_plans_collapsed", collapsedNow);
+    btn.innerText = collapsedNow ? "[+]" : "[−]";
+  });
+}
+
 function saveGame() {
   localStorage.setItem("doroappSave", JSON.stringify(gameState));
 }
@@ -1291,6 +1312,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initKanbanDragAndDrop();
   initMetricsListeners();
   initAiPlansListeners();
+  initAiPlansCollapse();
   showRandomQuote();
   resetTimer(currentFocusTime, "focus"); // Init state
 
