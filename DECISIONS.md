@@ -916,3 +916,21 @@ O usuário solicitou melhorias no comportamento das missões:
 - O nome e o horário de qualquer missão personalizada ficam persistidos permanentemente no navegador.
 - Missões com horário de compromisso (como "Malhar" e "Hora do Foco") comportam-se de forma consistente e integrada como tarefas diárias únicas e com alertas vermelhos vibrantes após o horário de disparo.
 - A listagem de missões passa a respeitar a nova ordem de prioridade diária estabelecida pelo usuário.
+
+## [2026-07-06] Painel de Planos de IA Recolhível
+
+### Contexto
+
+O usuário solicitou um botão de recolher ao lado de 'Planos de IA', para ocultar a seção quando não estiver em uso. Isso economiza espaço na tela, permitindo focar em aspectos mais imediatos como as Missões logo abaixo (tanto no desktop quanto no mobile).
+
+### Decisão
+
+1. **Estrutura HTML (`index.html`)**: Substituímos o cabeçalho simples do painel por um cabeçalho estruturado `.ai-plans-header` contendo o título `<h3>` e um botão de ação `<button id="btn-toggle-ai-plans" class="btn-collapse">` no estilo cyberpunk `[&minus;]` / `[+]`. Envolvemos a lista de planos na div `.ai-plans-content`.
+2. **Estilização CSS (`style.css`)**: Definimos o alinhamento flexível da nova `.ai-plans-header`, o visual temático para `.btn-collapse` (sem bordas/fundo, cores em consonância com o tema cyberpunk e text-shadow de brilho sob hover) e a regra `.ai-plans-panel.collapsed .ai-plans-content { display: none; }` para recolhimento instantâneo.
+3. **Lógica de Comportamento e Persistência (`script.js`)**: Criamos a função `initAiPlansCollapse()` para ler o estado de recolhimento (`doroapp_ai_plans_collapsed`) do `localStorage`, aplicando a classe `collapsed` e atualizando o texto do botão correspondente no carregamento inicial (`DOMContentLoaded`). O listener de clique no botão alterna o estado do painel, salva o novo estado no navegador e modifica o caractere visual do botão entre `[−]` (expandido) e `[+]` (recolhido).
+
+### Consequências
+
+- Usuários que não utilizam planos de IA ou querem focar nas missões/Kanban podem recolher a seção com um clique.
+- O estado recolhido é persistido entre recarregamentos de página, poupando espaço valioso de tela.
+- Mantida a estética retrô/cyberpunk do sistema.
