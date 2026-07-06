@@ -496,14 +496,51 @@ body {
   flex-shrink: 0;
 }
 
-.ai-plans-panel h3 {
+.ai-plans-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--matrix-dim);
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.15rem;
+}
+
+.ai-plans-header h3 {
   font-size: 0.9rem;
   text-transform: uppercase;
   color: var(--matrix-glow);
-  border-bottom: 1px solid var(--matrix-dim);
-  padding-bottom: 0.25rem;
-  margin-bottom: 0.15rem; /* Reduzido de 0.5rem para aproximar a listagem da borda */
   opacity: 0.8;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.btn-collapse {
+  background: none;
+  border: none;
+  color: var(--matrix-green);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0 4px;
+  transition: all 0.2s ease;
+  text-shadow: 0 0 3px var(--matrix-glow);
+  user-select: none;
+}
+
+.btn-collapse:hover {
+  color: #fff;
+  text-shadow: 0 0 8px var(--matrix-glow);
+}
+
+.ai-plans-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ai-plans-panel.collapsed .ai-plans-content {
+  display: none;
 }
 
 .ai-plan-row {
