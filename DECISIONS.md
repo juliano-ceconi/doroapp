@@ -890,3 +890,29 @@ Adicionados 4 novos provedores de IA ao painel de Planos de IA, cada um com cor 
 
 - Painel passou de 7 para 11 planos.
 - Compatibilidade retroativa mantida (planos novos iniciam em 0 se carregados de save anterior).
+
+## [2026-07-06] Melhorias no Sistema de Missões e Alertas do Doroapp
+
+### Contexto
+
+O usuário solicitou melhorias no comportamento das missões:
+1. Corrigir a falha de persistência onde a edição de nomes das missões não era mantida ao recarregar o navegador.
+2. Permitir que o horário das missões do tipo "Hora do Foco" (onde a linha fica vermelha) seja editável.
+3. Fazer com que a missão "Malhar" também fique vermelha (alerta visual) diariamente às 06:30.
+4. Alterar a ordem das missões exibidas na tela conforme uma nova disposição de prioridades.
+
+### Decisão
+
+1. **Persistência Completa no LocalStorage**: Corrigimos a função `loadGame()` em [script.js](file:///d:/projetos/juliano-ceconi/05_Vida/doroapp/script.js) para restaurar não apenas a conclusão das missões, mas também os campos `text`, `xp`, `bonusXp` e `triggerTime` a partir dos dados do `savedMission` persistidos no `localStorage`.
+2. **Edição do Horário de Disparo (`triggerTime`)**: Adicionamos um prompt opcional na função `editMission(id)` de [script.js](file:///d:/projetos/juliano-ceconi/05_Vida/doroapp/script.js) para que, caso a missão possua a propriedade `triggerTime`, o usuário possa editar o seu valor (exibido na interface) com validação de formato `HH:MM`.
+3. **Alerta de Horário na Missão "Malhar"**: Adicionamos a propriedade `triggerTime: "06:30"` à missão "Malhar" (ID 6) no array inicial de missões e unificamos a lógica de comportamento. Agora, qualquer missão (medicamento ou comum) que possua o atributo `triggerTime`:
+   - Fica vermelha (pulsando na classe `.medicine-alert`) após passar o horário correspondente no dia caso ainda não esteja concluída;
+   - Funciona como missão diária fixa no `toggleMission()` (mantém-se concluída pelo resto do dia e atualiza a propriedade `lastDoneDate`, evitando o auto-reset rápido de 1.5s das missões repetitivas);
+   - Reseta no início do dia seguinte na rotina global `checkDailyMissionsReset()`.
+4. **Reposicionamento Físico**: Reordenamos os objetos no array `gameState.missions` inicial no código para respeitar a ordem: Malhar (1º), Água (2º), Meditar (3º), Aeróbico (4º), as duas Hora do Foco (5º e 6º), Marco (7º), Dia sem Doomscrolling (8º) e por fim 2h de foco (9º). Como a restauração no `loadGame` é mapeada a partir do array estático do código, essa ordem é herdada e exibida com perfeição.
+
+### Consequências
+
+- O nome e o horário de qualquer missão personalizada ficam persistidos permanentemente no navegador.
+- Missões com horário de compromisso (como "Malhar" e "Hora do Foco") comportam-se de forma consistente e integrada como tarefas diárias únicas e com alertas vermelhos vibrantes após o horário de disparo.
+- A listagem de missões passa a respeitar a nova ordem de prioridade diária estabelecida pelo usuário.

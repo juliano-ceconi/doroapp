@@ -5,6 +5,26 @@ let gameState = {
   operatorName: "Juliano Ceconi",
   missions: [
     {
+      id: 6,
+      text: "Malhar",
+      completed: false,
+      xp: 500,
+      triggerTime: "06:30",
+      lastDoneDate: null
+    },
+    {
+      id: 4,
+      text: "Beber 500ml de água",
+      completed: false,
+      xp: 100, // XP per glass
+      bonusXp: 200, // Bonus when reaching 4
+      currentProgress: 0,
+      targetProgress: 4,
+      lastDoneDate: null
+    },
+    { id: 5, text: "Meditar", completed: false, xp: 500 },
+    { id: 7, text: "Aeróbico", completed: false, xp: 500 },
+    {
       id: "venvanse",
       text: "Hora do Foco",
       completed: false,
@@ -23,6 +43,13 @@ let gameState = {
       lastDoneDate: null
     },
     {
+      id: 2,
+      text: "Marco: Objetivo Atingido",
+      completed: false,
+      xp: 500,
+    },
+    { id: 3, text: "Dia sem Doomscrolling", completed: false, xp: 1000 },
+    {
       id: 1,
       text: "2h de foco",
       completed: false,
@@ -31,26 +58,6 @@ let gameState = {
       currentProgress: 0,
       targetProgress: 120, // 120 minutos
     },
-    {
-      id: 2,
-      text: "Marco: Objetivo Atingido",
-      completed: false,
-      xp: 500,
-    },
-    { id: 3, text: "Dia sem Doomscrolling", completed: false, xp: 1000 },
-    {
-      id: 4,
-      text: "Beber 500ml de água",
-      completed: false,
-      xp: 100, // XP per glass
-      bonusXp: 200, // Bonus when reaching 4
-      currentProgress: 0,
-      targetProgress: 4,
-      lastDoneDate: null
-    },
-    { id: 5, text: "Meditar", completed: false, xp: 500 },
-    { id: 6, text: "Malhar", completed: false, xp: 500 },
-    { id: 7, text: "Aeróbico", completed: false, xp: 500 },
   ],
 
   streak: 0,
@@ -422,7 +429,7 @@ function checkDailyMissionsReset() {
   let updated = false;
   const todayStr = new Date().toLocaleDateString('sv');
   gameState.missions.forEach((mission) => {
-    if (mission.isMedicine) {
+    if (mission.isMedicine || mission.triggerTime) {
       if (mission.lastDoneDate !== todayStr && mission.completed) {
         mission.completed = false;
         updated = true;
@@ -457,6 +464,22 @@ function editMission(id) {
   }
 
   mission.text = cleanText;
+
+  // Ajuste do horário de disparo se a missão possuir triggerTime
+  if (mission.triggerTime !== undefined) {
+    const newTriggerTime = prompt(`Editar horário de disparo (formato HH:MM, atual: ${mission.triggerTime}):`, mission.triggerTime);
+    if (newTriggerTime !== null) {
+      const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+      const cleanTime = newTriggerTime.trim();
+      if (timeRegex.test(cleanTime)) {
+        const [h, m] = cleanTime.split(":");
+        const formattedTime = `${h.padStart(2, "0")}:${m.padStart(2, "0")}`;
+        mission.triggerTime = formattedTime;
+      } else {
+        alert("Formato de horário inválido. Deve ser HH:MM (ex: 06:30).");
+      }
+    }
+  }
 
   // Ajuste do XP
   if (mission.bonusXp !== undefined) {
@@ -516,6 +539,10 @@ function renderMissions() {
 
       li.innerText = `${mission.text} (${mission.triggerTime}) [${mission.xp} XP]`;
     } else {
+      if (mission.triggerTime && mission.lastDoneDate !== todayStr) {
+        mission.completed = false;
+      }
+
       let progressText = "";
       if (mission.targetProgress) {
         progressText = ` (${mission.currentProgress}/${mission.targetProgress})`;
@@ -523,13 +550,19 @@ function renderMissions() {
       const xpToShow = mission.id === 1 ? mission.bonusXp : mission.xp;
       
       let missionText = mission.text;
-      if (mission.id === 4) {
+      if (mission.triggerTime) {
+        missionText = `${mission.text} (${mission.triggerTime})`;
+      } else if (mission.id === 4) {
         missionText = `${mission.text} (07h, 10h, 11h30, 16h)`;
       }
       
       li.innerText = `${missionText}${progressText} [${xpToShow} XP]`;
 
       if (mission.id === 4 && isWaterAlertActive(mission)) {
+        li.classList.add("medicine-alert");
+      }
+
+      if (mission.triggerTime && !mission.completed && hasMedicineTriggered(mission.triggerTime)) {
         li.classList.add("medicine-alert");
       }
     }
@@ -600,7 +633,7 @@ function toggleMission(id) {
   const mission = gameState.missions.find((m) => m.id === id);
   if (!mission || mission.completed) return;
  
-  if (mission.isMedicine) {
+  if (mission.isMedicine || mission.triggerTime) {
     const todayStr = new Date().toLocaleDateString('sv');
     mission.completed = true;
     mission.lastDoneDate = todayStr;
@@ -865,12 +898,17 @@ function loadGame() {
         // Find saved version of this mission by ID
         const savedMission = parsed.missions.find((m) => m.id === mission.id);
         if (savedMission) {
-          return {
+          const restored = {
             ...mission,
             completed: savedMission.completed,
             currentProgress: savedMission.currentProgress || 0,
             lastDoneDate: savedMission.lastDoneDate || null,
           };
+          if (savedMission.text !== undefined) restored.text = savedMission.text;
+          if (savedMission.xp !== undefined) restored.xp = savedMission.xp;
+          if (savedMission.bonusXp !== undefined) restored.bonusXp = savedMission.bonusXp;
+          if (savedMission.triggerTime !== undefined) restored.triggerTime = savedMission.triggerTime;
+          return restored;
         }
         return mission;
       });
