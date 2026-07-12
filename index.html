@@ -16,6 +16,7 @@
   </head>
   <body>
     <div class="crt-overlay"></div>
+    <canvas id="matrix-canvas"></canvas>
     <div class="app-container">
       <!-- Sidebar / Status -->
       <aside class="sidebar">
@@ -143,13 +144,26 @@
           <span id="quote-display">Inicializando sistema de motivação...</span>
         </div>
 
-        <nav class="mission-log">
-          <h3>Missões</h3>
-          <ul id="mission-list">
-            <!-- Missions injected via JS -->
-          </ul>
         </nav>
 
+        <div class="sys-config-panel">
+          <h3>Configurações</h3>
+          <div class="config-row">
+            <span class="config-label">TECLADO:</span>
+            <select id="select-keyboard-switch" class="sys-select">
+              <option value="none">NENHUM</option>
+              <option value="brown">CHERRY MX BROWN</option>
+              <option value="red">CHERRY MX RED</option>
+              <option value="blue">CHERRY MX BLUE</option>
+            </select>
+          </div>
+        <div class="sys-dump-panel">
+          <div class="sys-dump-header">
+            <h3>SYS DUMP</h3>
+            <button id="btn-wipe-dump" class="btn-wipe" title="Limpar notas">WIPE</button>
+          </div>
+          <textarea id="sys-dump-textarea" placeholder="Descarregue pensamentos intrusivos aqui..." autocomplete="off"></textarea>
+        </div>
 
       </aside>
 
@@ -183,6 +197,7 @@
               <span id="system-status">SISTEMA AGUARDANDO...</span>
               <span class="status-divider">|</span>
               <button id="btn-agent-toggle" class="btn-protocol">AGENTE: <span id="agent-status-text">OFF</span></button>
+              <button id="btn-sys-ambient" class="btn-protocol" title="Protetor de tela Matrix Rain (ou pressione ESC)">SYS AMBIENT</button>
               <div class="agent-colors" id="agent-colors">
                 <button class="color-swatch" data-color="purple" title="Roxo" style="background:#b026ff"></button>
                 <button class="color-swatch" data-color="red" title="Vermelho" style="background:#ff2b2b"></button>
@@ -218,6 +233,17 @@
             </div>
           </div>
         </section>
+
+        <!-- Mono Tasking Focus Panel -->
+        <div id="mono-tasking-panel" class="mono-tasking-panel">
+          <div class="mono-header">
+            <span class="mono-tag">[ MISSÃO ATIVA ]</span>
+            <button id="btn-toggle-mono" class="btn-mono-toggle" title="Alternar Modo Foco Único">MODO MONO</button>
+          </div>
+          <div class="mono-content" id="mono-task-content">
+            <p id="mono-task-text" class="placeholder">Nenhuma missão ativa selecionada. Clique no 🎯 de uma tarefa no board para começar.</p>
+          </div>
+        </div>
 
         <!-- Board Section -->
         <section class="board-section" id="board-section">
@@ -385,6 +411,12 @@
               <div class="metric-progress-bar" id="metric-bar-punctuality" style="width: 1%"></div>
             </div>
           </div>
+        </div>
+
+        <!-- Painel de Gráficos Retro -->
+        <div class="sys-graph-panel">
+          <h3>SINAL DE XP (ÚLTIMOS 7 DIAS)</h3>
+          <canvas id="sys-stats-canvas" width="220" height="110"></canvas>
         </div>
 
         <!-- Registro Histórico -->

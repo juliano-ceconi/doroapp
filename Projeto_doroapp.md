@@ -5,7 +5,7 @@ type: projeto
 parent: [[Dashboard_Central]]
 created: 2026-04-26
 updated: 2026-04-26
-tags: [projeto, area/inteligência, status/backlog]
+tags: [area/inteligência, status/backlog]
 ---
 
 # 🧠 Projeto: doroapp

@@ -90,6 +90,9 @@ let gameState = {
     nvidia: 0,
     sambanova: 0,
   },
+  keyboardSwitch: 'none',
+  activeTaskId: null,
+  monoTaskingActive: false,
 };
 
 const AGENT_COLORS = {
@@ -216,6 +219,94 @@ function playSound(type) {
   }
 }
 
+// Keyboard Mechanical Switches Synthesis (Web Audio API)
+let whiteNoiseBuffer = null;
+function getWhiteNoiseBuffer() {
+  if (whiteNoiseBuffer) return whiteNoiseBuffer;
+  const bufferSize = audioCtx.sampleRate * 0.1;
+  const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) {
+    data[i] = Math.random() * 2 - 1;
+  }
+  whiteNoiseBuffer = buffer;
+  return whiteNoiseBuffer;
+}
+
+function playKeyboardSound(switchType) {
+  if (!switchType || switchType === 'none') return;
+  if (audioCtx.state === "suspended") audioCtx.resume();
+  const time = audioCtx.currentTime;
+
+  const impactOsc = audioCtx.createOscillator();
+  const impactGain = audioCtx.createGain();
+  impactOsc.connect(impactGain);
+  impactGain.connect(audioCtx.destination);
+
+  const noiseSource = audioCtx.createBufferSource();
+  noiseSource.buffer = getWhiteNoiseBuffer();
+  const noiseGain = audioCtx.createGain();
+  noiseSource.connect(noiseGain);
+  noiseGain.connect(audioCtx.destination);
+
+  if (switchType === 'blue') {
+    impactOsc.frequency.setValueAtTime(180, time);
+    impactOsc.frequency.exponentialRampToValueAtTime(80, time + 0.04);
+    impactGain.gain.setValueAtTime(0.05, time);
+    impactGain.gain.exponentialRampToValueAtTime(0.001, time + 0.04);
+
+    const clickOsc = audioCtx.createOscillator();
+    const clickGain = audioCtx.createGain();
+    clickOsc.type = 'triangle';
+    clickOsc.frequency.setValueAtTime(4500, time);
+    clickOsc.frequency.exponentialRampToValueAtTime(3000, time + 0.005);
+    clickGain.gain.setValueAtTime(0.07, time);
+    clickGain.gain.exponentialRampToValueAtTime(0.001, time + 0.006);
+    clickOsc.connect(clickGain);
+    clickGain.connect(audioCtx.destination);
+    clickOsc.start(time);
+    clickOsc.stop(time + 0.01);
+
+    noiseGain.gain.setValueAtTime(0.015, time);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, time + 0.015);
+  } 
+  else if (switchType === 'brown') {
+    impactOsc.frequency.setValueAtTime(140, time);
+    impactOsc.frequency.exponentialRampToValueAtTime(70, time + 0.035);
+    impactGain.gain.setValueAtTime(0.06, time);
+    impactGain.gain.exponentialRampToValueAtTime(0.001, time + 0.035);
+
+    const tactileOsc = audioCtx.createOscillator();
+    const tactileGain = audioCtx.createGain();
+    tactileOsc.type = 'sine';
+    tactileOsc.frequency.setValueAtTime(1800, time);
+    tactileOsc.frequency.exponentialRampToValueAtTime(800, time + 0.008);
+    tactileGain.gain.setValueAtTime(0.03, time);
+    tactileGain.gain.exponentialRampToValueAtTime(0.001, time + 0.008);
+    tactileOsc.connect(tactileGain);
+    tactileGain.connect(audioCtx.destination);
+    tactileOsc.start(time);
+    tactileOsc.stop(time + 0.01);
+
+    noiseGain.gain.setValueAtTime(0.01, time);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, time + 0.02);
+  } 
+  else if (switchType === 'red') {
+    impactOsc.frequency.setValueAtTime(100, time);
+    impactOsc.frequency.exponentialRampToValueAtTime(50, time + 0.04);
+    impactGain.gain.setValueAtTime(0.08, time);
+    impactGain.gain.exponentialRampToValueAtTime(0.001, time + 0.04);
+
+    noiseGain.gain.setValueAtTime(0.008, time);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, time + 0.025);
+  }
+
+  impactOsc.start(time);
+  impactOsc.stop(time + 0.05);
+  noiseSource.start(time);
+  noiseSource.stop(time + 0.05);
+}
+
 // DOM Elements
 const timerDisplay = document.getElementById("timer");
 
@@ -261,6 +352,17 @@ function tick() {
       const missionMinutes = gameState.agentMode ? currentFocusTime * 2 : currentFocusTime;
       incrementMissionProgress(1, missionMinutes);
 
+      // Incrementar contador de pomodoros se houver missão ativa
+      if (gameState.activeTaskId) {
+        const activeTask = gameState.tasks.find(t => t.id === gameState.activeTaskId);
+        if (activeTask) {
+          activeTask.pomodoroCount = (activeTask.pomodoroCount || 0) + 1;
+          saveGame();
+          renderTasks();
+          updateMonoTaskingUI();
+        }
+      }
+
       resetTimer(currentBreakTime, "break"); // Default break after focus
     } else {
       alert("Pausa finalizada! Pronto para o próximo round?");
@@ -278,6 +380,7 @@ function startTimer() {
     document.getElementById("btn-focus").innerText = "PAUSAR";
     playSound("start");
     updatePartialButtonVisibility();
+    resetInactivityTimer();
   }
 }
 
@@ -289,6 +392,7 @@ function pauseTimer() {
     document.getElementById("system-status").innerText = "SISTEMA PAUSADO";
     document.getElementById("btn-focus").innerText = "CONTINUAR";
     updatePartialButtonVisibility();
+    resetInactivityTimer();
   }
 }
 
@@ -334,6 +438,7 @@ function resetTimer(newTime, newMode) {
   document.getElementById("btn-focus").innerText = "INICIAR";
   updateTimerDisplay();
   updatePartialButtonVisibility();
+  resetInactivityTimer();
 }
 
 // XP & Level System
@@ -820,6 +925,7 @@ function logHistoryEvent(category, itemId, itemLabel, value = null, xpGained = 0
     localStorage.setItem("doroapp_history_log", JSON.stringify(history));
     updateHistoryCountUI();
     backupLogLocalmente();
+    renderStatsGraph();
   } catch (e) {
     console.error("Erro ao registrar evento no histórico:", e);
   }
@@ -861,6 +967,144 @@ function backupLogLocalmente() {
   }
 }
 
+// Retro-Futuristic XP Stats Graph (Canvas 2D Oscilloscope Style)
+function renderStatsGraph() {
+  const canvas = document.getElementById("sys-stats-canvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  
+  const width = canvas.width;
+  const height = canvas.height;
+  
+  ctx.clearRect(0, 0, width, height);
+
+  ctx.fillStyle = "#020203";
+  ctx.fillRect(0, 0, width, height);
+
+  ctx.strokeStyle = "rgba(0, 59, 0, 0.4)";
+  ctx.lineWidth = 1;
+  
+  const gridSteps = 4;
+  for (let i = 1; i < gridSteps; i++) {
+    const y = (height / gridSteps) * i;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(width, y);
+    ctx.stroke();
+  }
+  
+  const daysCount = 7;
+  for (let i = 1; i < daysCount; i++) {
+    const x = (width / (daysCount - 1)) * i;
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, height);
+    ctx.stroke();
+  }
+
+  let history = [];
+  try {
+    history = JSON.parse(localStorage.getItem("doroapp_history_log") || "[]");
+  } catch(e) {
+    console.error("Erro ao carregar log do histórico para gráfico:", e);
+  }
+
+  const dateList = [];
+  const labelList = [];
+  for (let i = daysCount - 1; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    dateList.push(d.toLocaleDateString('sv'));
+    
+    const dayLabel = d.toLocaleDateString('pt-BR', { weekday: 'narrow' });
+    labelList.push(dayLabel);
+  }
+
+  const xpPerDay = dateList.map((dateStr) => {
+    return history
+      .filter((entry) => {
+        if (!entry.timestamp) return false;
+        const logDateStr = entry.timestamp.slice(0, 10);
+        return logDateStr === dateStr;
+      })
+      .reduce((sum, entry) => sum + (entry.xpGained || 0), 0);
+  });
+
+  const maxVal = Math.max(...xpPerDay, 100);
+  
+  const points = xpPerDay.map((xp, index) => {
+    const x = (width / (daysCount - 1)) * index;
+    const y = height - 20 - ((xp / maxVal) * (height - 35));
+    return { x, y, xp };
+  });
+
+  const greenGlow = getComputedStyle(document.documentElement).getPropertyValue('--matrix-glow').trim() || 'rgba(0, 255, 65, 0.5)';
+  const mainColor = getComputedStyle(document.documentElement).getPropertyValue('--matrix-green').trim() || '#00ff41';
+
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, height - 18);
+  points.forEach((p) => {
+    ctx.lineTo(p.x, p.y);
+  });
+  ctx.lineTo(points[points.length - 1].x, height - 18);
+  ctx.closePath();
+  
+  const fillGrad = ctx.createLinearGradient(0, 0, 0, height);
+  // Garante que converte a cor de tema para rgba de forma segura
+  let colorPrefix = mainColor;
+  if (mainColor.startsWith('#')) {
+    // Converter hex simples para rgba
+    const r = parseInt(mainColor.slice(1, 3), 16) || 0;
+    const g = parseInt(mainColor.slice(3, 5), 16) || 255;
+    const b = parseInt(mainColor.slice(5, 7), 16) || 65;
+    colorPrefix = `rgba(${r}, ${g}, ${b}`;
+  } else if (mainColor.includes('rgb')) {
+    colorPrefix = mainColor.split(')')[0].replace('rgb', 'rgba');
+  } else {
+    colorPrefix = 'rgba(0, 255, 65';
+  }
+  
+  fillGrad.addColorStop(0, `${colorPrefix}, 0.15)`);
+  fillGrad.addColorStop(1, `${colorPrefix}, 0)`);
+  ctx.fillStyle = fillGrad;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  for (let i = 1; i < points.length; i++) {
+    ctx.lineTo(points[i].x, points[i].y);
+  }
+  ctx.strokeStyle = mainColor;
+  ctx.lineWidth = 2;
+  ctx.shadowColor = greenGlow;
+  ctx.shadowBlur = 6;
+  ctx.stroke();
+  
+  ctx.shadowBlur = 0;
+  ctx.shadowColor = 'transparent';
+
+  points.forEach((p, idx) => {
+    ctx.fillStyle = mainColor;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 3, 0, 2 * Math.PI);
+    ctx.fill();
+
+    ctx.fillStyle = "rgba(0, 255, 65, 0.6)";
+    // Sincronizar cor dos textos do dia com a cor de tema se não for verde
+    if (colorPrefix !== 'rgba(0, 255, 65') {
+      ctx.fillStyle = `${colorPrefix}, 0.6)`;
+    }
+    ctx.font = '8px "JetBrains Mono", monospace';
+    ctx.textAlign = "center";
+    
+    let adjustX = 0;
+    if (idx === 0) adjustX = 8;
+    if (idx === daysCount - 1) adjustX = -8;
+    
+    ctx.fillText(labelList[idx], p.x + adjustX, height - 5);
+  });
+}
+
 
 function loadGame() {
   let saved = localStorage.getItem("doroappSave");
@@ -885,6 +1129,9 @@ function loadGame() {
     gameState.agentColor = parsed.agentColor || 'purple';
     gameState.tasks = parsed.tasks || [];
     gameState.operatorName = parsed.operatorName || "Juliano Ceconi";
+    gameState.keyboardSwitch = parsed.keyboardSwitch || 'none';
+    gameState.activeTaskId = parsed.activeTaskId || null;
+    gameState.monoTaskingActive = parsed.monoTaskingActive || false;
 
     // Restore metrics
     if (parsed.metrics) {
@@ -983,6 +1230,9 @@ function loadGame() {
       groq: 0,
       opencode: 0,
     };
+    gameState.keyboardSwitch = 'none';
+    gameState.activeTaskId = null;
+    gameState.monoTaskingActive = false;
   }
 
   // Update Operator Name Element
@@ -1005,6 +1255,18 @@ function loadGame() {
     toggleAgentModeVisuals(gameState.agentMode);
   }
   applyAgentColor(gameState.agentColor);
+
+  // Sync Keyboard Switch Dropdown
+  const switchSelect = document.getElementById("select-keyboard-switch");
+  if (switchSelect) {
+    switchSelect.value = gameState.keyboardSwitch || "none";
+  }
+
+  // Sync Mono Tasking UI
+  updateMonoTaskingUI();
+
+  // Sync Stats Graph
+  renderStatsGraph();
 }
 
 function toggleAgentModeVisuals(active) {
@@ -1023,6 +1285,7 @@ function applyAgentColor(colorId) {
   document.querySelectorAll('.color-swatch').forEach(el => {
     el.classList.toggle('active', el.dataset.color === colorId);
   });
+  setTimeout(renderStatsGraph, 0);
 }
 
 function toggleBreakModeVisuals(active) {
@@ -1031,6 +1294,7 @@ function toggleBreakModeVisuals(active) {
   } else {
     document.body.classList.remove("break-mode-active");
   }
+  setTimeout(renderStatsGraph, 0);
 }
 
 // Random Quote
@@ -1146,11 +1410,16 @@ function renderTasks() {
             ${tagsHtml}
             ${pomodoroBadge}
           </div>
+          <button class="task-focus-select" title="Definir como foco principal">🎯</button>
           <button class="task-delete" aria-label="Deletar tarefa">×</button>
         `;
 
         // Handlers
         card.querySelector(".task-check").addEventListener("click", () => toggleTaskDone(task.id));
+        card.querySelector(".task-focus-select").addEventListener("click", (e) => {
+          e.stopPropagation();
+          setMainMission(task.id);
+        });
         card.querySelector(".task-delete").addEventListener("click", (e) => {
           e.stopPropagation();
           deleteTask(task.id);
@@ -1331,9 +1600,235 @@ function startInlineEdit(task, textEl, cardEl) {
   input.addEventListener("blur", commitEdit);
 }
 
+// Matrix Digital Rain Animation
+const matrixCanvas = document.getElementById("matrix-canvas");
+let matrixCtx = null;
+let matrixAnimation = null;
+let isMatrixActive = false;
+let matrixDrops = [];
+const matrixFontSize = 14;
+
+function initMatrixRain() {
+  if (!matrixCanvas) return;
+  matrixCtx = matrixCanvas.getContext("2d");
+  
+  matrixCanvas.addEventListener("click", () => {
+    toggleMatrixRain(false);
+  });
+}
+
+function resizeMatrixCanvas() {
+  if (!matrixCanvas || !isMatrixActive) return;
+  matrixCanvas.width = window.innerWidth;
+  matrixCanvas.height = window.innerHeight;
+  const columns = Math.floor(matrixCanvas.width / matrixFontSize);
+  
+  if (matrixDrops.length !== columns) {
+    matrixDrops = [];
+    for (let x = 0; x < columns; x++) {
+      matrixDrops[x] = Math.random() * -100;
+    }
+  }
+}
+
+function drawMatrixRain() {
+  if (!isMatrixActive || !matrixCtx || !matrixCanvas) return;
+
+  matrixCtx.fillStyle = "rgba(2, 2, 3, 0.06)";
+  matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+
+  const mainColor = getComputedStyle(document.documentElement).getPropertyValue('--matrix-green').trim() || '#00ff41';
+  matrixCtx.fillStyle = mainColor;
+  matrixCtx.font = `${matrixFontSize}px "VT323", monospace`;
+
+  const columns = matrixDrops.length;
+  for (let i = 0; i < columns; i++) {
+    const char = String.fromCharCode(0x30A0 + Math.random() * 96);
+    const x = i * matrixFontSize;
+    const y = matrixDrops[i] * matrixFontSize;
+
+    matrixCtx.fillText(char, x, y);
+
+    if (y > matrixCanvas.height && Math.random() > 0.975) {
+      matrixDrops[i] = 0;
+    }
+    
+    matrixDrops[i]++;
+  }
+
+  matrixAnimation = requestAnimationFrame(drawMatrixRain);
+}
+
+function toggleMatrixRain(forceState) {
+  const nextState = forceState !== undefined ? forceState : !isMatrixActive;
+  if (nextState === isMatrixActive) return;
+
+  isMatrixActive = nextState;
+
+  if (isMatrixActive) {
+    matrixCanvas.style.display = "block";
+    matrixCanvas.offsetHeight;
+    matrixCanvas.classList.add("active");
+    resizeMatrixCanvas();
+    drawMatrixRain();
+  } else {
+    matrixCanvas.classList.remove("active");
+    cancelAnimationFrame(matrixAnimation);
+    setTimeout(() => {
+      if (!isMatrixActive) {
+        matrixCanvas.style.display = "none";
+        if (matrixCtx) {
+          matrixCtx.clearRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+        }
+      }
+    }, 500);
+  }
+}
+
+let inactivityTimer = null;
+function resetInactivityTimer() {
+  clearTimeout(inactivityTimer);
+  if (isMatrixActive) {
+    toggleMatrixRain(false);
+  }
+  if (isRunning && mode === "focus") {
+    inactivityTimer = setTimeout(() => {
+      toggleMatrixRain(true);
+    }, 30000);
+  }
+}
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    if (isMatrixActive) {
+      cancelAnimationFrame(matrixAnimation);
+    }
+  } else {
+    if (isMatrixActive) {
+      drawMatrixRain();
+    }
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    const activeEl = document.activeElement;
+    if (activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA")) {
+      return;
+    }
+    toggleMatrixRain();
+  }
+});
+
+// Mono-Tasking Logic
+function setMainMission(taskId) {
+  gameState.activeTaskId = taskId;
+  
+  if (!gameState.monoTaskingActive) {
+    gameState.monoTaskingActive = true;
+  }
+  
+  saveGame();
+  updateMonoTaskingUI();
+  playKeyboardSound('brown');
+}
+
+function updateMonoTaskingUI() {
+  const panel = document.getElementById("mono-tasking-panel");
+  const contentEl = document.getElementById("mono-task-content");
+  const toggleBtn = document.getElementById("btn-toggle-mono");
+  if (!panel || !contentEl || !toggleBtn) return;
+
+  document.body.classList.toggle("mono-tasking-active", gameState.monoTaskingActive);
+  toggleBtn.innerText = gameState.monoTaskingActive ? "MODO MULTI" : "MODO MONO";
+
+  if (!gameState.activeTaskId) {
+    contentEl.innerHTML = `<p id="mono-task-text" class="placeholder">Nenhuma missão ativa selecionada. Clique no 🎯 de uma tarefa no board para começar.</p>`;
+    return;
+  }
+
+  const task = gameState.tasks.find(t => t.id === gameState.activeTaskId);
+  if (!task) {
+    gameState.activeTaskId = null;
+    saveGame();
+    contentEl.innerHTML = `<p id="mono-task-text" class="placeholder">Nenhuma missão ativa selecionada. Clique no 🎯 de uma tarefa no board para começar.</p>`;
+    return;
+  }
+
+  const tagsHtml = task.tags && task.tags.length > 0
+    ? `<div class="task-tags">${task.tags.map((t) => `<span class="tag">#${t}</span>`).join("")}</div>`
+    : "";
+
+  const pomodoroHtml = task.pomodoroCount > 0
+    ? `<span class="pomodoro-badge">Ciclos de Foco: ${task.pomodoroCount}</span>`
+    : "";
+
+  contentEl.innerHTML = `
+    <div class="mono-task-card ${task.done ? 'done' : ''} ${task.priority}">
+      <button class="mono-task-check" aria-label="Concluir tarefa">${task.done ? "✓" : ""}</button>
+      <div class="mono-task-content">
+        <span class="mono-task-title">${task.text}</span>
+        ${tagsHtml}
+        ${pomodoroHtml}
+      </div>
+      <span class="mono-priority-badge">${task.priority.toUpperCase()}</span>
+    </div>
+  `;
+
+  const checkBtn = contentEl.querySelector(".mono-task-check");
+  if (checkBtn) {
+    checkBtn.addEventListener("click", () => {
+      toggleTaskDone(task.id);
+      updateMonoTaskingUI();
+    });
+  }
+}
+
+["mousemove", "mousedown", "keydown", "touchstart", "scroll"].forEach((evt) => {
+  document.addEventListener(evt, resetInactivityTimer, { passive: true });
+});
+
 // Init
 document.addEventListener("DOMContentLoaded", () => {
   loadGame();
+  initMatrixRain();
+  
+  const btnSysAmbient = document.getElementById("btn-sys-ambient");
+  if (btnSysAmbient) {
+    btnSysAmbient.addEventListener("click", () => {
+      toggleMatrixRain();
+    });
+  }
+  resetInactivityTimer();
+
+  const btnToggleMono = document.getElementById("btn-toggle-mono");
+  if (btnToggleMono) {
+    btnToggleMono.addEventListener("click", () => {
+      gameState.monoTaskingActive = !gameState.monoTaskingActive;
+      saveGame();
+      updateMonoTaskingUI();
+    });
+  }
+
+  // Configurar dropdown de som do teclado
+  const switchSelect = document.getElementById("select-keyboard-switch");
+  if (switchSelect) {
+    switchSelect.addEventListener("change", (e) => {
+      gameState.keyboardSwitch = e.target.value;
+      saveGame();
+    });
+  }
+
+  // Event listener global para tocar som de teclado mecânico ao digitar
+  document.addEventListener("keydown", (e) => {
+    if (gameState.keyboardSwitch === "none") return;
+    const activeEl = document.activeElement;
+    if (activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA")) {
+      if (["Control", "Shift", "Alt", "Meta", "CapsLock"].includes(e.key)) return;
+      playKeyboardSound(gameState.keyboardSwitch);
+    }
+  });
+
   backupLogLocalmente();
   initKanbanDragAndDrop();
   initMetricsListeners();
@@ -1436,6 +1931,31 @@ document.addEventListener("DOMContentLoaded", () => {
     .addEventListener("dblclick", () => {
       showRandomQuote();
     });
+
+  // Lógica do SYS DUMP (Auto-salvamento)
+  const sysDumpTextarea = document.getElementById("sys-dump-textarea");
+  const btnWipeDump = document.getElementById("btn-wipe-dump");
+  if (sysDumpTextarea) {
+    sysDumpTextarea.value = localStorage.getItem("doroapp_sys_dump") || "";
+
+    let saveTimeout;
+    sysDumpTextarea.addEventListener("input", () => {
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        localStorage.setItem("doroapp_sys_dump", sysDumpTextarea.value);
+      }, 300);
+    });
+  }
+
+  if (btnWipeDump && sysDumpTextarea) {
+    btnWipeDump.addEventListener("click", () => {
+      if (sysDumpTextarea.value.trim() !== "") {
+        playSound("start");
+        sysDumpTextarea.value = "";
+        localStorage.removeItem("doroapp_sys_dump");
+      }
+    });
+  }
 
   // Hidden XP Override Logic
   let opClickCount = 0;
@@ -1568,6 +2088,7 @@ document.addEventListener("DOMContentLoaded", () => {
             updateHistoryCountUI();
             alert("Histórico de logs importado com sucesso!");
             backupLogLocalmente();
+            renderStatsGraph();
           }
         } catch (err) {
           alert("Erro ao ler o arquivo JSON: " + err.message);
@@ -1583,6 +2104,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (confirm("Deseja realmente limpar todo o histórico de logs salvos? Esta ação não pode ser desfeita.")) {
       localStorage.setItem("doroapp_history_log", "[]");
       updateHistoryCountUI();
+      renderStatsGraph();
       alert("Histórico de logs limpo com sucesso.");
     }
   };

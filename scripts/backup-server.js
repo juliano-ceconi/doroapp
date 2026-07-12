@@ -4,10 +4,42 @@ const path = require('path');
 
 const PORT = 19191;
 const LOGS_DIR = path.join(__dirname, '..', 'log-registros-local');
+const MAX_HISTORY_FILES = 20;
+const MAX_SAVE_FILES = 20;
 
 // Garantir que a pasta de logs existe
 if (!fs.existsSync(LOGS_DIR)) {
   fs.mkdirSync(LOGS_DIR, { recursive: true });
+}
+
+/**
+ * Remove arquivos excedentes no diretório mantendo apenas os mais recentes.
+ */
+function pruneOldFiles(dir, prefix, maxFiles) {
+  fs.readdir(dir, (err, files) => {
+    if (err) {
+      console.error(`[Purga] Erro ao ler diretório para purga:`, err);
+      return;
+    }
+
+    const targetFiles = files
+      .filter(f => f.startsWith(prefix) && f.endsWith('.json'))
+      .sort((a, b) => b.localeCompare(a));
+
+    if (targetFiles.length > maxFiles) {
+      const filesToDelete = targetFiles.slice(maxFiles);
+      filesToDelete.forEach(file => {
+        const filePath = path.join(dir, file);
+        fs.unlink(filePath, unlinkErr => {
+          if (unlinkErr) {
+            console.error(`[Purga] Erro ao deletar arquivo antigo ${file}:`, unlinkErr);
+          } else {
+            console.log(`[Purga] Arquivo excedente removido: ${file}`);
+          }
+        });
+      });
+    }
+  });
 }
 
 const server = http.createServer((req, res) => {
@@ -40,25 +72,36 @@ const server = http.createServer((req, res) => {
           return;
         }
 
-        // Obter data no formato local YYYY-MM-DD
+        // Obter data e hora locais no formato YYYY-MM-DD_HH-mm
         const now = new Date();
         const year = now.getFullYear();
         const month = String(now.getMonth() + 1).padStart(2, '0');
         const day = String(now.getDate()).padStart(2, '0');
-        const dateStr = `${year}-${month}-${day}`;
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const dateStr = `${year}-${month}-${day}_${hours}-${minutes}`;
 
         // Salvar histórico de logs
         const historyFileName = `doroapp-historico-${dateStr}.json`;
         const historyFilePath = path.join(LOGS_DIR, historyFileName);
         fs.writeFileSync(historyFilePath, JSON.stringify(data.history, null, 2), 'utf8');
+        pruneOldFiles(LOGS_DIR, 'doroapp-historico-', MAX_HISTORY_FILES);
 
         // Salvar estado do jogo (gameState) se presente
         let gameStateSaved = false;
         if (data.gameState) {
           const saveFileName = `doroapp-save-${dateStr}.json`;
           const saveFilePath = path.join(LOGS_DIR, saveFileName);
-          fs.writeFileSync(saveFilePath, JSON.stringify(data.gameState, null, 2), 'utf8');
+          
+          // Injetar o timestamp completo (ISO 8601) no gameState
+          const gameStateWithTimestamp = {
+            ...data.gameState,
+            updatedAt: now.toISOString()
+          };
+          
+          fs.writeFileSync(saveFilePath, JSON.stringify(gameStateWithTimestamp, null, 2), 'utf8');
           gameStateSaved = true;
+          pruneOldFiles(LOGS_DIR, 'doroapp-save-', MAX_SAVE_FILES);
         }
 
         console.log(`[${new Date().toISOString()}] Backup realizado com sucesso para ${dateStr}`);
