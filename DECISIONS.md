@@ -955,3 +955,23 @@ O usuário solicitou uma maneira de importar arquivos de logs/histórico exporta
 - Facilidade para transferir o histórico de logs entre diferentes navegadores através do upload do JSON.
 - Backup local 100% automatizado, atualizado a cada ação executada no Doroapp ou ao recarregar a página, gravando os arquivos diretamente na pasta de preferência do usuário (`log-registros-local/`).
 - Mantida a resiliência e portabilidade do Doroapp estático, rodando offline e no Vercel sem dependências locais obrigatórias.
+
+---
+
+## [2026-07-12] Substituição do Favicon por Design Autoral
+
+### Contexto
+
+O Doroapp utilizava um favicon genérico do Matrix (`imagens/icons8-neo.svg`). Havia a necessidade de possuir um favicon autoral que estivesse diretamente conectado à lore e aos conceitos do projeto, como o nível inicial "Perdido na Toca do Coelho" e o estilo de ficção científica (sci-fi).
+
+### Decisão
+
+1. Criar um favicon autoral no estilo cyberpunk/sci-fi de um coelho branco com visor neon verde.
+2. Salvar o arquivo gerado como `doroapp_favicon.png` na pasta `imagens/`.
+3. Atualizar o `index.html` para carregar o novo favicon em formato PNG.
+
+### Consequências
+
+- O Doroapp agora possui identidade visual autoral e conectada ao conceito do projeto.
+- O favicon é carregado em formato PNG de alta resolução com suporte a transparência e fidelidade de cores cyberpunk.
+
