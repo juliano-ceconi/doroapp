@@ -819,6 +819,7 @@ function logHistoryEvent(category, itemId, itemLabel, value = null, xpGained = 0
     history.push(entry);
     localStorage.setItem("doroapp_history_log", JSON.stringify(history));
     updateHistoryCountUI();
+    backupLogLocalmente();
   } catch (e) {
     console.error("Erro ao registrar evento no histórico:", e);
   }
@@ -833,6 +834,30 @@ function updateHistoryCountUI() {
     } catch (e) {
       countEl.innerText = "0 registros";
     }
+  }
+}
+
+function backupLogLocalmente() {
+  try {
+    const historyStr = localStorage.getItem("doroapp_history_log") || "[]";
+    const history = JSON.parse(historyStr);
+    const gameStateCopy = typeof gameState !== "undefined" ? gameState : null;
+
+    fetch("http://127.0.0.1:19191/api/save", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        history: history,
+        gameState: gameStateCopy
+      })
+    }).catch(() => {
+      // Ignora erro se o servidor de backup local não estiver ativo
+    });
+  } catch (e) {
+    console.error("Erro ao enviar backup local de logs:", e);
   }
 }
 
@@ -1309,6 +1334,7 @@ function startInlineEdit(task, textEl, cardEl) {
 // Init
 document.addEventListener("DOMContentLoaded", () => {
   loadGame();
+  backupLogLocalmente();
   initKanbanDragAndDrop();
   initMetricsListeners();
   initAiPlansListeners();
@@ -1512,6 +1538,43 @@ document.addEventListener("DOMContentLoaded", () => {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+    });
+  }
+
+  const btnImportHistory = document.getElementById("btn-import-history");
+  const inputImportHistory = document.getElementById("input-import-history");
+  if (btnImportHistory && inputImportHistory) {
+    btnImportHistory.addEventListener("click", () => {
+      inputImportHistory.click();
+    });
+
+    inputImportHistory.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const content = e.target.result;
+          const importedData = JSON.parse(content);
+
+          if (!Array.isArray(importedData)) {
+            alert("Erro: O arquivo de log deve ser um array JSON válido.");
+            return;
+          }
+
+          if (confirm(`Deseja realmente importar ${importedData.length} registros de histórico? Isso irá substituir o histórico atual deste navegador.`)) {
+            localStorage.setItem("doroapp_history_log", JSON.stringify(importedData));
+            updateHistoryCountUI();
+            alert("Histórico de logs importado com sucesso!");
+            backupLogLocalmente();
+          }
+        } catch (err) {
+          alert("Erro ao ler o arquivo JSON: " + err.message);
+        }
+        inputImportHistory.value = "";
+      };
+      reader.readAsText(file);
     });
   }
 

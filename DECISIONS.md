@@ -934,3 +934,24 @@ O usuário solicitou um botão de recolher ao lado de 'Planos de IA', para ocult
 - Usuários que não utilizam planos de IA ou querem focar nas missões/Kanban podem recolher a seção com um clique.
 - O estado recolhido é persistido entre recarregamentos de página, poupando espaço valioso de tela.
 - Mantida a estética retrô/cyberpunk do sistema.
+
+---
+
+## [2026-07-12] Importação de Histórico e Servidor Local de Backup
+
+### Contexto
+
+O usuário solicitou uma maneira de importar arquivos de logs/histórico exportados pelo Doroapp em novos navegadores para sincronizar o progresso de logs manualmente, bem como automatizar o salvamento desses logs localmente em disco na pasta `05_Vida/doroapp/log-registros-local/`.
+
+### Decisão
+
+1. **Botão IMPORTAR LOG (`index.html`)**: Adicionamos o botão "IMPORTAR LOG" e um input de arquivo oculto ao lado do botão "EXPORTAR LOG" no menu lateral direito.
+2. **Leitura e Validação de JSON (`script.js`)**: Implementamos no JavaScript a leitura do arquivo JSON importado via `FileReader`. O app valida se o arquivo é um array JSON de histórico legítimo, substitui a chave `doroapp_history_log` no `localStorage` após confirmação do usuário e atualiza a contagem exibida na interface.
+3. **Servidor Local de Backup (`scripts/backup-server.js`)**: Criamos um servidor local Node.js sem dependências, projetado para rodar em background via PM2. Ele escuta requisições na porta `19191` e grava arquivos formatados de histórico e estado (`doroapp-historico-YYYY-MM-DD.json` e `doroapp-save-YYYY-MM-DD.json`) na pasta local de logs.
+4. **Sincronização de Logs (`script.js`)**: Adicionamos a função `backupLogLocalmente()` no Doroapp para enviar os logs do localStorage via POST para o servidor local no carregamento da página (`DOMContentLoaded`) e toda vez que um novo evento de histórico é inserido. A requisição falha de forma silenciosa e não bloqueante se o servidor local de backup estiver offline.
+
+### Consequências
+
+- Facilidade para transferir o histórico de logs entre diferentes navegadores através do upload do JSON.
+- Backup local 100% automatizado, atualizado a cada ação executada no Doroapp ou ao recarregar a página, gravando os arquivos diretamente na pasta de preferência do usuário (`log-registros-local/`).
+- Mantida a resiliência e portabilidade do Doroapp estático, rodando offline e no Vercel sem dependências locais obrigatórias.
