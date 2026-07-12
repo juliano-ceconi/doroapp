@@ -1634,7 +1634,7 @@ function showWaterNotification() {
   if (typeof Notification !== "undefined" && Notification.permission === "granted") {
     new Notification("Protocolo Hidratação", {
       body: "Hora de beber água! 💧",
-      icon: "imagens/icons8-neo.svg"
+      icon: "imagens/doroapp_favicon.svg"
     });
   }
 

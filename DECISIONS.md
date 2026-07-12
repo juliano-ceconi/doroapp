@@ -958,21 +958,24 @@ O usuário solicitou uma maneira de importar arquivos de logs/histórico exporta
 
 ---
 
-## [2026-07-12] Substituição do Favicon por Design Autoral (SVG Minimalista)
+## [2026-07-12] Substituição do Favicon por Design Autoral (SVG Minimalista & PWA Manifest)
 
 ### Contexto
 
-O Doroapp utilizava um favicon genérico do Matrix (`imagens/icons8-neo.svg`). Havia a necessidade de possuir um favicon autoral que estivesse diretamente conectado à lore e aos conceitos do projeto (como o nível inicial "Perdido na Toca do Coelho") em estilo de ficção científica (sci-fi), mas com foco em minimalismo e transparência perfeita.
+O Doroapp utilizava um favicon genérico do Matrix (`imagens/icons8-neo.svg`). Havia a necessidade de possuir um favicon autoral conectado à lore do projeto (nível inicial "Perdido na Toca do Coelho") em estilo de ficção científica (sci-fi), com minimalismo, transparência e consistência tanto na aba do navegador quanto quando instalado como Chrome App (PWA) ou em notificações nativas.
 
 ### Decisão
 
 1. Criar um favicon autoral ultra-minimalista no formato SVG contendo o desenho em wireframe geométrico de um coelho (linhas brancas) e um visor horizontal verde neon.
 2. Salvar o arquivo gerado como `doroapp_favicon.svg` na pasta `imagens/`.
 3. Atualizar o `index.html` para carregar o novo favicon em formato SVG (`type="image/svg+xml"`).
+4. Adicionar um arquivo de manifesto web (`manifest.json`) especificando metadados de PWA e o ícone SVG com tamanho dinâmico (`sizes: "any"`), vinculando-o no `index.html`. Isso garante que o instalador do Chrome no Windows utilize o ícone do coelho transparente para o app instalado, em vez de gerar um ícone padrão com a letra "D".
+5. Atualizar o caminho de ícone de notificações de hidratação no `script.js` para usar o novo favicon SVG.
 
 ### Consequências
 
-- O Doroapp agora possui identidade visual autoral, moderna e diretamente conectada aos conceitos do projeto.
-- O uso do formato SVG garante transparência nativa perfeita, peso inferior a 1KB e renderização nítida sem serrilhados em qualquer tamanho de tela ou aba do navegador.
+- Identidade visual autoral, moderna e coesa em todas as interfaces: aba do navegador, atalho do Chrome App (PWA) no Windows e popups de notificações do sistema.
+- Uso do formato SVG garante transparência perfeita em qualquer tema de fundo, peso inferior a 1KB e renderização vetorial nítida.
+
 
 
