@@ -958,20 +958,21 @@ O usuário solicitou uma maneira de importar arquivos de logs/histórico exporta
 
 ---
 
-## [2026-07-12] Substituição do Favicon por Design Autoral
+## [2026-07-12] Substituição do Favicon por Design Autoral (SVG Minimalista)
 
 ### Contexto
 
-O Doroapp utilizava um favicon genérico do Matrix (`imagens/icons8-neo.svg`). Havia a necessidade de possuir um favicon autoral que estivesse diretamente conectado à lore e aos conceitos do projeto, como o nível inicial "Perdido na Toca do Coelho" e o estilo de ficção científica (sci-fi).
+O Doroapp utilizava um favicon genérico do Matrix (`imagens/icons8-neo.svg`). Havia a necessidade de possuir um favicon autoral que estivesse diretamente conectado à lore e aos conceitos do projeto (como o nível inicial "Perdido na Toca do Coelho") em estilo de ficção científica (sci-fi), mas com foco em minimalismo e transparência perfeita.
 
 ### Decisão
 
-1. Criar um favicon autoral no estilo cyberpunk/sci-fi de um coelho branco com visor neon verde.
-2. Salvar o arquivo gerado como `doroapp_favicon.png` na pasta `imagens/`.
-3. Atualizar o `index.html` para carregar o novo favicon em formato PNG.
+1. Criar um favicon autoral ultra-minimalista no formato SVG contendo o desenho em wireframe geométrico de um coelho (linhas brancas) e um visor horizontal verde neon.
+2. Salvar o arquivo gerado como `doroapp_favicon.svg` na pasta `imagens/`.
+3. Atualizar o `index.html` para carregar o novo favicon em formato SVG (`type="image/svg+xml"`).
 
 ### Consequências
 
-- O Doroapp agora possui identidade visual autoral e conectada ao conceito do projeto.
-- O favicon é carregado em formato PNG de alta resolução com suporte a transparência e fidelidade de cores cyberpunk.
+- O Doroapp agora possui identidade visual autoral, moderna e diretamente conectada aos conceitos do projeto.
+- O uso do formato SVG garante transparência nativa perfeita, peso inferior a 1KB e renderização nítida sem serrilhados em qualquer tamanho de tela ou aba do navegador.
+
 

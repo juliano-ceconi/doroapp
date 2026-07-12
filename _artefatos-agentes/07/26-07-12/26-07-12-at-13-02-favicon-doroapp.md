@@ -1,14 +1,15 @@
-# Registro de Plano: Alteração do Favicon no Doroapp
-Data: 2026-07-12 13:02 (Local)
+# Registro de Plano: Alteração do Favicon no Doroapp (Revisado - Minimalista)
+Data: 2026-07-12 13:13 (Local)
 
 ## Descrição
-Substituição do favicon atual (`imagens/icons8-neo.svg`) por um favicon de coelho cyberpunk sci-fi autoral.
+Substituição do favicon anterior por uma opção ultra-minimalista com fundo transparente.
 
-## Proposta de Design
-Imagem gerada: `C:\Users\cecon\.gemini\antigravity-ide\brain\b09e33a6-877a-49a0-aab2-ea3dea584877\doroapp_favicon_1783872178836.png`
+## Propostas Apresentadas
+1. **Opção A (SVG Vetorial Geométrico)**: Código SVG puro contendo um coelho wireframe branco e visor neon verde. Totalmente transparente e nítido.
+2. **Opção B (PNG Minimalista da IA)**: Imagem minimalista do coelho gerada pela IA, convertida para fundo transparente.
 
 ## Alterações Planejadas
-- Copiar imagem para `05_Vida/doroapp/imagens/doroapp_favicon.png`
-- Atualizar link de favicon em `05_Vida/doroapp/index.html`
-- Registrar decisão em `05_Vida/doroapp/DECISIONS.md`
+- Copiar o arquivo correspondente para `05_Vida/doroapp/imagens/` (doroapp_favicon.svg ou doroapp_favicon.png).
+- Atualizar o link de favicon em `05_Vida/doroapp/index.html`.
+- Atualizar o registro da decisão em `05_Vida/doroapp/DECISIONS.md`.
 - Commit & Push para deploy no Vercel.
