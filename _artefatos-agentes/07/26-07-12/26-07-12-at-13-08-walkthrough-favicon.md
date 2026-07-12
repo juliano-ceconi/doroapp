@@ -1,11 +1,12 @@
-# Registro de Walkthrough: Substituição do Favicon do Doroapp por Design Autoral (SVG Minimalista)
-Data: 2026-07-12 13:18 (Local)
+# Registro de Walkthrough: Substituição do Favicon do Doroapp por Design Autoral (SVG Minimalista & PWA Manifest)
+Data: 2026-07-12 13:30 (Local)
 
 ## Resumo das Alterações
-- Deletado o arquivo temporário anterior `imagens/doroapp_favicon.png`.
-- Adicionado arquivo `imagens/doroapp_favicon.svg` contendo um coelho minimalista geométrico (linhas brancas com visor verde neon e fundo transparente nativo).
-- Modificado `index.html` para carregar o favicon em formato SVG (`type="image/svg+xml"`).
-- Adicionado registro atualizado em `DECISIONS.md`.
+- Adicionado arquivo `imagens/doroapp_favicon.svg` contendo o coelho minimalista geométrico (linhas brancas com visor verde neon e fundo transparente nativo).
+- Criado `manifest.json` com especificações PWA vinculadas ao favicon SVG com sizes "any" para que atalhos do Chrome App no Windows usem a imagem correta do coelho transparente.
+- Modificado `index.html` para carregar o favicon e apontar para o `manifest.json`.
+- Atualizado o ícone das notificações de água no `script.js` para usar o novo favicon SVG.
+- Adicionado registro de decisão em `DECISIONS.md`.
 - Commit e push realizados para deploy automático de produção no Vercel.
 
 ## Código do Favicon SVG Criado
