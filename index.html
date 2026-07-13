@@ -155,12 +155,16 @@
           <h3>Configurações</h3>
           <div class="config-row">
             <span class="config-label">TECLADO:</span>
-            <select id="select-keyboard-switch" class="sys-select">
-              <option value="none">NENHUM</option>
-              <option value="brown">CHERRY MX BROWN</option>
-              <option value="red">CHERRY MX RED</option>
-              <option value="blue">CHERRY MX BLUE</option>
-            </select>
+            <div style="display: flex; align-items: center; gap: 0.4rem; flex: 1; justify-content: flex-end;">
+              <select id="select-keyboard-switch" class="sys-select" style="flex: 1; max-width: 90px;">
+                <option value="none">NENHUM</option>
+                <option value="brown">CHERRY MX BROWN</option>
+                <option value="red">CHERRY MX RED</option>
+                <option value="blue">CHERRY MX BLUE</option>
+              </select>
+              <input type="range" id="slider-keyboard-vol" class="sys-slider" min="0" max="100" value="80" title="Volume do som do teclado">
+              <span id="label-keyboard-vol" style="font-size: 0.6rem; font-weight: bold; min-width: 25px; text-align: right;">80%</span>
+            </div>
           </div>
           <div class="config-row" style="margin-top: 0.5rem;">
             <span class="config-label">AUTO MATRIX:</span>
@@ -182,8 +186,8 @@
             </div>
           </div>
           <div class="config-row" style="margin-top: 0.5rem;">
-            <span class="config-label">AMBIENT TELA:</span>
-            <button id="btn-sys-ambient" class="btn-config" title="Protetor de tela Matrix Rain (ou pressione ESC)">SYS AMBIENT</button>
+            <span class="config-label">BLOQUEAR TELA:</span>
+            <button id="btn-sys-ambient" class="btn-config" title="Protetor de tela Matrix Rain (ou pressione ESC)">MATRIX</button>
           </div>
           <div class="config-row" style="margin-top: 0.5rem;">
             <span class="config-label">TELA CHEIA:</span>
