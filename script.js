@@ -91,6 +91,7 @@ let gameState = {
     sambanova: 0,
   },
   keyboardSwitch: 'none',
+  keyboardVolume: 80,
   activeTaskId: null,
   monoTaskingActive: false,
   ambientAutoActive: true,
@@ -242,16 +243,23 @@ function playKeyboardSound(switchType) {
   if (audioCtx.state === "suspended") audioCtx.resume();
   const time = audioCtx.currentTime;
 
+  const keyboardVolume = (gameState.keyboardVolume !== undefined) ? gameState.keyboardVolume : 80;
+  const keyboardGainMultiplier = keyboardVolume / 100;
+
+  const keyboardGain = audioCtx.createGain();
+  keyboardGain.gain.setValueAtTime(keyboardGainMultiplier, time);
+  keyboardGain.connect(audioCtx.destination);
+
   const impactOsc = audioCtx.createOscillator();
   const impactGain = audioCtx.createGain();
   impactOsc.connect(impactGain);
-  impactGain.connect(audioCtx.destination);
+  impactGain.connect(keyboardGain);
 
   const noiseSource = audioCtx.createBufferSource();
   noiseSource.buffer = getWhiteNoiseBuffer();
   const noiseGain = audioCtx.createGain();
   noiseSource.connect(noiseGain);
-  noiseGain.connect(audioCtx.destination);
+  noiseGain.connect(keyboardGain);
 
   if (switchType === 'blue') {
     impactOsc.frequency.setValueAtTime(180, time);
@@ -267,7 +275,7 @@ function playKeyboardSound(switchType) {
     clickGain.gain.setValueAtTime(0.07, time);
     clickGain.gain.exponentialRampToValueAtTime(0.001, time + 0.006);
     clickOsc.connect(clickGain);
-    clickGain.connect(audioCtx.destination);
+    clickGain.connect(keyboardGain);
     clickOsc.start(time);
     clickOsc.stop(time + 0.01);
 
@@ -288,7 +296,7 @@ function playKeyboardSound(switchType) {
     tactileGain.gain.setValueAtTime(0.03, time);
     tactileGain.gain.exponentialRampToValueAtTime(0.001, time + 0.008);
     tactileOsc.connect(tactileGain);
-    tactileGain.connect(audioCtx.destination);
+    tactileGain.connect(keyboardGain);
     tactileOsc.start(time);
     tactileOsc.stop(time + 0.01);
 
@@ -1208,6 +1216,7 @@ function loadGame() {
     gameState.tasks = parsed.tasks || [];
     gameState.operatorName = parsed.operatorName || "Juliano Ceconi";
     gameState.keyboardSwitch = parsed.keyboardSwitch || 'none';
+    gameState.keyboardVolume = parsed.keyboardVolume !== undefined ? parsed.keyboardVolume : 80;
     gameState.activeTaskId = parsed.activeTaskId || null;
     gameState.monoTaskingActive = parsed.monoTaskingActive || false;
     gameState.ambientAutoActive = parsed.ambientAutoActive !== undefined ? parsed.ambientAutoActive : true;
@@ -1313,6 +1322,7 @@ function loadGame() {
       opencode: 0,
     };
     gameState.keyboardSwitch = 'none';
+    gameState.keyboardVolume = 80;
     gameState.activeTaskId = null;
     gameState.monoTaskingActive = false;
   }
@@ -1342,6 +1352,14 @@ function loadGame() {
   const switchSelect = document.getElementById("select-keyboard-switch");
   if (switchSelect) {
     switchSelect.value = gameState.keyboardSwitch || "none";
+  }
+  const sliderKeyboardVol = document.getElementById("slider-keyboard-vol");
+  const labelKeyboardVol = document.getElementById("label-keyboard-vol");
+  if (sliderKeyboardVol) {
+    sliderKeyboardVol.value = gameState.keyboardVolume !== undefined ? gameState.keyboardVolume : 80;
+  }
+  if (labelKeyboardVol) {
+    labelKeyboardVol.innerText = `${gameState.keyboardVolume !== undefined ? gameState.keyboardVolume : 80}%`;
   }
 
   // Sync Ambient Auto Dropdown
@@ -1937,6 +1955,22 @@ document.addEventListener("DOMContentLoaded", () => {
   if (switchSelect) {
     switchSelect.addEventListener("change", (e) => {
       gameState.keyboardSwitch = e.target.value;
+      saveGame();
+    });
+  }
+
+  // Configurar volume do teclado
+  const sliderKeyboardVol = document.getElementById("slider-keyboard-vol");
+  const labelKeyboardVol = document.getElementById("label-keyboard-vol");
+  if (sliderKeyboardVol) {
+    sliderKeyboardVol.addEventListener("input", (e) => {
+      const vol = parseInt(e.target.value, 10);
+      gameState.keyboardVolume = vol;
+      if (labelKeyboardVol) {
+        labelKeyboardVol.innerText = `${vol}%`;
+      }
+    });
+    sliderKeyboardVol.addEventListener("change", () => {
       saveGame();
     });
   }
