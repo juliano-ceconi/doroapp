@@ -93,6 +93,7 @@ let gameState = {
   keyboardSwitch: 'none',
   activeTaskId: null,
   monoTaskingActive: false,
+  ambientAutoActive: true,
 };
 
 const AGENT_COLORS = {
@@ -1132,6 +1133,7 @@ function loadGame() {
     gameState.keyboardSwitch = parsed.keyboardSwitch || 'none';
     gameState.activeTaskId = parsed.activeTaskId || null;
     gameState.monoTaskingActive = parsed.monoTaskingActive || false;
+    gameState.ambientAutoActive = parsed.ambientAutoActive !== undefined ? parsed.ambientAutoActive : true;
 
     // Restore metrics
     if (parsed.metrics) {
@@ -1260,6 +1262,12 @@ function loadGame() {
   const switchSelect = document.getElementById("select-keyboard-switch");
   if (switchSelect) {
     switchSelect.value = gameState.keyboardSwitch || "none";
+  }
+
+  // Sync Ambient Auto Dropdown
+  const ambientAutoSelect = document.getElementById("select-ambient-auto");
+  if (ambientAutoSelect) {
+    ambientAutoSelect.value = gameState.ambientAutoActive ? "on" : "off";
   }
 
   // Sync Mono Tasking UI
@@ -1688,10 +1696,7 @@ function toggleMatrixRain(forceState) {
 let inactivityTimer = null;
 function resetInactivityTimer() {
   clearTimeout(inactivityTimer);
-  if (isMatrixActive) {
-    toggleMatrixRain(false);
-  }
-  if (isRunning && mode === "focus") {
+  if (gameState.ambientAutoActive && isRunning && mode === "focus") {
     inactivityTimer = setTimeout(() => {
       toggleMatrixRain(true);
     }, 30000);
@@ -1816,6 +1821,16 @@ document.addEventListener("DOMContentLoaded", () => {
     switchSelect.addEventListener("change", (e) => {
       gameState.keyboardSwitch = e.target.value;
       saveGame();
+    });
+  }
+
+  // Configurar dropdown de auto matrix
+  const ambientAutoSelect = document.getElementById("select-ambient-auto");
+  if (ambientAutoSelect) {
+    ambientAutoSelect.addEventListener("change", (e) => {
+      gameState.ambientAutoActive = e.target.value === "on";
+      saveGame();
+      resetInactivityTimer();
     });
   }
 

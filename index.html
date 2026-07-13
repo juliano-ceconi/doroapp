@@ -162,6 +162,17 @@
               <option value="blue">CHERRY MX BLUE</option>
             </select>
           </div>
+          <div class="config-row" style="margin-top: 0.5rem;">
+            <span class="config-label">AUTO MATRIX (30s):</span>
+            <select id="select-ambient-auto" class="sys-select">
+              <option value="off">OFF</option>
+              <option value="on">ON</option>
+            </select>
+          </div>
+          <div class="config-row" style="margin-top: 0.5rem;">
+            <span class="config-label">AMBIENT TELA:</span>
+            <button id="btn-sys-ambient" class="btn-config" title="Protetor de tela Matrix Rain (ou pressione ESC)">SYS AMBIENT</button>
+          </div>
         </div>
 
         <div class="sys-dump-panel">
@@ -204,7 +215,6 @@
               <span id="system-status">SISTEMA AGUARDANDO...</span>
               <span class="status-divider">|</span>
               <button id="btn-agent-toggle" class="btn-protocol">AGENTE: <span id="agent-status-text">OFF</span></button>
-              <button id="btn-sys-ambient" class="btn-protocol" title="Protetor de tela Matrix Rain (ou pressione ESC)">SYS AMBIENT</button>
               <div class="agent-colors" id="agent-colors">
                 <button class="color-swatch" data-color="purple" title="Roxo" style="background:#b026ff"></button>
                 <button class="color-swatch" data-color="red" title="Vermelho" style="background:#ff2b2b"></button>

@@ -977,5 +977,29 @@ O Doroapp utilizava um favicon genérico do Matrix (`imagens/icons8-neo.svg`). H
 - Identidade visual autoral, moderna e coesa em todas as interfaces: aba do navegador, atalho do Chrome App (PWA) no Windows e popups de notificações do sistema.
 - Uso do formato SVG garante transparência perfeita em qualquer tema de fundo, peso inferior a 1KB e renderização vetorial nítida.
 
+---
+
+## [2026-07-13] Refatoração e Reposicionamento do Protetor de Tela (SYS AMBIENT)
+
+### Contexto
+
+O botão de protetor de tela "SYS AMBIENT" estava localizado na div central `.status-indicator` poluindo visualmente a área do temporizador principal. Além disso, o comportamento do protetor de tela continha problemas de usabilidade:
+1. Qualquer movimento infinitesimal do mouse (1px) ou digitação de teclado fechava o protetor de tela instantaneamente. Isso impedia o usuário de ativar manualmente o protetor em um monitor/janela e interagir com outros aplicativos/páginas no computador.
+2. O temporizador de inatividade padrão (30s) não possuía chave de desativação (on/off).
+
+### Decisão
+
+1. Mover o botão "SYS AMBIENT" da div central `.status-indicator` para o painel `.sys-config-panel` (Configurações) na sidebar esquerda inferior.
+2. Adicionar uma nova configuração do tipo select "AUTO MATRIX (30s)" em `.sys-config-panel` para habilitar ou desabilitar a ativação automática do protetor por inatividade, persistida na propriedade `gameState.ambientAutoActive`.
+3. Ajustar os estilos CSS no `.sys-config-panel` com a criação da classe `.btn-config`, mantendo a harmonia dimensional e estética Cyberpunk.
+4. Alterar a função `resetInactivityTimer` no `script.js` eliminando o fechamento automático da chuva Matrix ao registrar movimentação de periféricos. O fechamento agora é delegado exclusivamente ao evento de clique no próprio canvas do protetor (`matrixCanvas`) ou pressionando a tecla `ESC`.
+5. Condicionar o temporizador de 30s de inatividade na função `resetInactivityTimer` ao estado de `gameState.ambientAutoActive`.
+
+### Consequências
+
+- Redução da poluição visual no dashboard de foco central do Pomodoro.
+- O protetor de tela Matrix Rain agora funciona como um protetor autêntico e persistente, permitindo focar em tarefas ou usar outros aplicativos em segundo plano sem que ele se feche sozinho com pequenas movimentações de mouse.
+- Interface de configurações unificada na sidebar esquerda com controle explícito e persistente do protetor automático.
+
 
 
