@@ -311,7 +311,7 @@ function playKeyboardSound(switchType) {
   noiseSource.stop(time + 0.05);
 }
 
-// Gray Noise Synthesis
+// Gray Noise Synthesis (Sintetizado como Ruído Marrom aveludado para conforto auditivo)
 let grayNoiseBuffer = null;
 function getGrayNoiseBuffer() {
   if (grayNoiseBuffer) return grayNoiseBuffer;
@@ -319,9 +319,15 @@ function getGrayNoiseBuffer() {
   const bufferSize = sampleRate * 2.0; // 2 segundos
   const buffer = audioCtx.createBuffer(1, bufferSize, sampleRate);
   const data = buffer.getChannelData(0);
+  
+  let lastOut = 0.0;
   for (let i = 0; i < bufferSize; i++) {
-    data[i] = Math.random() * 2 - 1;
+    const white = Math.random() * 2 - 1;
+    // Algoritmo clássico de ruído marrom (integração) para som aveludado e profundo
+    lastOut = (lastOut + (0.02 * white)) / 1.02;
+    data[i] = lastOut * 3.5; // Compensar perda de ganho
   }
+  
   grayNoiseBuffer = buffer;
   return grayNoiseBuffer;
 }
@@ -347,28 +353,8 @@ function startGrayNoise() {
   const vol = Math.pow((gameState.grayNoiseVolume !== undefined ? gameState.grayNoiseVolume : 50) / 100, 2) * maxGain;
   grayNoiseGain.gain.setValueAtTime(vol, audioCtx.currentTime);
   
-  // Filtros psicoacústicos para simular ruído cinza (grave/agudo elevados, médios atenuados)
-  const lowShelf = audioCtx.createBiquadFilter();
-  lowShelf.type = "lowshelf";
-  lowShelf.frequency.value = 150;
-  lowShelf.gain.value = 8;
-  
-  const peaking = audioCtx.createBiquadFilter();
-  peaking.type = "peaking";
-  peaking.frequency.value = 2000;
-  peaking.Q.value = 0.5;
-  peaking.gain.value = -6;
-  
-  const highShelf = audioCtx.createBiquadFilter();
-  highShelf.type = "highshelf";
-  highShelf.frequency.value = 6000;
-  highShelf.gain.value = 8;
-  
-  // Conectar cadeia
-  grayNoiseSource.connect(lowShelf);
-  lowShelf.connect(peaking);
-  peaking.connect(highShelf);
-  highShelf.connect(grayNoiseGain);
+  // Conectar diretamente (o ruído marrom gerado no buffer já é perfeitamente suave e aveludado)
+  grayNoiseSource.connect(grayNoiseGain);
   grayNoiseGain.connect(audioCtx.destination);
   
   grayNoiseSource.start();
