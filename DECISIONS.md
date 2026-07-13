@@ -1057,7 +1057,7 @@ Para melhorar a clareza textual e o controle auditivo no Doroapp:
 ### Decisão
 
 1. Renomear o texto explicativo da linha correspondente a Matrix Rain para "BLOQUEAR TELA:" e o texto do botão de ativação para "MATRIX" no arquivo `index.html`.
-2. Adicionar um controle deslizante de volume (`#slider-keyboard-vol` de classe `.sys-slider`) e a respectiva label de percentual (`#label-keyboard-vol`) na mesma linha de configuração do tipo de teclado ("TECLADO") no painel lateral do `index.html`.
+2. Adicionar um controle deslizante de volume (`#slider-keyboard-vol` de classe `.sys-slider`) e a respectiva label de percentual (`#label-keyboard-vol`) em uma nova linha ("VOL TECLADO") abaixo da linha de seleção do switch de teclado ("TECLADO") no painel lateral do `index.html`, evitando poluição visual e encavalamento de elementos.
 3. Adicionar a variável `keyboardVolume` (valor inicial de 80) no `gameState` para persistência no `localStorage`.
 4. Refatorar a lógica de geração de som do teclado no `script.js` dentro da função `playKeyboardSound()` para criar um nó de ganho centralizado (`keyboardGain`) que multiplica os ganhos originais do tipo de switch pelo volume do teclado, permitindo atenuação e amplificação suave.
 5. Adicionar listeners para monitoramento do slider e atualização dinâmica do volume e da label em tempo real.
