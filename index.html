@@ -163,11 +163,23 @@
             </select>
           </div>
           <div class="config-row" style="margin-top: 0.5rem;">
-            <span class="config-label">AUTO MATRIX (30s):</span>
+            <span class="config-label">AUTO MATRIX:</span>
             <select id="select-ambient-auto" class="sys-select">
-              <option value="off">OFF</option>
-              <option value="on">ON</option>
+              <option value="off">DESATIVADO</option>
+              <option value="15">15s</option>
+              <option value="30">30s</option>
+              <option value="60">1m</option>
+              <option value="120">2m</option>
+              <option value="300">5m</option>
             </select>
+          </div>
+          <div class="config-row" style="margin-top: 0.5rem;">
+            <span class="config-label">RUÍDO CINZA:</span>
+            <div style="display: flex; align-items: center; gap: 0.4rem; flex: 1; justify-content: flex-end;">
+              <button id="btn-gray-noise" class="btn-config" style="min-width: 32px; padding: 2px 4px;">OFF</button>
+              <input type="range" id="slider-gray-noise" class="sys-slider" min="0" max="100" value="50" title="Volume do ruído cinza">
+              <span id="label-gray-noise-vol" style="font-size: 0.6rem; font-weight: bold; min-width: 25px; text-align: right;">50%</span>
+            </div>
           </div>
           <div class="config-row" style="margin-top: 0.5rem;">
             <span class="config-label">AMBIENT TELA:</span>

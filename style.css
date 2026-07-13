@@ -1599,6 +1599,59 @@ body:not(.agent-mode-active) .agent-colors {
   color: var(--matrix-green);
 }
 
+.btn-config.active {
+  background: var(--matrix-green);
+  color: var(--matrix-bg);
+  border-color: var(--matrix-green);
+  box-shadow: 0 0 5px var(--matrix-glow);
+}
+
+.sys-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--matrix-bg);
+  border: 1px solid var(--matrix-dim);
+  height: 10px;
+  width: 60px;
+  border-radius: var(--radius-sm);
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sys-slider:hover, .sys-slider:focus {
+  border-color: var(--matrix-green);
+  box-shadow: 0 0 5px var(--matrix-glow);
+}
+
+.sys-slider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.sys-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 6px;
+  height: 8px;
+  background: var(--matrix-green);
+  box-shadow: 0 0 4px var(--matrix-glow);
+  border-radius: 1px;
+  cursor: pointer;
+}
+
+.sys-slider::-moz-range-thumb {
+  width: 6px;
+  height: 8px;
+  background: var(--matrix-green);
+  box-shadow: 0 0 4px var(--matrix-glow);
+  border-radius: 1px;
+  border: none;
+  cursor: pointer;
+}
+
+
 /* Painel SYS DUMP (Captura de Notas) */
 .sys-dump-panel {
   margin-top: 1rem;

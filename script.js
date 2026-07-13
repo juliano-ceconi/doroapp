@@ -94,6 +94,9 @@ let gameState = {
   activeTaskId: null,
   monoTaskingActive: false,
   ambientAutoActive: true,
+  ambientAutoTimeout: 30,
+  grayNoiseActive: false,
+  grayNoiseVolume: 50,
 };
 
 const AGENT_COLORS = {
@@ -307,6 +310,92 @@ function playKeyboardSound(switchType) {
   noiseSource.start(time);
   noiseSource.stop(time + 0.05);
 }
+
+// Gray Noise Synthesis
+let grayNoiseBuffer = null;
+function getGrayNoiseBuffer() {
+  if (grayNoiseBuffer) return grayNoiseBuffer;
+  const sampleRate = audioCtx.sampleRate;
+  const bufferSize = sampleRate * 2.0; // 2 segundos
+  const buffer = audioCtx.createBuffer(1, bufferSize, sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) {
+    data[i] = Math.random() * 2 - 1;
+  }
+  grayNoiseBuffer = buffer;
+  return grayNoiseBuffer;
+}
+
+let grayNoiseSource = null;
+let grayNoiseGain = null;
+
+function startGrayNoise() {
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+  
+  if (grayNoiseSource) {
+    stopGrayNoise();
+  }
+  
+  grayNoiseSource = audioCtx.createBufferSource();
+  grayNoiseSource.buffer = getGrayNoiseBuffer();
+  grayNoiseSource.loop = true;
+  
+  grayNoiseGain = audioCtx.createGain();
+  const vol = (gameState.grayNoiseVolume !== undefined ? gameState.grayNoiseVolume : 50) / 100;
+  grayNoiseGain.gain.setValueAtTime(vol, audioCtx.currentTime);
+  
+  // Filtros psicoacústicos para simular ruído cinza (grave/agudo elevados, médios atenuados)
+  const lowShelf = audioCtx.createBiquadFilter();
+  lowShelf.type = "lowshelf";
+  lowShelf.frequency.value = 150;
+  lowShelf.gain.value = 8;
+  
+  const peaking = audioCtx.createBiquadFilter();
+  peaking.type = "peaking";
+  peaking.frequency.value = 2000;
+  peaking.Q.value = 0.5;
+  peaking.gain.value = -6;
+  
+  const highShelf = audioCtx.createBiquadFilter();
+  highShelf.type = "highshelf";
+  highShelf.frequency.value = 6000;
+  highShelf.gain.value = 8;
+  
+  // Conectar cadeia
+  grayNoiseSource.connect(lowShelf);
+  lowShelf.connect(peaking);
+  peaking.connect(highShelf);
+  highShelf.connect(grayNoiseGain);
+  grayNoiseGain.connect(audioCtx.destination);
+  
+  grayNoiseSource.start();
+}
+
+function stopGrayNoise() {
+  if (grayNoiseSource) {
+    try {
+      grayNoiseSource.stop();
+    } catch (e) {
+      // Ignorar se já estiver parado
+    }
+    grayNoiseSource.disconnect();
+    grayNoiseSource = null;
+  }
+  if (grayNoiseGain) {
+    grayNoiseGain.disconnect();
+    grayNoiseGain = null;
+  }
+}
+
+function updateGrayNoiseVolume(volume) {
+  const vol = volume / 100;
+  if (grayNoiseGain) {
+    grayNoiseGain.gain.setValueAtTime(vol, audioCtx.currentTime);
+  }
+}
+
 
 // DOM Elements
 const timerDisplay = document.getElementById("timer");
@@ -1134,6 +1223,9 @@ function loadGame() {
     gameState.activeTaskId = parsed.activeTaskId || null;
     gameState.monoTaskingActive = parsed.monoTaskingActive || false;
     gameState.ambientAutoActive = parsed.ambientAutoActive !== undefined ? parsed.ambientAutoActive : true;
+    gameState.ambientAutoTimeout = parsed.ambientAutoTimeout !== undefined ? parsed.ambientAutoTimeout : 30;
+    gameState.grayNoiseActive = parsed.grayNoiseActive !== undefined ? parsed.grayNoiseActive : false;
+    gameState.grayNoiseVolume = parsed.grayNoiseVolume !== undefined ? parsed.grayNoiseVolume : 50;
 
     // Restore metrics
     if (parsed.metrics) {
@@ -1267,7 +1359,26 @@ function loadGame() {
   // Sync Ambient Auto Dropdown
   const ambientAutoSelect = document.getElementById("select-ambient-auto");
   if (ambientAutoSelect) {
-    ambientAutoSelect.value = gameState.ambientAutoActive ? "on" : "off";
+    if (!gameState.ambientAutoActive) {
+      ambientAutoSelect.value = "off";
+    } else {
+      ambientAutoSelect.value = String(gameState.ambientAutoTimeout || 30);
+    }
+  }
+
+  // Sync Gray Noise UI
+  const btnGrayNoise = document.getElementById("btn-gray-noise");
+  const sliderGrayNoise = document.getElementById("slider-gray-noise");
+  const labelGrayNoiseVol = document.getElementById("label-gray-noise-vol");
+  if (btnGrayNoise) {
+    btnGrayNoise.innerText = gameState.grayNoiseActive ? "ON" : "OFF";
+    btnGrayNoise.classList.toggle("active", !!gameState.grayNoiseActive);
+  }
+  if (sliderGrayNoise) {
+    sliderGrayNoise.value = gameState.grayNoiseVolume !== undefined ? gameState.grayNoiseVolume : 50;
+  }
+  if (labelGrayNoiseVol) {
+    labelGrayNoiseVol.innerText = `${gameState.grayNoiseVolume !== undefined ? gameState.grayNoiseVolume : 50}%`;
   }
 
   // Sync Mono Tasking UI
@@ -1697,9 +1808,10 @@ let inactivityTimer = null;
 function resetInactivityTimer() {
   clearTimeout(inactivityTimer);
   if (gameState.ambientAutoActive && isRunning && mode === "focus") {
+    const delayMs = (gameState.ambientAutoTimeout || 30) * 1000;
     inactivityTimer = setTimeout(() => {
       toggleMatrixRain(true);
-    }, 30000);
+    }, delayMs);
   }
 }
 
@@ -1845,11 +1957,71 @@ document.addEventListener("DOMContentLoaded", () => {
   const ambientAutoSelect = document.getElementById("select-ambient-auto");
   if (ambientAutoSelect) {
     ambientAutoSelect.addEventListener("change", (e) => {
-      gameState.ambientAutoActive = e.target.value === "on";
+      const val = e.target.value;
+      if (val === "off") {
+        gameState.ambientAutoActive = false;
+      } else {
+        gameState.ambientAutoActive = true;
+        gameState.ambientAutoTimeout = parseInt(val, 10);
+      }
       saveGame();
       resetInactivityTimer();
     });
   }
+
+  // Configurar Ruído Cinza
+  const btnGrayNoise = document.getElementById("btn-gray-noise");
+  const sliderGrayNoise = document.getElementById("slider-gray-noise");
+  const labelGrayNoiseVol = document.getElementById("label-gray-noise-vol");
+
+  if (btnGrayNoise) {
+    btnGrayNoise.addEventListener("click", () => {
+      gameState.grayNoiseActive = !gameState.grayNoiseActive;
+      btnGrayNoise.innerText = gameState.grayNoiseActive ? "ON" : "OFF";
+      btnGrayNoise.classList.toggle("active", !!gameState.grayNoiseActive);
+      
+      if (gameState.grayNoiseActive) {
+        startGrayNoise();
+      } else {
+        stopGrayNoise();
+      }
+      saveGame();
+    });
+  }
+
+  if (sliderGrayNoise) {
+    sliderGrayNoise.addEventListener("input", (e) => {
+      const vol = parseInt(e.target.value, 10);
+      gameState.grayNoiseVolume = vol;
+      if (labelGrayNoiseVol) {
+        labelGrayNoiseVol.innerText = `${vol}%`;
+      }
+      updateGrayNoiseVolume(vol);
+    });
+    
+    sliderGrayNoise.addEventListener("change", () => {
+      saveGame();
+    });
+  }
+
+  // Desbloquear AudioContext na primeira interação com a página (necessário em navegadores modernos)
+  const resumeAudioOnInteraction = () => {
+    if (audioCtx.state === "suspended") {
+      audioCtx.resume().then(() => {
+        if (gameState.grayNoiseActive) {
+          startGrayNoise();
+        }
+      });
+    } else {
+      if (gameState.grayNoiseActive) {
+        startGrayNoise();
+      }
+    }
+    document.removeEventListener("click", resumeAudioOnInteraction);
+    document.removeEventListener("keydown", resumeAudioOnInteraction);
+  };
+  document.addEventListener("click", resumeAudioOnInteraction);
+  document.addEventListener("keydown", resumeAudioOnInteraction);
 
   // Event listener global para tocar som de teclado mecânico ao digitar
   document.addEventListener("keydown", (e) => {
