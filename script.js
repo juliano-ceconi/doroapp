@@ -343,7 +343,8 @@ function startGrayNoise() {
   grayNoiseSource.loop = true;
   
   grayNoiseGain = audioCtx.createGain();
-  const vol = (gameState.grayNoiseVolume !== undefined ? gameState.grayNoiseVolume : 50) / 100;
+  const maxGain = 0.15;
+  const vol = Math.pow((gameState.grayNoiseVolume !== undefined ? gameState.grayNoiseVolume : 50) / 100, 2) * maxGain;
   grayNoiseGain.gain.setValueAtTime(vol, audioCtx.currentTime);
   
   // Filtros psicoacústicos para simular ruído cinza (grave/agudo elevados, médios atenuados)
@@ -390,7 +391,8 @@ function stopGrayNoise() {
 }
 
 function updateGrayNoiseVolume(volume) {
-  const vol = volume / 100;
+  const maxGain = 0.15;
+  const vol = Math.pow(volume / 100, 2) * maxGain;
   if (grayNoiseGain) {
     grayNoiseGain.gain.setValueAtTime(vol, audioCtx.currentTime);
   }

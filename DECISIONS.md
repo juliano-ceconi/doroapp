@@ -1034,7 +1034,7 @@ Para melhorar a customização visual e auditiva no doroapp:
 
 1. Modificar a configuração "AUTO MATRIX" no `.sys-config-panel` para um seletor que unifica ativação e tempo de inatividade com opções: Desativado, 15s, 30s, 1m, 2m, 5m.
 2. Adicionar o controle de "RUÍDO CINZA" na barra lateral contendo um botão compacto ON/OFF e um slider de volume estilizado customizadamente (`.sys-slider`) no tema Cyberpunk, variando de 0 a 100%.
-3. Implementar um gerador de ruído cinza de alta performance baseado em Web Audio API usando um buffer de ruído branco circular de 2.0s em loop, esculpido por uma cadeia de filtros biquad do navegador: `lowshelf` (+8dB em 150Hz) e `highshelf` (+8dB em 6000Hz) para amplificar graves/agudos profundos, e `peaking` (-6dB em 2000Hz, Q=0.5) para atenuar a faixa média.
+3. Implementar um gerador de ruído cinza de alta performance baseado em Web Audio API usando um buffer de ruído branco circular de 2.0s em loop, esculpido por uma cadeia de filtros biquad do navegador: `lowshelf` (+8dB em 150Hz) e `highshelf` (+8dB em 6000Hz) para amplificar graves/agudos profundos, e `peaking` (-6dB em 2000Hz, Q=0.5) para atenuar a faixa média. O ganho total de sinal é limitado a 15% (`maxGain = 0.15`) e a resposta do slider de volume é mapeada por uma curva exponencial quadrática para fornecer maior sensibilidade e suavidade em faixas baixas (ex: 1% a 10%).
 4. Adicionar um tratador especial de interação do usuário (`click`, `keydown`) de uso único para desbloquear e resumir o `AudioContext` suspenso nativamente por restrições dos navegadores, dando execução imediata ao ruído cinza caso esteja ativado no estado de carregamento.
 5. Persistir `ambientAutoTimeout` (segundos), `grayNoiseActive` (boolean) e `grayNoiseVolume` (number) no `gameState` e no `localStorage` de forma retrocompatível.
 
@@ -1042,7 +1042,7 @@ Para melhorar a customização visual e auditiva no doroapp:
 
 - Customização total do tempo de inatividade do protetor de tela, prevenindo distrações indesejadas.
 - Inclusão de um gerador psicoacústico de ruído cinza que atua no isolamento auditivo sem exigir processamento pesado em JavaScript nem arquivos de áudio externos (100% sintetizado via hardware).
-- UX aprimorada com persistência de estado e controles cyberpunk.
+- UX aprimorada com persistência de estado, controles cyberpunk e resposta de volume altamente precisa em volumes sutis.
 
 
 
