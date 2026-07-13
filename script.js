@@ -1716,12 +1716,15 @@ document.addEventListener("visibilitychange", () => {
 });
 
 document.addEventListener("keydown", (e) => {
+  const activeEl = document.activeElement;
+  if (activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA")) {
+    return;
+  }
   if (e.key === "Escape") {
-    const activeEl = document.activeElement;
-    if (activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA")) {
-      return;
-    }
     toggleMatrixRain();
+  }
+  if (e.key === "f" || e.key === "F") {
+    toggleFullscreen();
   }
 });
 
@@ -1802,6 +1805,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnSysAmbient) {
     btnSysAmbient.addEventListener("click", () => {
       toggleMatrixRain();
+    });
+  }
+
+  const btnFullscreen = document.getElementById("btn-fullscreen");
+  if (btnFullscreen) {
+    btnFullscreen.addEventListener("click", () => {
+      toggleFullscreen();
     });
   }
   resetInactivityTimer();
@@ -2252,4 +2262,17 @@ function showWaterNotification() {
   document.getElementById("btn-water-close").onclick = () => {
     document.body.removeChild(modal);
   };
+}
+
+// Alternar tela cheia (Full-screen)
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch((err) => {
+      console.error(`Erro ao tentar ativar tela cheia: ${err.message}`);
+    });
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+  }
 }

@@ -1001,5 +1001,24 @@ O botão de protetor de tela "SYS AMBIENT" estava localizado na div central `.st
 - O protetor de tela Matrix Rain agora funciona como um protetor autêntico e persistente, permitindo focar em tarefas ou usar outros aplicativos em segundo plano sem que ele se feche sozinho com pequenas movimentações de mouse.
 - Interface de configurações unificada na sidebar esquerda com controle explícito e persistente do protetor automático.
 
+---
+
+## [2026-07-13] Adição do Botão Full-screen e Atalho de Teclado
+
+### Contexto
+
+Necessidade de alternar o aplicativo Doroapp para tela cheia de forma rápida para aumentar a imersão no protocolo de foco profundo (Deep Focus), seja por interação direta na interface ou por atalho rápido no teclado.
+
+### Decisão
+
+1. Adicionar um botão "FULL SCREEN" no painel de configurações na barra lateral esquerda (`.sys-config-panel`) do `index.html`.
+2. Implementar a lógica utilizando a Fullscreen API do navegador (`requestFullscreen`/`exitFullscreen`) no `script.js` em uma função centralizada `toggleFullscreen()`.
+3. Associar a tecla "f"/"F" no tratador global de eventos de teclado `keydown` (quando não estiver com foco em inputs ou textareas) para alternar a tela cheia.
+
+### Consequências
+
+- O usuário consegue alternar o Doroapp para tela cheia com um clique no botão na barra lateral ou pressionando a tecla "F".
+- Mantém o foco sem distrações visuais do navegador de forma simples e compatível com navegadores modernos.
+
 
 
