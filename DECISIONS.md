@@ -1044,5 +1044,29 @@ Para melhorar a customização visual e auditiva no doroapp:
 - Inclusão de um gerador acústico embutido que atua no isolamento de ruído ambiente de forma extremamente aveludada, imersiva e natural (soando como o barulho relaxante de uma cachoeira ou chuva distante), sem exigir consumo excessivo de CPU ou carregamento de arquivos externos.
 - UX aprimorada com persistência de estado, controles cyberpunk e resposta de volume altamente precisa em volumes sutis.
 
+---
+
+## [2026-07-13] Renomeação do Bloqueio de Tela e Controle de Volume do Teclado
+
+### Contexto
+
+Para melhorar a clareza textual e o controle auditivo no Doroapp:
+1. O texto "AMBIENT TELA: SYS AMBIENT" do protetor de tela causava estranheza. Desejava-se alterar para "BLOQUEAR TELA: MATRIX", alinhado à estética e propósito do recurso.
+2. Os sons de teclado mecânico (Cherry MX Brown, Red, Blue) ao digitar tinham volumes estáticos definidos via código. Era necessário adicionar um controle de volume (0-100) ajustável e persistente pelo usuário diretamente no painel.
+
+### Decisão
+
+1. Renomear o texto explicativo da linha correspondente a Matrix Rain para "BLOQUEAR TELA:" e o texto do botão de ativação para "MATRIX" no arquivo `index.html`.
+2. Adicionar um controle deslizante de volume (`#slider-keyboard-vol` de classe `.sys-slider`) e a respectiva label de percentual (`#label-keyboard-vol`) na mesma linha de configuração do tipo de teclado ("TECLADO") no painel lateral do `index.html`.
+3. Adicionar a variável `keyboardVolume` (valor inicial de 80) no `gameState` para persistência no `localStorage`.
+4. Refatorar a lógica de geração de som do teclado no `script.js` dentro da função `playKeyboardSound()` para criar um nó de ganho centralizado (`keyboardGain`) que multiplica os ganhos originais do tipo de switch pelo volume do teclado, permitindo atenuação e amplificação suave.
+5. Adicionar listeners para monitoramento do slider e atualização dinâmica do volume e da label em tempo real.
+
+### Consequências
+
+- A interface de configurações ficou mais intuitiva com as novas nomenclaturas ("BLOQUEAR TELA: MATRIX").
+- O usuário agora possui controle total de volume sobre os sons de digitação do teclado (0-100), permitindo uma experiência tátil-auditiva sob medida e persistida no navegador.
+
+
 
 
