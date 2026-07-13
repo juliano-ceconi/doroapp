@@ -1771,6 +1771,13 @@ function updateMonoTaskingUI() {
     ? `<span class="pomodoro-badge">Ciclos de Foco: ${task.pomodoroCount}</span>`
     : "";
 
+  const priorityLabels = {
+    diaria: "Foco de Hoje",
+    urgente: "Urgente",
+    importante: "Importante"
+  };
+  const priorityLabel = priorityLabels[task.priority] || task.priority.toUpperCase();
+
   contentEl.innerHTML = `
     <div class="mono-task-card ${task.done ? 'done' : ''} ${task.priority}">
       <button class="mono-task-check" aria-label="Concluir tarefa">${task.done ? "✓" : ""}</button>
@@ -1779,7 +1786,7 @@ function updateMonoTaskingUI() {
         ${tagsHtml}
         ${pomodoroHtml}
       </div>
-      <span class="mono-priority-badge">${task.priority.toUpperCase()}</span>
+      <span class="mono-priority-badge">${priorityLabel}</span>
     </div>
   `;
 

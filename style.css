@@ -1753,7 +1753,7 @@ body:not(.agent-mode-active) .agent-colors {
 .mono-task-card {
   background: rgba(0, 15, 0, 0.4);
   border: 2px solid var(--matrix-green);
-  box-shadow: 0 0 15px rgba(0, 255, 65, 0.15);
+  box-shadow: 0 0 15px var(--matrix-glow);
   padding: 1rem;
   border-radius: var(--radius-sm);
   display: flex;
@@ -1762,10 +1762,6 @@ body:not(.agent-mode-active) .agent-colors {
   position: relative;
   overflow: hidden;
 }
-
-.mono-task-card.urgente { border-color: var(--urgente); box-shadow: 0 0 15px rgba(239, 68, 68, 0.15); }
-.mono-task-card.importante { border-color: var(--importante); box-shadow: 0 0 15px rgba(251, 191, 36, 0.15); }
-.mono-task-card.diaria { border-color: var(--diaria); box-shadow: 0 0 15px rgba(59, 130, 246, 0.15); }
 
 .mono-task-check {
   width: 24px;
@@ -1788,14 +1784,6 @@ body:not(.agent-mode-active) .agent-colors {
   color: var(--matrix-bg);
 }
 
-.mono-task-card.urgente .mono-task-check { border-color: var(--urgente); color: var(--urgente); }
-.mono-task-card.urgente.done .mono-task-check { background: var(--urgente); color: var(--matrix-bg); }
-
-.mono-task-card.importante .mono-task-check { border-color: var(--importante); color: var(--importante); }
-.mono-task-card.importante.done .mono-task-check { background: var(--importante); color: var(--matrix-bg); }
-
-.mono-task-card.diaria .mono-task-check { border-color: var(--diaria); color: var(--diaria); }
-.mono-task-card.diaria.done .mono-task-check { background: var(--diaria); color: var(--matrix-bg); }
 
 .mono-task-content {
   flex: 1;
@@ -1820,15 +1808,11 @@ body:not(.agent-mode-active) .agent-colors {
 .mono-priority-badge {
   font-size: 0.55rem;
   font-weight: bold;
-  border: 1px solid var(--matrix-dim);
+  border: 1px solid var(--matrix-green);
   padding: 2px 6px;
   border-radius: 2px;
-  color: var(--matrix-dim-medium);
+  color: var(--matrix-green);
 }
-
-.mono-task-card.urgente .mono-priority-badge { border-color: var(--urgente); color: var(--urgente); }
-.mono-task-card.importante .mono-priority-badge { border-color: var(--importante); color: var(--importante); }
-.mono-task-card.diaria .mono-priority-badge { border-color: var(--diaria); color: var(--diaria); }
 
 /* Estilos de Botão Foco no Card */
 .task-focus-select {
