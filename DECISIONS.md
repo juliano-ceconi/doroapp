@@ -1067,6 +1067,25 @@ Para melhorar a clareza textual e o controle auditivo no Doroapp:
 - A interface de configurações ficou mais intuitiva com as novas nomenclaturas ("BLOQUEAR TELA: MATRIX").
 - O usuário agora possui controle total de volume sobre os sons de digitação do teclado (0-100), permitindo uma experiência tátil-auditiva sob medida e persistida no navegador.
 
+---
+
+## [2026-07-13] Redução da Velocidade do Protetor de Tela Matrix
+
+### Contexto
+
+O usuário solicitou que a velocidade da queda dos caracteres no bloqueio de tela "Matrix" fosse reduzida para proporcionar uma experiência de foco mais calma ("chill").
+
+### Decisão
+
+1. Reduzir o incremento de posição de queda vertical (`matrixDrops[i]`) de `1` para `0.3` a cada chamada de frame (`drawMatrixRain()`), diminuindo a velocidade em aproximadamente 3.3 vezes.
+2. Alterar o cálculo da coordenada `y` do texto para `Math.floor(matrixDrops[i]) * matrixFontSize`. Isso arredonda a posição para a linha exata da fonte de forma pixel-perfect, evitando anti-aliasing (borrado) que ocorreria ao renderizar caracteres em coordenadas de pixels fracionadas.
+
+### Consequências
+
+- A chuva de códigos Matrix agora cai em um ritmo muito mais relaxante e calmo, reduzindo a distração visual na tela de bloqueio.
+- Os caracteres continuam com renderização perfeitamente nítida devido ao alinhamento pixel-perfect baseado no grid da fonte.
+
+
 
 
 

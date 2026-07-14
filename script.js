@@ -1770,7 +1770,7 @@ function drawMatrixRain() {
   for (let i = 0; i < columns; i++) {
     const char = String.fromCharCode(0x30A0 + Math.random() * 96);
     const x = i * matrixFontSize;
-    const y = matrixDrops[i] * matrixFontSize;
+    const y = Math.floor(matrixDrops[i]) * matrixFontSize;
 
     matrixCtx.fillText(char, x, y);
 
@@ -1778,7 +1778,7 @@ function drawMatrixRain() {
       matrixDrops[i] = 0;
     }
     
-    matrixDrops[i]++;
+    matrixDrops[i] += 0.3;
   }
 
   matrixAnimation = requestAnimationFrame(drawMatrixRain);
