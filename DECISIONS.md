@@ -1085,7 +1085,22 @@ O usuário solicitou que a velocidade da queda dos caracteres no bloqueio de tel
 - A chuva de códigos Matrix agora cai em um ritmo muito mais relaxante e calmo, reduzindo a distração visual na tela de bloqueio.
 - Os caracteres continuam com renderização perfeitamente nítida devido ao alinhamento pixel-perfect baseado no grid da fonte.
 
+---
 
+## [2026-07-15] Novo Favicon Coelho Branco Minimalista de Perfil
 
+### Contexto
 
+O usuário solicitou a criação de um novo favicon para o Doroapp com a imagem de um coelho branco minimalista, de corpo inteiro e visto de lado (de perfil).
 
+### Decisão
+
+1. Fazer o backup do favicon original (`imagens/doroapp_favicon.svg` com estilo cyberpunk de óculos verde neon) como `imagens/doroapp_favicon_original_cyberpunk.svg`.
+2. Substituir `imagens/doroapp_favicon.svg` com um design vetorial SVG composto por curvas fluidas representando um coelho de perfil sentado em branco puro (`#ffffff`), contendo uma orelha traseira sombreada (`#b3b3b3`) para dar profundidade tridimensional.
+3. Aplicar um filtro de sombra projetada (`feDropShadow`) no SVG com opacidade e dispersão calibradas, garantindo que o coelho permaneça altamente visível e nítido tanto em abas de navegadores claras quanto escuras.
+
+### Consequências
+
+- O aplicativo Doroapp agora exibe um favicon minimalista de coelho branco em perfil no navegador, atendendo à nova identidade visual solicitada.
+- A compatibilidade de renderização foi preservada em qualquer tema do navegador do usuário, graças à sombra de contraste aplicada.
+- A referência no `manifest.json` e `index.html` permanece apontada para `imagens/doroapp_favicon.svg`, assegurando que o deploy e cache sejam atualizados sem quebras estruturais.

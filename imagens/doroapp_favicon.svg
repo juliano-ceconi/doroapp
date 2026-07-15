@@ -1,10 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
-  <!-- Orelhas e Rosto em Wireframe Branco -->
-  <path d="M 35 45 L 30 15 L 45 45 Z" stroke="#ffffff" stroke-width="3" stroke-linejoin="round" fill="none" />
-  <path d="M 65 45 L 70 15 L 55 45 Z" stroke="#ffffff" stroke-width="3" stroke-linejoin="round" fill="none" />
-  <path d="M 45 45 L 50 45 L 55 45 L 70 65 L 50 85 L 30 65 Z" stroke="#ffffff" stroke-width="3" stroke-linejoin="round" fill="none" />
-  <path d="M 50 45 L 50 85" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="2,2" fill="none" opacity="0.7" />
-  <path d="M 45 45 L 50 85 L 55 45" stroke="#ffffff" stroke-width="1" fill="none" opacity="0.5" />
-  <!-- Visor Cyberpunk Verde Neon -->
-  <line x1="36" y1="56" x2="64" y2="56" stroke="#00ff66" stroke-width="4.5" stroke-linecap="round" />
+  <!-- Filtro de sombra projetada, garantindo excelente visibilidade tanto em abas de navegadores claras quanto escuras -->
+  <defs>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#shadow)">
+    <!-- Orelha Traseira (sombreada para profundidade tridimensional) -->
+    <path d="M 52 35 C 50 18, 56 10, 59 10 C 62 10, 62 20, 56 38 Z" fill="#b3b3b3" />
+    
+    <!-- Orelha Frontal -->
+    <path d="M 45 32 C 42 13, 48 5, 51 5 C 54 5, 55 17, 49 35 Z" fill="#ffffff" />
+    
+    <!-- Cabeça -->
+    <circle cx="38" cy="42" r="12" fill="#ffffff" />
+    
+    <!-- Pata Dianteira -->
+    <path d="M 33 56 L 33 76 C 33 77.5, 30.5 77.5, 30.5 76 L 30.5 56 Z" fill="#ffffff" />
+    
+    <!-- Corpo Principal -->
+    <path d="M 37 48 C 48 45, 68 50, 68 68 C 68 78, 58 78, 48 78 C 38 78, 34 72, 34 72 Z" fill="#ffffff" />
+    
+    <!-- Coxa Traseira e Pé de Apoio (sobreposição com leve opacidade) -->
+    <path d="M 48 78 C 50 78, 64 78, 64 74 C 64 70, 58 64, 48 64 C 44 64, 44 72, 48 78 Z" fill="#ffffff" opacity="0.95" />
+    
+    <!-- Cauda Pompom -->
+    <circle cx="71" cy="65" r="6.5" fill="#ffffff" />
+  </g>
 </svg>
