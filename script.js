@@ -98,6 +98,9 @@ let gameState = {
   ambientAutoTimeout: 30,
   grayNoiseActive: false,
   grayNoiseVolume: 50,
+  radioActive: false,
+  radioVolume: 50,
+  radioGenre: 'lofi',
 };
 
 const AGENT_COLORS = {
@@ -115,6 +118,26 @@ let currentFocusTime = 25;
 let currentBreakTime = 5;
 const XP_BASE = 7.65;
 const XP_EXPONENT = 3;
+
+const RADIO_PRESETS = {
+  lofi: 'https://radio.loficafe.net/listen/chilling/radio.mp3',
+  rock: 'https://stream.radioparadise.com/mp3-128',
+  house: 'https://ice1.somafm.com/groovesalad-256-mp3',
+  techno: 'https://ice1.somafm.com/sonicuniverse-256-mp3',
+  prog: 'https://ice1.somafm.com/seventies-320-mp3',
+  fullon: 'https://ice1.somafm.com/specials-128-mp3',
+  classica: 'https://classical-stream.iowapublicradio.org/Classical.mp3',
+};
+
+const RADIO_GENRE_NAMES = {
+  lofi: 'Lofi',
+  rock: 'Rock',
+  house: 'House',
+  techno: 'Techno',
+  prog: 'Prog',
+  fullon: 'Full-On',
+  classica: 'Clássica',
+};
 
 function getRequiredXP(levelIndex) {
   if (levelIndex === 0) return 0;
@@ -392,6 +415,47 @@ function updateGrayNoiseVolume(volume) {
   }
 }
 
+
+// Radio Player
+let radioAudio = null;
+
+function getRadioAudio() {
+  if (!radioAudio) {
+    radioAudio = document.getElementById('audio-radio');
+  }
+  return radioAudio;
+}
+
+function updateRadio() {
+  const audio = getRadioAudio();
+  if (!audio) return;
+
+  const btnRadioToggle = document.getElementById('btn-radio-toggle');
+
+  if (gameState.radioActive) {
+    btnRadioToggle.innerText = 'ON';
+    btnRadioToggle.classList.add('active');
+
+    const streamUrl = RADIO_PRESETS[gameState.radioGenre] || RADIO_PRESETS.lofi;
+    if (audio.src !== streamUrl) {
+      audio.src = streamUrl;
+      audio.load();
+    }
+    audio.volume = Math.pow(gameState.radioVolume / 100, 2);
+    audio.play().catch(() => {
+      gameState.radioActive = false;
+      if (btnRadioToggle) {
+        btnRadioToggle.innerText = 'OFF';
+        btnRadioToggle.classList.remove('active');
+      }
+      saveGame();
+    });
+  } else {
+    btnRadioToggle.innerText = 'OFF';
+    btnRadioToggle.classList.remove('active');
+    audio.pause();
+  }
+}
 
 // DOM Elements
 const timerDisplay = document.getElementById("timer");
@@ -1222,7 +1286,9 @@ function loadGame() {
     gameState.ambientAutoActive = parsed.ambientAutoActive !== undefined ? parsed.ambientAutoActive : true;
     gameState.ambientAutoTimeout = parsed.ambientAutoTimeout !== undefined ? parsed.ambientAutoTimeout : 30;
     gameState.grayNoiseActive = parsed.grayNoiseActive !== undefined ? parsed.grayNoiseActive : false;
-    gameState.grayNoiseVolume = parsed.grayNoiseVolume !== undefined ? parsed.grayNoiseVolume : 50;
+    gameState.radioActive = parsed.radioActive !== undefined ? parsed.radioActive : false;
+    gameState.radioVolume = parsed.radioVolume !== undefined ? parsed.radioVolume : 50;
+    gameState.radioGenre = parsed.radioGenre !== undefined ? parsed.radioGenre : 'lofi';
 
     // Restore metrics
     if (parsed.metrics) {
@@ -1387,11 +1453,33 @@ function loadGame() {
     labelGrayNoiseVol.innerText = `${gameState.grayNoiseVolume !== undefined ? gameState.grayNoiseVolume : 50}%`;
   }
 
+  // Sync Radio UI
+  const btnRadioToggle = document.getElementById('btn-radio-toggle');
+  const selectRadioGenre = document.getElementById('select-radio-genre');
+  const sliderRadioVol = document.getElementById('slider-radio-vol');
+  const labelRadioVol = document.getElementById('label-radio-vol');
+  if (btnRadioToggle) {
+    btnRadioToggle.innerText = gameState.radioActive ? 'ON' : 'OFF';
+    btnRadioToggle.classList.toggle('active', !!gameState.radioActive);
+  }
+  if (selectRadioGenre) {
+    selectRadioGenre.value = gameState.radioGenre || 'lofi';
+  }
+  if (sliderRadioVol) {
+    sliderRadioVol.value = gameState.radioVolume !== undefined ? gameState.radioVolume : 50;
+  }
+  if (labelRadioVol) {
+    labelRadioVol.innerText = `${gameState.radioVolume !== undefined ? gameState.radioVolume : 50}%`;
+  }
+
   // Sync Mono Tasking UI
   updateMonoTaskingUI();
 
   // Sync Stats Graph
   renderStatsGraph();
+
+  // Sync Radio stream state
+  updateRadio();
 }
 
 function toggleAgentModeVisuals(active) {
@@ -2026,6 +2114,47 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Radio
+  const btnRadioToggle = document.getElementById('btn-radio-toggle');
+  const selectRadioGenre = document.getElementById('select-radio-genre');
+  const sliderRadioVol = document.getElementById('slider-radio-vol');
+  const labelRadioVol = document.getElementById('label-radio-vol');
+
+  if (btnRadioToggle) {
+    btnRadioToggle.addEventListener('click', () => {
+      gameState.radioActive = !gameState.radioActive;
+      updateRadio();
+      saveGame();
+    });
+  }
+
+  if (selectRadioGenre) {
+    selectRadioGenre.addEventListener('change', (e) => {
+      gameState.radioGenre = e.target.value;
+      if (gameState.radioActive) {
+        updateRadio();
+      }
+      saveGame();
+    });
+  }
+
+  if (sliderRadioVol) {
+    sliderRadioVol.addEventListener('input', (e) => {
+      const vol = parseInt(e.target.value, 10);
+      gameState.radioVolume = vol;
+      if (labelRadioVol) {
+        labelRadioVol.innerText = `${vol}%`;
+      }
+      const audio = getRadioAudio();
+      if (audio) {
+        audio.volume = Math.pow(vol / 100, 2);
+      }
+    });
+    sliderRadioVol.addEventListener('change', () => {
+      saveGame();
+    });
+  }
+
   // Desbloquear AudioContext na primeira interação com a página (necessário em navegadores modernos)
   const resumeAudioOnInteraction = () => {
     if (audioCtx.state === "suspended") {
@@ -2033,10 +2162,16 @@ document.addEventListener("DOMContentLoaded", () => {
         if (gameState.grayNoiseActive) {
           startGrayNoise();
         }
+        if (gameState.radioActive) {
+          updateRadio();
+        }
       });
     } else {
       if (gameState.grayNoiseActive) {
         startGrayNoise();
+      }
+      if (gameState.radioActive) {
+        updateRadio();
       }
     }
     document.removeEventListener("click", resumeAudioOnInteraction);

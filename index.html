@@ -189,6 +189,28 @@
             </div>
           </div>
           <div class="config-row" style="margin-top: 0.5rem;">
+            <span class="config-label">RÁDIO:</span>
+            <div style="display: flex; align-items: center; gap: 0.4rem; flex: 1; justify-content: flex-end;">
+              <button id="btn-radio-toggle" class="btn-config" style="min-width: 32px; padding: 2px 4px;">OFF</button>
+              <select id="select-radio-genre" class="sys-select" style="max-width: 90px;">
+                <option value="lofi">Lofi</option>
+                <option value="rock">Rock</option>
+                <option value="house">House</option>
+                <option value="techno">Techno</option>
+                <option value="prog">Prog</option>
+                <option value="fullon">Full-On</option>
+                <option value="classica">Clássica</option>
+              </select>
+            </div>
+          </div>
+          <div class="config-row" style="margin-top: 0.5rem;">
+            <span class="config-label">VOL RÁDIO:</span>
+            <div style="display: flex; align-items: center; gap: 0.4rem; flex: 1; justify-content: flex-end;">
+              <input type="range" id="slider-radio-vol" class="sys-slider" min="0" max="100" value="50" title="Volume da rádio">
+              <span id="label-radio-vol" style="font-size: 0.6rem; font-weight: bold; min-width: 25px; text-align: right;">50%</span>
+            </div>
+          </div>
+          <div class="config-row" style="margin-top: 0.5rem;">
             <span class="config-label">BLOQUEAR TELA:</span>
             <button id="btn-sys-ambient" class="btn-config" title="Protetor de tela Matrix Rain (ou pressione ESC)">MATRIX</button>
           </div>
@@ -471,6 +493,7 @@
         </div>
       </aside>
     </div>
+    <audio id="audio-radio" preload="none" crossorigin="anonymous"></audio>
     <script src="script.js"></script>
   </body>
 </html>
