@@ -1096,11 +1096,11 @@ O usuário solicitou a criação de um novo favicon para o Doroapp com a imagem 
 ### Decisão
 
 1. Fazer o backup do favicon original (`imagens/doroapp_favicon.svg` com estilo cyberpunk de óculos verde neon) como `imagens/doroapp_favicon_original_cyberpunk.svg`.
-2. Substituir `imagens/doroapp_favicon.svg` com um design vetorial SVG composto por uma silhueta contínua com curvas Bezier orgânicas e integradas representando um coelho de perfil sentado em branco puro (`#ffffff`), com a orelha traseira sombreada em cinza claro (`#b3b3b3`) para dar profundidade tridimensional e evitar a aparência fragmentada do modelo inicial.
-3. Aplicar um filtro de sombra projetada (`feDropShadow`) no SVG com opacidade e dispersão calibradas, garantindo que o coelho permaneça altamente visível e nítido tanto em abas de navegadores claras quanto escuras.
+2. Substituir `imagens/doroapp_favicon.svg` com a silhueta geométrica clássica do coelho sólido de perfil, ajustando a centralização vertical (Y + 4) e aplicando um filtro de sombra projetada (`feDropShadow`) para garantir alto contraste contra fundos claros e escuros de navegadores.
+3. Manter a orelha traseira sombreada em cinza claro (`#cccccc`) para dar profundidade tridimensional ao design geométrico original.
 
 ### Consequências
 
-- O aplicativo Doroapp agora exibe um favicon minimalista e fluido de coelho branco em perfil no navegador, atendendo à nova identidade visual solicitada de forma integrada.
+- O aplicativo Doroapp agora exibe um favicon minimalista de coelho branco sólido em perfil no navegador, atendendo à identidade visual clássica e reconhecível.
 - A compatibilidade de renderização foi preservada em qualquer tema do navegador do usuário, graças à sombra de contraste aplicada.
 - A referência no `manifest.json` e `index.html` permanece apontada para `imagens/doroapp_favicon.svg`, assegurando que o deploy e cache sejam atualizados sem quebras estruturais.
