@@ -2,30 +2,28 @@
   <!-- Filtro de sombra projetada, garantindo excelente visibilidade tanto em abas de navegadores claras quanto escuras -->
   <defs>
     <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
-      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.5"/>
+      <feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#000000" flood-opacity="0.5"/>
     </filter>
   </defs>
 
   <g filter="url(#shadow)">
     <!-- Orelha Traseira (sombreada para profundidade tridimensional) -->
-    <path d="M 52 35 C 50 18, 56 10, 59 10 C 62 10, 62 20, 56 38 Z" fill="#b3b3b3" />
+    <path d="M 43 33 C 46 31, 51 18, 57 10 C 59 18, 57 28, 52 37 Z" fill="#b3b3b3" />
     
-    <!-- Orelha Frontal -->
-    <path d="M 45 32 C 42 13, 48 5, 51 5 C 54 5, 55 17, 49 35 Z" fill="#ffffff" />
-    
-    <!-- Cabeça -->
-    <circle cx="38" cy="42" r="12" fill="#ffffff" />
-    
-    <!-- Pata Dianteira -->
-    <path d="M 33 56 L 33 76 C 33 77.5, 30.5 77.5, 30.5 76 L 30.5 56 Z" fill="#ffffff" />
-    
-    <!-- Corpo Principal -->
-    <path d="M 37 48 C 48 45, 68 50, 68 68 C 68 78, 58 78, 48 78 C 38 78, 34 72, 34 72 Z" fill="#ffffff" />
-    
-    <!-- Coxa Traseira e Pé de Apoio (sobreposição com leve opacidade) -->
-    <path d="M 48 78 C 50 78, 64 78, 64 74 C 64 70, 58 64, 48 64 C 44 64, 44 72, 48 78 Z" fill="#ffffff" opacity="0.95" />
-    
-    <!-- Cauda Pompom -->
-    <circle cx="71" cy="65" r="6.5" fill="#ffffff" />
+    <!-- Coelho Principal (Silhueta Contínua em Branco Puro) -->
+    <path d="M 23 75
+             C 21 70, 21 62, 23 55
+             C 25 48, 31 42, 37 42
+             C 40 42, 41 38, 40 32
+             C 38 23, 35 12, 42 5
+             C 45 12, 46 22, 43 33
+             C 45 38, 47 42, 52 37
+             C 63 43, 71 52, 71 66
+             C 71 68, 75 66, 77 69
+             C 79 72, 77 75, 73 75
+             C 67 75, 65 75, 59 75
+             C 55 75, 53 70, 53 66
+             C 53 58, 45 56, 39 56
+             C 33 56, 31 68, 30 75 Z" fill="#ffffff" />
   </g>
 </svg>
