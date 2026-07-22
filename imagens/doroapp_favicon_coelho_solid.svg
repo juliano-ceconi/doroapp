@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <!-- Coelho Branco Minimalista - Silhueta Sólida de Perfil -->
+  <!-- Orelha Traseira (levemente escura para dar profundidade) -->
+  <path d="M 48 36 C 47 22, 53 14, 56 14 C 59 14, 59 24, 53 40 Z" fill="#cccccc" />
+  
+  <!-- Orelha Frontal -->
+  <path d="M 42 34 C 40 18, 46 10, 49 10 C 52 10, 53 22, 47 38 Z" fill="#ffffff" />
+  
+  <!-- Cabeça -->
+  <circle cx="38" cy="44" r="13" fill="#ffffff" />
+  
+  <!-- Corpo e Coxa Traseira combinados -->
+  <path d="M 37 50 C 46 48, 68 53, 68 70 C 68 80, 58 80, 48 80 C 38 80, 35 73, 35 73 Z" fill="#ffffff" />
+  
+  <!-- Pata Dianteira -->
+  <rect x="36" y="68" width="7" height="13" rx="3.5" fill="#ffffff" />
+  
+  <!-- Pata Traseira -->
+  <rect x="50" y="73" width="18" height="8" rx="4" fill="#ffffff" />
+  
+  <!-- Cauda Pompom -->
+  <circle cx="71" cy="67" r="6.5" fill="#ffffff" />
+</svg>

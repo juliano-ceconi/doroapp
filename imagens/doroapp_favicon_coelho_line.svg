@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <!-- Coelho Branco Minimalista - Linhas/Wireframe de Perfil -->
+  <!-- Orelha Traseira (com opacidade para profundidade) -->
+  <path d="M 48 36 C 47 22, 53 14, 56 14 C 59 14, 59 24, 53 40" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" fill="none" opacity="0.5" />
+  
+  <!-- Orelha Frontal, Cabeça, Corpo e Patas em linha contínua fluida -->
+  <path d="
+    M 36 78
+    C 36 78, 35 72, 35 70
+    C 35 52, 25 48, 32 40
+    C 35 36, 40 18, 49 10
+    C 52 10, 53 22, 47 38
+    C 52 42, 68 46, 68 66
+    C 68 78, 58 78, 48 78
+    C 42 78, 42 74, 42 74
+  " stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+  
+  <!-- Detalhe da Pata Dianteira -->
+  <path d="M 36 70 L 36 78" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" fill="none" />
+  
+  <!-- Cauda Pompom -->
+  <circle cx="71" cy="65" r="5" stroke="#ffffff" stroke-width="4.5" fill="none" />
+</svg>
