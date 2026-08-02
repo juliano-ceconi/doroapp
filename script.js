@@ -124,12 +124,12 @@ const RADIO_PRESETS = {
   rock:      'https://stream.radioparadise.com/mp3-128',
   house:     'https://ice1.somafm.com/beatblender-128-mp3',
   techno:    'https://ice1.somafm.com/thetrip-128-mp3',
-  prog:      'http://94.130.113.214:8000/prog',
-  fullon:    'http://cast.magicstreams.gr:9111/stream',
+  prog:      'https://stream.technolovers.fm/psytrance',
+  fullon:    'https://goanight.stream.laut.fm/goanight',
   classica:  'https://classical-stream.iowapublicradio.org/Classical.mp3',
   indie:     'https://listen-msmn.sharp-stream.com/nme1.mp3',
   rain:      'https://maggie.torontocast.com:2020/stream/natureradiorain',
-  meditation:'http://radio.stereoscenic.com/asp-h',
+  meditation:'https://stream.epic-lounge.com/sleep-meditation',
   yoga:      'https://ice1.somafm.com/dronezone-256-mp3',
 };
 
