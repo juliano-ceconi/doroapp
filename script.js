@@ -120,23 +120,31 @@ const XP_BASE = 7.65;
 const XP_EXPONENT = 3;
 
 const RADIO_PRESETS = {
-  lofi: 'https://radio.loficafe.net/listen/chilling/radio.mp3',
-  rock: 'https://stream.radioparadise.com/mp3-128',
-  house: 'https://ice1.somafm.com/groovesalad-256-mp3',
-  techno: 'https://ice1.somafm.com/sonicuniverse-256-mp3',
-  prog: 'https://ice1.somafm.com/seventies-320-mp3',
-  fullon: 'https://ice1.somafm.com/specials-128-mp3',
-  classica: 'https://classical-stream.iowapublicradio.org/Classical.mp3',
+  lofi:      'https://ice1.somafm.com/groovesalad-256-mp3',
+  rock:      'https://stream.radioparadise.com/mp3-128',
+  house:     'https://ice1.somafm.com/beatblender-128-mp3',
+  techno:    'https://ice1.somafm.com/thetrip-128-mp3',
+  prog:      'http://94.130.113.214:8000/prog',
+  fullon:    'http://cast.magicstreams.gr:9111/stream',
+  classica:  'https://classical-stream.iowapublicradio.org/Classical.mp3',
+  indie:     'https://listen-msmn.sharp-stream.com/nme1.mp3',
+  rain:      'https://maggie.torontocast.com:2020/stream/natureradiorain',
+  meditation:'http://radio.stereoscenic.com/asp-h',
+  yoga:      'https://ice1.somafm.com/dronezone-256-mp3',
 };
 
 const RADIO_GENRE_NAMES = {
-  lofi: 'Lofi',
-  rock: 'Rock',
-  house: 'House',
-  techno: 'Techno',
-  prog: 'Prog',
-  fullon: 'Full-On',
-  classica: 'Clássica',
+  lofi:      'Lofi',
+  rock:      'Rock',
+  house:     'House',
+  techno:    'Techno',
+  prog:      'Prog Psy',
+  fullon:    'Full-On Psy',
+  classica:  'Clássica',
+  indie:     'Indie',
+  rain:      'Chuva',
+  meditation:'Meditação',
+  yoga:      'Yoga',
 };
 
 function getRequiredXP(levelIndex) {
