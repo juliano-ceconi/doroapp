@@ -542,17 +542,13 @@ body {
   gap: 0.5rem;
 }
 
-.collapsed .ai-plans-content,
-.collapsed .mission-list-content,
-.collapsed .config-content,
-.collapsed .sys-dump-content,
-.collapsed .evolution-content,
-.collapsed .history-content {
+#ai-plans-panel.collapsed > .ai-plans-content,
+#mission-log-panel.collapsed > .mission-list-content,
+#sys-config-panel.collapsed > .config-content,
+#sys-dump-panel.collapsed > .sys-dump-content,
+#evolution-panel.collapsed > .evolution-content,
+#history-panel.collapsed > .history-content {
   display: none !important;
-}
-
-.ai-plans-panel.collapsed .ai-plans-content {
-  display: none;
 }
 
 .ai-plan-row {
