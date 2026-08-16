@@ -496,16 +496,19 @@ body {
   flex-shrink: 0;
 }
 
-.ai-plans-header {
+.ai-plans-header,
+.panel-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--matrix-dim);
   padding-bottom: 0.25rem;
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.5rem;
 }
 
-.ai-plans-header h3 {
+.ai-plans-header h3,
+.panel-header h3,
+.panel-header h4 {
   font-size: 0.9rem;
   text-transform: uppercase;
   color: var(--matrix-glow);
@@ -537,6 +540,15 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.collapsed .ai-plans-content,
+.collapsed .mission-list-content,
+.collapsed .config-content,
+.collapsed .sys-dump-content,
+.collapsed .evolution-content,
+.collapsed .history-content {
+  display: none !important;
 }
 
 .ai-plans-panel.collapsed .ai-plans-content {
@@ -1793,6 +1805,7 @@ body:not(.agent-mode-active) .agent-colors {
 .mono-content {
   display: flex;
   flex-direction: column;
+  gap: 0.75rem;
 }
 
 .mono-content .placeholder {
@@ -1867,6 +1880,25 @@ body:not(.agent-mode-active) .agent-colors {
   color: var(--matrix-green);
 }
 
+.mono-task-remove {
+  background: transparent;
+  border: none;
+  color: var(--matrix-dim-medium);
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: all 0.2s ease;
+  margin-left: 0.25rem;
+  opacity: 0.6;
+}
+
+.mono-task-remove:hover {
+  opacity: 1;
+  color: var(--alert);
+  text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
 /* Estilos de Botão Foco no Card */
 .task-focus-select {
   background: none;
@@ -1881,6 +1913,19 @@ body:not(.agent-mode-active) .agent-colors {
 
 .task-card:hover .task-focus-select { opacity: 0.5; }
 .task-focus-select:hover { opacity: 1 !important; color: var(--matrix-green); }
+
+/* Tarefas Ativas / Foco no Board */
+.task-card.is-active {
+  border-color: var(--matrix-green);
+  background: rgba(0, 30, 0, 0.45);
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.25);
+}
+
+.task-card.is-active .task-focus-select {
+  opacity: 1 !important;
+  color: var(--matrix-green);
+  filter: drop-shadow(0 0 4px var(--matrix-glow));
+}
 
 /* Estado Ativo do Mono-Tasking */
 body.mono-tasking-active .board-section {

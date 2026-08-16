@@ -1104,3 +1104,37 @@ O usuário solicitou a criação de um novo favicon para o Doroapp com a imagem 
 - O aplicativo Doroapp agora exibe um favicon minimalista de coelho branco sólido em perfil no navegador, atendendo à identidade visual clássica e reconhecível.
 - A compatibilidade de renderização foi preservada em qualquer tema do navegador do usuário, graças à sombra de contraste aplicada.
 - A referência no `manifest.json` e `index.html` permanece apontada para `imagens/doroapp_favicon.svg`, assegurando que o deploy e cache sejam atualizados sem quebras estruturais.
+
+---
+
+## [2026-08-16] Múltiplas Missões Ativas Simultâneas, Borda Superior PWA Preta e Seções Retráteis
+
+### Contexto
+
+1. O operador utiliza múltiplos agentes de inteligência artificial em paralelo e necessita manter múltiplas tarefas selecionadas simultaneamente como missões ativas no Doroapp para servir de âncora cognitiva visual contra a dispersão durante a alternância constante de janelas e telas.
+2. Na instalação como PWA (Progressive Web App) no Windows através do Google Chrome, a barra de título superior exibia um verde fluorescente (`#00ff66`), que destoava da atmosfera imersiva escura do app.
+3. Necessidade de compactar a interface através de botões de recolhimento nas seções 'Evolução', 'Missões', 'Configurações', 'Sys Dump' e 'Registro Histórico'.
+
+### Decisão
+
+1. **Múltiplas Missões Ativas (`script.js`, `style.css`)**:
+   - Evolução de `gameState.activeTaskId` para `gameState.activeTaskIds` (array) com migração retrocompatível transparente em `loadGame()`.
+   - Ao clicar no botão `🎯` em um card do Kanban, a função `toggleMainMission(taskId)` adiciona ou remove a tarefa do array de ativas.
+   - O card ativo no Kanban recebe a classe `.is-active` com destaque de borda e o ícone `🎯` permanentemente iluminado.
+   - O painel mono (`#mono-tasking-panel`) agora renderiza todos os cards ativos em pilha vertical no `#mono-task-content`, com suporte à conclusão rápida (`✓`) e desancoragem (`✕`).
+   - A contagem de ciclos de Pomodoro concluídos agora é incrementada simultaneamente em todas as tarefas ativas em `gameState.activeTaskIds`.
+   - Na exclusão de uma tarefa (`deleteTask`), o ID é removido automaticamente do array de ativas.
+2. **Barra Superior Preta PWA (`manifest.json`, `index.html`)**:
+   - Alteração do parâmetro `theme_color` de `#00ff66` para `#000000` no `manifest.json`.
+   - Adição das meta tags `<meta name="theme-color" content="#000000" />` e `<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />` no `<head>` do `index.html`.
+3. **Painéis Retráteis com Persistência (`index.html`, `style.css`, `script.js`)**:
+   - Estruturação dos cabeçalhos das seções 'Evolução' (`#evolution-panel`), 'Missões' (`#mission-log-panel`), 'Configurações' (`#sys-config-panel`), 'Sys Dump' (`#sys-dump-panel`) e 'Registro Histórico' (`#history-panel`) com botões padronizados `.btn-collapse` (`[−]` / `[+]`).
+   - Implementação da função utilitária `setupCollapsibleSection()` com persistência individual no `localStorage` para cada seção (`doroapp_evolution_collapsed`, `doroapp_missions_collapsed`, `doroapp_config_collapsed`, `doroapp_sys_dump_collapsed`, `doroapp_history_collapsed`, `doroapp_ai_plans_collapsed`).
+   - Ocultação dos conteúdos via CSS com a classe `.collapsed` (`display: none !important;`).
+
+### Consequências
+
+- O operador pode manter 2, 3 ou mais tarefas como âncoras ativas no modo mono durante a execução com múltiplos agentes em paralelo.
+- A barra de título do aplicativo instalado no Windows agora é preta, integrando perfeitamente com a janela da aplicação.
+- A barra lateral e a coluna de evolução podem ser compactadas sob demanda, permitindo focar nos módulos essenciais em telas menores ou monitores dedicados.
+

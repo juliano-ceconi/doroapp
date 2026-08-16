@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Doroapp | Protocolo: DEEP FOCUS</title>
+    <meta name="theme-color" content="#000000" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" href="imagens/doroapp_favicon.svg" type="image/svg+xml" />
     <link rel="manifest" href="manifest.json" />
@@ -144,92 +146,105 @@
           <span id="quote-display">Inicializando sistema de motivação...</span>
         </div>
 
-        <nav class="mission-log">
-          <h3>Missões</h3>
-          <ul id="mission-list">
+        <nav class="mission-log" id="mission-log-panel">
+          <div class="panel-header">
+            <h3>Missões</h3>
+            <button id="btn-toggle-missions" class="btn-collapse" title="Recolher/Expandir Missões">[&minus;]</button>
+          </div>
+          <ul id="mission-list" class="mission-list-content">
             <!-- Missions injected via JS -->
           </ul>
         </nav>
 
-        <div class="sys-config-panel">
-          <h3>Configurações</h3>
-          <div class="config-row">
-            <span class="config-label">TECLADO:</span>
-            <select id="select-keyboard-switch" class="sys-select">
-              <option value="none">NENHUM</option>
-              <option value="brown">CHERRY MX BROWN</option>
-              <option value="red">CHERRY MX RED</option>
-              <option value="blue">CHERRY MX BLUE</option>
-            </select>
+        <div class="sys-config-panel" id="sys-config-panel">
+          <div class="panel-header">
+            <h3>Configurações</h3>
+            <button id="btn-toggle-config" class="btn-collapse" title="Recolher/Expandir Configurações">[&minus;]</button>
           </div>
-          <div class="config-row" style="margin-top: 0.5rem;">
-            <span class="config-label">VOL TECLADO:</span>
-            <div style="display: flex; align-items: center; gap: 0.4rem; flex: 1; justify-content: flex-end;">
-              <input type="range" id="slider-keyboard-vol" class="sys-slider" min="0" max="100" value="80" title="Volume do som do teclado">
-              <span id="label-keyboard-vol" style="font-size: 0.6rem; font-weight: bold; min-width: 25px; text-align: right;">80%</span>
-            </div>
-          </div>
-          <div class="config-row" style="margin-top: 0.5rem;">
-            <span class="config-label">AUTO MATRIX:</span>
-            <select id="select-ambient-auto" class="sys-select">
-              <option value="off">DESATIVADO</option>
-              <option value="15">15s</option>
-              <option value="30">30s</option>
-              <option value="60">1m</option>
-              <option value="120">2m</option>
-              <option value="300">5m</option>
-            </select>
-          </div>
-          <div class="config-row" style="margin-top: 0.5rem;">
-            <span class="config-label">RUÍDO CINZA:</span>
-            <div style="display: flex; align-items: center; gap: 0.4rem; flex: 1; justify-content: flex-end;">
-              <button id="btn-gray-noise" class="btn-config" style="min-width: 32px; padding: 2px 4px;">OFF</button>
-              <input type="range" id="slider-gray-noise" class="sys-slider" min="0" max="100" value="50" title="Volume do ruído cinza">
-              <span id="label-gray-noise-vol" style="font-size: 0.6rem; font-weight: bold; min-width: 25px; text-align: right;">50%</span>
-            </div>
-          </div>
-          <div class="config-row" style="margin-top: 0.5rem;">
-            <span class="config-label">RÁDIO:</span>
-            <div style="display: flex; align-items: center; gap: 0.4rem; flex: 1; justify-content: flex-end;">
-              <button id="btn-radio-toggle" class="btn-config" style="min-width: 32px; padding: 2px 4px;">OFF</button>
-              <select id="select-radio-genre" class="sys-select" style="max-width: 100px;">
-                <option value="lofi">Lofi</option>
-                <option value="rock">Rock</option>
-                <option value="house">House</option>
-                <option value="techno">Techno</option>
-                <option value="prog">Prog Psy</option>
-                <option value="fullon">Full-On Psy</option>
-                <option value="classica">Clássica</option>
-                <option value="indie">Indie</option>
-                <option value="rain">Chuva</option>
-                <option value="meditation">Meditação</option>
-                <option value="yoga">Yoga</option>
+          <div class="config-content" id="sys-config-content">
+            <div class="config-row">
+              <span class="config-label">TECLADO:</span>
+              <select id="select-keyboard-switch" class="sys-select">
+                <option value="none">NENHUM</option>
+                <option value="brown">CHERRY MX BROWN</option>
+                <option value="red">CHERRY MX RED</option>
+                <option value="blue">CHERRY MX BLUE</option>
               </select>
             </div>
-          </div>
-          <div class="config-row" style="margin-top: 0.5rem;">
-            <span class="config-label">VOL RÁDIO:</span>
-            <div style="display: flex; align-items: center; gap: 0.4rem; flex: 1; justify-content: flex-end;">
-              <input type="range" id="slider-radio-vol" class="sys-slider" min="0" max="100" value="50" title="Volume da rádio">
-              <span id="label-radio-vol" style="font-size: 0.6rem; font-weight: bold; min-width: 25px; text-align: right;">50%</span>
+            <div class="config-row" style="margin-top: 0.5rem;">
+              <span class="config-label">VOL TECLADO:</span>
+              <div style="display: flex; align-items: center; gap: 0.4rem; flex: 1; justify-content: flex-end;">
+                <input type="range" id="slider-keyboard-vol" class="sys-slider" min="0" max="100" value="80" title="Volume do som do teclado">
+                <span id="label-keyboard-vol" style="font-size: 0.6rem; font-weight: bold; min-width: 25px; text-align: right;">80%</span>
+              </div>
             </div>
-          </div>
-          <div class="config-row" style="margin-top: 0.5rem;">
-            <span class="config-label">BLOQUEAR TELA:</span>
-            <button id="btn-sys-ambient" class="btn-config" title="Protetor de tela Matrix Rain (ou pressione ESC)">MATRIX</button>
-          </div>
-          <div class="config-row" style="margin-top: 0.5rem;">
-            <span class="config-label">TELA CHEIA:</span>
-            <button id="btn-fullscreen" class="btn-config" title="Alternar tela cheia (ou pressione F)">FULL SCREEN</button>
+            <div class="config-row" style="margin-top: 0.5rem;">
+              <span class="config-label">AUTO MATRIX:</span>
+              <select id="select-ambient-auto" class="sys-select">
+                <option value="off">DESATIVADO</option>
+                <option value="15">15s</option>
+                <option value="30">30s</option>
+                <option value="60">1m</option>
+                <option value="120">2m</option>
+                <option value="300">5m</option>
+              </select>
+            </div>
+            <div class="config-row" style="margin-top: 0.5rem;">
+              <span class="config-label">RUÍDO CINZA:</span>
+              <div style="display: flex; align-items: center; gap: 0.4rem; flex: 1; justify-content: flex-end;">
+                <button id="btn-gray-noise" class="btn-config" style="min-width: 32px; padding: 2px 4px;">OFF</button>
+                <input type="range" id="slider-gray-noise" class="sys-slider" min="0" max="100" value="50" title="Volume do ruído cinza">
+                <span id="label-gray-noise-vol" style="font-size: 0.6rem; font-weight: bold; min-width: 25px; text-align: right;">50%</span>
+              </div>
+            </div>
+            <div class="config-row" style="margin-top: 0.5rem;">
+              <span class="config-label">RÁDIO:</span>
+              <div style="display: flex; align-items: center; gap: 0.4rem; flex: 1; justify-content: flex-end;">
+                <button id="btn-radio-toggle" class="btn-config" style="min-width: 32px; padding: 2px 4px;">OFF</button>
+                <select id="select-radio-genre" class="sys-select" style="max-width: 100px;">
+                  <option value="lofi">Lofi</option>
+                  <option value="rock">Rock</option>
+                  <option value="house">House</option>
+                  <option value="techno">Techno</option>
+                  <option value="prog">Prog Psy</option>
+                  <option value="fullon">Full-On Psy</option>
+                  <option value="classica">Clássica</option>
+                  <option value="indie">Indie</option>
+                  <option value="rain">Chuva</option>
+                  <option value="meditation">Meditação</option>
+                  <option value="yoga">Yoga</option>
+                </select>
+              </div>
+            </div>
+            <div class="config-row" style="margin-top: 0.5rem;">
+              <span class="config-label">VOL RÁDIO:</span>
+              <div style="display: flex; align-items: center; gap: 0.4rem; flex: 1; justify-content: flex-end;">
+                <input type="range" id="slider-radio-vol" class="sys-slider" min="0" max="100" value="50" title="Volume da rádio">
+                <span id="label-radio-vol" style="font-size: 0.6rem; font-weight: bold; min-width: 25px; text-align: right;">50%</span>
+              </div>
+            </div>
+            <div class="config-row" style="margin-top: 0.5rem;">
+              <span class="config-label">BLOQUEAR TELA:</span>
+              <button id="btn-sys-ambient" class="btn-config" title="Protetor de tela Matrix Rain (ou pressione ESC)">MATRIX</button>
+            </div>
+            <div class="config-row" style="margin-top: 0.5rem;">
+              <span class="config-label">TELA CHEIA:</span>
+              <button id="btn-fullscreen" class="btn-config" title="Alternar tela cheia (ou pressione F)">FULL SCREEN</button>
+            </div>
           </div>
         </div>
 
-        <div class="sys-dump-panel">
-          <div class="sys-dump-header">
+        <div class="sys-dump-panel" id="sys-dump-panel">
+          <div class="sys-dump-header panel-header">
             <h3>SYS DUMP</h3>
-            <button id="btn-wipe-dump" class="btn-wipe" title="Limpar notas">WIPE</button>
+            <div style="display: flex; align-items: center; gap: 0.4rem;">
+              <button id="btn-wipe-dump" class="btn-wipe" title="Limpar notas">WIPE</button>
+              <button id="btn-toggle-sys-dump" class="btn-collapse" title="Recolher/Expandir Sys Dump">[&minus;]</button>
+            </div>
           </div>
-          <textarea id="sys-dump-textarea" placeholder="Descarregue pensamentos intrusivos aqui..." autocomplete="off"></textarea>
+          <div class="sys-dump-content" id="sys-dump-content">
+            <textarea id="sys-dump-textarea" placeholder="Descarregue pensamentos intrusivos aqui..." autocomplete="off"></textarea>
+          </div>
         </div>
 
       </aside>
@@ -345,155 +360,165 @@
       </main>
 
       <!-- Painel de Métricas (Coluna Direita) -->
-      <aside class="metrics-sidebar">
-        <h3>EVOLUÇÃO</h3>
-        <div class="metrics-panel">
-          <div class="metric-row" data-metric="productivity" title="Dê duplo-clique para ajustar">
-            <div class="metric-header">
-              <div class="metric-info">
-                <span class="metric-icon">⚡</span>
-                <span class="metric-title">Produtividade</span>
-              </div>
-              <span class="metric-value-label" id="metric-val-productivity">1%</span>
-            </div>
-            <div class="metric-progress-wrapper">
-              <div class="metric-progress-bar" id="metric-bar-productivity" style="width: 1%"></div>
-            </div>
-          </div>
-
-          <div class="metric-row" data-metric="physical" title="Dê duplo-clique para ajustar">
-            <div class="metric-header">
-              <div class="metric-info">
-                <span class="metric-icon">💪</span>
-                <span class="metric-title">Físico</span>
-              </div>
-              <span class="metric-value-label" id="metric-val-physical">1%</span>
-            </div>
-            <div class="metric-progress-wrapper">
-              <div class="metric-progress-bar" id="metric-bar-physical" style="width: 1%"></div>
-            </div>
-          </div>
-
-          <div class="metric-row" data-metric="money" title="Dê duplo-clique para ajustar">
-            <div class="metric-header">
-              <div class="metric-info">
-                <span class="metric-icon">💵</span>
-                <span class="metric-title">Dinheiro</span>
-              </div>
-              <span class="metric-value-label" id="metric-val-money">1%</span>
-            </div>
-            <div class="metric-progress-wrapper">
-              <div class="metric-progress-bar" id="metric-bar-money" style="width: 1%"></div>
-            </div>
-          </div>
-
-          <div class="metric-row" data-metric="emotional" title="Dê duplo-clique para ajustar">
-            <div class="metric-header">
-              <div class="metric-info">
-                <span class="metric-icon">🧠</span>
-                <span class="metric-title">Emocional</span>
-              </div>
-              <span class="metric-value-label" id="metric-val-emotional">1%</span>
-            </div>
-            <div class="metric-progress-wrapper">
-              <div class="metric-progress-bar" id="metric-bar-emotional" style="width: 1%"></div>
-            </div>
-          </div>
-
-          <div class="metric-row" data-metric="health" title="Dê duplo-clique para ajustar">
-            <div class="metric-header">
-              <div class="metric-info">
-                <span class="metric-icon">❤️</span>
-                <span class="metric-title">Saúde</span>
-              </div>
-              <span class="metric-value-label" id="metric-val-health">1%</span>
-            </div>
-            <div class="metric-progress-wrapper">
-              <div class="metric-progress-bar" id="metric-bar-health" style="width: 1%"></div>
-            </div>
-          </div>
-
-          <div class="metric-row" data-metric="spiritual" title="Dê duplo-clique para ajustar">
-            <div class="metric-header">
-              <div class="metric-info">
-                <span class="metric-icon">🧘</span>
-                <span class="metric-title">Espiritual</span>
-              </div>
-              <span class="metric-value-label" id="metric-val-spiritual">1%</span>
-            </div>
-            <div class="metric-progress-wrapper">
-              <div class="metric-progress-bar" id="metric-bar-spiritual" style="width: 1%"></div>
-            </div>
-          </div>
-
-          <div class="metric-row" data-metric="eating" title="Dê duplo-clique para ajustar">
-            <div class="metric-header">
-              <div class="metric-info">
-                <span class="metric-icon">🥗</span>
-                <span class="metric-title">Alimentação</span>
-              </div>
-              <span class="metric-value-label" id="metric-val-eating">1%</span>
-            </div>
-            <div class="metric-progress-wrapper">
-              <div class="metric-progress-bar" id="metric-bar-eating" style="width: 1%"></div>
-            </div>
-          </div>
-
-          <div class="metric-row" data-metric="water" title="Dê duplo-clique para ajustar">
-            <div class="metric-header">
-              <div class="metric-info">
-                <span class="metric-icon">💧</span>
-                <span class="metric-title">Água</span>
-              </div>
-              <span class="metric-value-label" id="metric-val-water">1%</span>
-            </div>
-            <div class="metric-progress-wrapper">
-              <div class="metric-progress-bar" id="metric-bar-water" style="width: 1%"></div>
-            </div>
-          </div>
-
-          <div class="metric-row" data-metric="aerobic" title="Dê duplo-clique para ajustar">
-            <div class="metric-header">
-              <div class="metric-info">
-                <span class="metric-icon">🏃</span>
-                <span class="metric-title">Aeróbico</span>
-              </div>
-              <span class="metric-value-label" id="metric-val-aerobic">1%</span>
-            </div>
-            <div class="metric-progress-wrapper">
-              <div class="metric-progress-bar" id="metric-bar-aerobic" style="width: 1%"></div>
-            </div>
-          </div>
-
-          <div class="metric-row" data-metric="punctuality" title="Dê duplo-clique para ajustar">
-            <div class="metric-header">
-              <div class="metric-info">
-                <span class="metric-icon">⏱️</span>
-                <span class="metric-title">Pontualidade</span>
-              </div>
-              <span class="metric-value-label" id="metric-val-punctuality">1%</span>
-            </div>
-            <div class="metric-progress-wrapper">
-              <div class="metric-progress-bar" id="metric-bar-punctuality" style="width: 1%"></div>
-            </div>
-          </div>
+      <aside class="metrics-sidebar" id="evolution-panel">
+        <div class="panel-header">
+          <h3>EVOLUÇÃO</h3>
+          <button id="btn-toggle-evolution" class="btn-collapse" title="Recolher/Expandir Evolução">[&minus;]</button>
         </div>
+        <div class="evolution-content" id="evolution-content">
+          <div class="metrics-panel">
+            <div class="metric-row" data-metric="productivity" title="Dê duplo-clique para ajustar">
+              <div class="metric-header">
+                <div class="metric-info">
+                  <span class="metric-icon">⚡</span>
+                  <span class="metric-title">Produtividade</span>
+                </div>
+                <span class="metric-value-label" id="metric-val-productivity">1%</span>
+              </div>
+              <div class="metric-progress-wrapper">
+                <div class="metric-progress-bar" id="metric-bar-productivity" style="width: 1%"></div>
+              </div>
+            </div>
 
-        <!-- Painel de Gráficos Retro -->
-        <div class="sys-graph-panel">
-          <h3>SINAL DE XP (ÚLTIMOS 7 DIAS)</h3>
-          <canvas id="sys-stats-canvas" width="220" height="110"></canvas>
+            <div class="metric-row" data-metric="physical" title="Dê duplo-clique para ajustar">
+              <div class="metric-header">
+                <div class="metric-info">
+                  <span class="metric-icon">💪</span>
+                  <span class="metric-title">Físico</span>
+                </div>
+                <span class="metric-value-label" id="metric-val-physical">1%</span>
+              </div>
+              <div class="metric-progress-wrapper">
+                <div class="metric-progress-bar" id="metric-bar-physical" style="width: 1%"></div>
+              </div>
+            </div>
+
+            <div class="metric-row" data-metric="money" title="Dê duplo-clique para ajustar">
+              <div class="metric-header">
+                <div class="metric-info">
+                  <span class="metric-icon">💵</span>
+                  <span class="metric-title">Dinheiro</span>
+                </div>
+                <span class="metric-value-label" id="metric-val-money">1%</span>
+              </div>
+              <div class="metric-progress-wrapper">
+                <div class="metric-progress-bar" id="metric-bar-money" style="width: 1%"></div>
+              </div>
+            </div>
+
+            <div class="metric-row" data-metric="emotional" title="Dê duplo-clique para ajustar">
+              <div class="metric-header">
+                <div class="metric-info">
+                  <span class="metric-icon">🧠</span>
+                  <span class="metric-title">Emocional</span>
+                </div>
+                <span class="metric-value-label" id="metric-val-emotional">1%</span>
+              </div>
+              <div class="metric-progress-wrapper">
+                <div class="metric-progress-bar" id="metric-bar-emotional" style="width: 1%"></div>
+              </div>
+            </div>
+
+            <div class="metric-row" data-metric="health" title="Dê duplo-clique para ajustar">
+              <div class="metric-header">
+                <div class="metric-info">
+                  <span class="metric-icon">❤️</span>
+                  <span class="metric-title">Saúde</span>
+                </div>
+                <span class="metric-value-label" id="metric-val-health">1%</span>
+              </div>
+              <div class="metric-progress-wrapper">
+                <div class="metric-progress-bar" id="metric-bar-health" style="width: 1%"></div>
+              </div>
+            </div>
+
+            <div class="metric-row" data-metric="spiritual" title="Dê duplo-clique para ajustar">
+              <div class="metric-header">
+                <div class="metric-info">
+                  <span class="metric-icon">🧘</span>
+                  <span class="metric-title">Espiritual</span>
+                </div>
+                <span class="metric-value-label" id="metric-val-spiritual">1%</span>
+              </div>
+              <div class="metric-progress-wrapper">
+                <div class="metric-progress-bar" id="metric-bar-spiritual" style="width: 1%"></div>
+              </div>
+            </div>
+
+            <div class="metric-row" data-metric="eating" title="Dê duplo-clique para ajustar">
+              <div class="metric-header">
+                <div class="metric-info">
+                  <span class="metric-icon">🥗</span>
+                  <span class="metric-title">Alimentação</span>
+                </div>
+                <span class="metric-value-label" id="metric-val-eating">1%</span>
+              </div>
+              <div class="metric-progress-wrapper">
+                <div class="metric-progress-bar" id="metric-bar-eating" style="width: 1%"></div>
+              </div>
+            </div>
+
+            <div class="metric-row" data-metric="water" title="Dê duplo-clique para ajustar">
+              <div class="metric-header">
+                <div class="metric-info">
+                  <span class="metric-icon">💧</span>
+                  <span class="metric-title">Água</span>
+                </div>
+                <span class="metric-value-label" id="metric-val-water">1%</span>
+              </div>
+              <div class="metric-progress-wrapper">
+                <div class="metric-progress-bar" id="metric-bar-water" style="width: 1%"></div>
+              </div>
+            </div>
+
+            <div class="metric-row" data-metric="aerobic" title="Dê duplo-clique para ajustar">
+              <div class="metric-header">
+                <div class="metric-info">
+                  <span class="metric-icon">🏃</span>
+                  <span class="metric-title">Aeróbico</span>
+                </div>
+                <span class="metric-value-label" id="metric-val-aerobic">1%</span>
+              </div>
+              <div class="metric-progress-wrapper">
+                <div class="metric-progress-bar" id="metric-bar-aerobic" style="width: 1%"></div>
+              </div>
+            </div>
+
+            <div class="metric-row" data-metric="punctuality" title="Dê duplo-clique para ajustar">
+              <div class="metric-header">
+                <div class="metric-info">
+                  <span class="metric-icon">⏱️</span>
+                  <span class="metric-title">Pontualidade</span>
+                </div>
+                <span class="metric-value-label" id="metric-val-punctuality">1%</span>
+              </div>
+              <div class="metric-progress-wrapper">
+                <div class="metric-progress-bar" id="metric-bar-punctuality" style="width: 1%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Painel de Gráficos Retro -->
+          <div class="sys-graph-panel">
+            <h3>SINAL DE XP (ÚLTIMOS 7 DIAS)</h3>
+            <canvas id="sys-stats-canvas" width="220" height="110"></canvas>
+          </div>
         </div>
 
         <!-- Registro Histórico -->
-        <div class="history-actions" style="margin-top: 1rem; border-top: 1px solid var(--matrix-dim); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
-          <h4 style="font-size: 0.65rem; text-transform: uppercase; color: var(--matrix-dim-medium); letter-spacing: 1px; text-align: center;">Registro Histórico</h4>
-          <div style="display: flex; gap: 0.5rem; justify-content: center;">
-            <button id="btn-export-history" class="btn-apply" style="font-size: 0.6rem; padding: 4px 8px; flex: 1;" title="Exportar dados como JSON">EXPORTAR LOG</button>
-            <button id="btn-import-history" class="btn-apply" style="font-size: 0.6rem; padding: 4px 8px; flex: 1;" title="Importar dados de um JSON">IMPORTAR LOG</button>
-            <input type="file" id="input-import-history" accept=".json" style="display: none;" />
+        <div class="history-actions" id="history-panel" style="margin-top: 1rem; border-top: 1px solid var(--matrix-dim); padding-top: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <h4 style="font-size: 0.65rem; text-transform: uppercase; color: var(--matrix-dim-medium); letter-spacing: 1px; margin: 0;">Registro Histórico</h4>
+            <button id="btn-toggle-history" class="btn-collapse" title="Recolher/Expandir Registro Histórico">[&minus;]</button>
           </div>
-          <p id="history-count" style="font-size: 0.55rem; color: var(--matrix-dim-medium); text-align: center; margin-top: 2px;">0 registros</p>
+          <div class="history-content" id="history-content" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <div style="display: flex; gap: 0.5rem; justify-content: center;">
+              <button id="btn-export-history" class="btn-apply" style="font-size: 0.6rem; padding: 4px 8px; flex: 1;" title="Exportar dados como JSON">EXPORTAR LOG</button>
+              <button id="btn-import-history" class="btn-apply" style="font-size: 0.6rem; padding: 4px 8px; flex: 1;" title="Importar dados de um JSON">IMPORTAR LOG</button>
+              <input type="file" id="input-import-history" accept=".json" style="display: none;" />
+            </div>
+            <p id="history-count" style="font-size: 0.55rem; color: var(--matrix-dim-medium); text-align: center; margin-top: 2px;">0 registros</p>
+          </div>
         </div>
       </aside>
     </div>

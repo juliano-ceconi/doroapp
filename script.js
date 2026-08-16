@@ -93,6 +93,7 @@ let gameState = {
   keyboardSwitch: 'none',
   keyboardVolume: 80,
   activeTaskId: null,
+  activeTaskIds: [],
   monoTaskingActive: false,
   ambientAutoActive: true,
   ambientAutoTimeout: 30,
@@ -510,15 +511,21 @@ function tick() {
       const missionMinutes = gameState.agentMode ? currentFocusTime * 2 : currentFocusTime;
       incrementMissionProgress(1, missionMinutes);
 
-      // Incrementar contador de pomodoros se houver missão ativa
-      if (gameState.activeTaskId) {
-        const activeTask = gameState.tasks.find(t => t.id === gameState.activeTaskId);
-        if (activeTask) {
-          activeTask.pomodoroCount = (activeTask.pomodoroCount || 0) + 1;
-          saveGame();
-          renderTasks();
-          updateMonoTaskingUI();
-        }
+      // Incrementar contador de pomodoros se houver missões ativas
+      const activeIds = gameState.activeTaskIds && gameState.activeTaskIds.length > 0
+        ? gameState.activeTaskIds
+        : (gameState.activeTaskId ? [gameState.activeTaskId] : []);
+
+      if (activeIds.length > 0) {
+        activeIds.forEach(taskId => {
+          const activeTask = gameState.tasks.find(t => t.id === taskId);
+          if (activeTask) {
+            activeTask.pomodoroCount = (activeTask.pomodoroCount || 0) + 1;
+          }
+        });
+        saveGame();
+        renderTasks();
+        updateMonoTaskingUI();
       }
 
       resetTimer(currentBreakTime, "break"); // Default break after focus
@@ -1028,12 +1035,13 @@ function initAiPlansListeners() {
   });
 }
 
-function initAiPlansCollapse() {
-  const panel = document.getElementById("ai-plans-panel");
-  const btn = document.getElementById("btn-toggle-ai-plans");
+function setupCollapsibleSection(panelId, btnId, storageKey, defaultCollapsed = false) {
+  const panel = document.getElementById(panelId);
+  const btn = document.getElementById(btnId);
   if (!panel || !btn) return;
 
-  const isCollapsed = localStorage.getItem("doroapp_ai_plans_collapsed") === "true";
+  const stored = localStorage.getItem(storageKey);
+  const isCollapsed = stored !== null ? stored === "true" : defaultCollapsed;
   if (isCollapsed) {
     panel.classList.add("collapsed");
     btn.innerText = "[+]";
@@ -1044,9 +1052,18 @@ function initAiPlansCollapse() {
 
   btn.addEventListener("click", () => {
     const collapsedNow = panel.classList.toggle("collapsed");
-    localStorage.setItem("doroapp_ai_plans_collapsed", collapsedNow);
+    localStorage.setItem(storageKey, collapsedNow);
     btn.innerText = collapsedNow ? "[+]" : "[−]";
   });
+}
+
+function initCollapsibleSections() {
+  setupCollapsibleSection("ai-plans-panel", "btn-toggle-ai-plans", "doroapp_ai_plans_collapsed");
+  setupCollapsibleSection("mission-log-panel", "btn-toggle-missions", "doroapp_missions_collapsed");
+  setupCollapsibleSection("sys-config-panel", "btn-toggle-config", "doroapp_config_collapsed");
+  setupCollapsibleSection("sys-dump-panel", "btn-toggle-sys-dump", "doroapp_sys_dump_collapsed");
+  setupCollapsibleSection("evolution-panel", "btn-toggle-evolution", "doroapp_evolution_collapsed");
+  setupCollapsibleSection("history-panel", "btn-toggle-history", "doroapp_history_collapsed");
 }
 
 function saveGame() {
@@ -1289,7 +1306,14 @@ function loadGame() {
     gameState.operatorName = parsed.operatorName || "Juliano Ceconi";
     gameState.keyboardSwitch = parsed.keyboardSwitch || 'none';
     gameState.keyboardVolume = parsed.keyboardVolume !== undefined ? parsed.keyboardVolume : 80;
-    gameState.activeTaskId = parsed.activeTaskId || null;
+    if (Array.isArray(parsed.activeTaskIds)) {
+      gameState.activeTaskIds = parsed.activeTaskIds;
+    } else if (parsed.activeTaskId) {
+      gameState.activeTaskIds = [parsed.activeTaskId];
+    } else {
+      gameState.activeTaskIds = [];
+    }
+    gameState.activeTaskId = gameState.activeTaskIds[0] || null;
     gameState.monoTaskingActive = parsed.monoTaskingActive || false;
     gameState.ambientAutoActive = parsed.ambientAutoActive !== undefined ? parsed.ambientAutoActive : true;
     gameState.ambientAutoTimeout = parsed.ambientAutoTimeout !== undefined ? parsed.ambientAutoTimeout : 30;
@@ -1398,6 +1422,7 @@ function loadGame() {
     gameState.keyboardSwitch = 'none';
     gameState.keyboardVolume = 80;
     gameState.activeTaskId = null;
+    gameState.activeTaskIds = [];
     gameState.monoTaskingActive = false;
   }
 
@@ -1592,8 +1617,13 @@ function deleteTask(taskId) {
     logHistoryEvent("task", task.id, task.text, "excluida", 0);
   }
   gameState.tasks = gameState.tasks.filter((t) => t.id !== taskId);
+  if (gameState.activeTaskIds) {
+    gameState.activeTaskIds = gameState.activeTaskIds.filter((id) => id !== taskId);
+  }
+  gameState.activeTaskId = (gameState.activeTaskIds && gameState.activeTaskIds[0]) || null;
   saveGame();
   renderTasks();
+  updateMonoTaskingUI();
 }
 
 function renderTasks() {
@@ -1611,8 +1641,9 @@ function renderTasks() {
       listEl.innerHTML = `<div class="empty-state">Nenhuma tarefa...</div>`;
     } else {
       filtered.forEach((task) => {
+        const isActive = gameState.activeTaskIds && gameState.activeTaskIds.includes(task.id);
         const card = document.createElement("div");
-        card.className = `task-card ${task.done ? "done" : ""}`;
+        card.className = `task-card ${task.done ? "done" : ""} ${isActive ? "is-active" : ""}`;
         card.dataset.taskId = task.id;
         card.setAttribute("draggable", "true");
 
@@ -1631,15 +1662,18 @@ function renderTasks() {
             ${tagsHtml}
             ${pomodoroBadge}
           </div>
-          <button class="task-focus-select" title="Definir como foco principal">🎯</button>
+          <button class="task-focus-select ${isActive ? 'active' : ''}" title="${isActive ? 'Remover do foco ativo' : 'Definir como foco ativo'}">🎯</button>
           <button class="task-delete" aria-label="Deletar tarefa">×</button>
         `;
 
         // Handlers
-        card.querySelector(".task-check").addEventListener("click", () => toggleTaskDone(task.id));
+        card.querySelector(".task-check").addEventListener("click", () => {
+          toggleTaskDone(task.id);
+          updateMonoTaskingUI();
+        });
         card.querySelector(".task-focus-select").addEventListener("click", (e) => {
           e.stopPropagation();
-          setMainMission(task.id);
+          toggleMainMission(task.id);
         });
         card.querySelector(".task-delete").addEventListener("click", (e) => {
           e.stopPropagation();
@@ -1942,75 +1976,109 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-// Mono-Tasking Logic
-function setMainMission(taskId) {
-  gameState.activeTaskId = taskId;
-  
-  if (!gameState.monoTaskingActive) {
-    gameState.monoTaskingActive = true;
+// Mono-Tasking Logic (Suporte a múltiplas missões ativas / âncoras paralelas)
+function toggleMainMission(taskId) {
+  if (!Array.isArray(gameState.activeTaskIds)) {
+    gameState.activeTaskIds = gameState.activeTaskId ? [gameState.activeTaskId] : [];
   }
-  
+
+  const index = gameState.activeTaskIds.indexOf(taskId);
+  if (index > -1) {
+    gameState.activeTaskIds.splice(index, 1);
+  } else {
+    gameState.activeTaskIds.push(taskId);
+  }
+  gameState.activeTaskId = gameState.activeTaskIds[0] || null;
+
   saveGame();
+  renderTasks();
   updateMonoTaskingUI();
   playKeyboardSound('brown');
+}
+
+function setMainMission(taskId) {
+  toggleMainMission(taskId);
 }
 
 function updateMonoTaskingUI() {
   const panel = document.getElementById("mono-tasking-panel");
   const contentEl = document.getElementById("mono-task-content");
   const toggleBtn = document.getElementById("btn-toggle-mono");
+  const tagEl = panel ? panel.querySelector(".mono-tag") : null;
   if (!panel || !contentEl || !toggleBtn) return;
 
   document.body.classList.toggle("mono-tasking-active", gameState.monoTaskingActive);
   toggleBtn.innerText = gameState.monoTaskingActive ? "MODO MULTI" : "MODO MONO";
 
-  if (!gameState.activeTaskId) {
-    contentEl.innerHTML = `<p id="mono-task-text" class="placeholder">Nenhuma missão ativa selecionada. Clique no 🎯 de uma tarefa no board para começar.</p>`;
-    return;
+  if (!Array.isArray(gameState.activeTaskIds)) {
+    gameState.activeTaskIds = gameState.activeTaskId ? [gameState.activeTaskId] : [];
   }
 
-  const task = gameState.tasks.find(t => t.id === gameState.activeTaskId);
-  if (!task) {
-    gameState.activeTaskId = null;
-    saveGame();
-    contentEl.innerHTML = `<p id="mono-task-text" class="placeholder">Nenhuma missão ativa selecionada. Clique no 🎯 de uma tarefa no board para começar.</p>`;
-    return;
+  // Filtrar apenas IDs de tarefas que ainda existem
+  gameState.activeTaskIds = gameState.activeTaskIds.filter(id => (gameState.tasks || []).some(t => t.id === id));
+  gameState.activeTaskId = gameState.activeTaskIds[0] || null;
+
+  const activeTasks = (gameState.tasks || []).filter(t => gameState.activeTaskIds.includes(t.id));
+
+  if (tagEl) {
+    if (activeTasks.length > 1) {
+      tagEl.innerText = `[ MISSÕES ATIVAS (${activeTasks.length}) ]`;
+    } else {
+      tagEl.innerText = "[ MISSÃO ATIVA ]";
+    }
   }
 
-  const tagsHtml = task.tags && task.tags.length > 0
-    ? `<div class="task-tags">${task.tags.map((t) => `<span class="tag">#${t}</span>`).join("")}</div>`
-    : "";
-
-  const pomodoroHtml = task.pomodoroCount > 0
-    ? `<span class="pomodoro-badge">Ciclos de Foco: ${task.pomodoroCount}</span>`
-    : "";
+  if (activeTasks.length === 0) {
+    contentEl.innerHTML = `<p id="mono-task-text" class="placeholder">Nenhuma missão ativa selecionada. Clique no 🎯 de uma ou mais tarefas no board para começar.</p>`;
+    return;
+  }
 
   const priorityLabels = {
     diaria: "Foco de Hoje",
     urgente: "Urgente",
     importante: "Importante"
   };
-  const priorityLabel = priorityLabels[task.priority] || task.priority.toUpperCase();
 
-  contentEl.innerHTML = `
-    <div class="mono-task-card ${task.done ? 'done' : ''} ${task.priority}">
-      <button class="mono-task-check" aria-label="Concluir tarefa">${task.done ? "✓" : ""}</button>
-      <div class="mono-task-content">
-        <span class="mono-task-title">${task.text}</span>
-        ${tagsHtml}
-        ${pomodoroHtml}
+  contentEl.innerHTML = activeTasks.map(task => {
+    const tagsHtml = task.tags && task.tags.length > 0
+      ? `<div class="task-tags">${task.tags.map((t) => `<span class="tag">#${t}</span>`).join("")}</div>`
+      : "";
+
+    const pomodoroHtml = task.pomodoroCount > 0
+      ? `<span class="pomodoro-badge">Ciclos de Foco: ${task.pomodoroCount}</span>`
+      : "";
+
+    const priorityLabel = priorityLabels[task.priority] || task.priority.toUpperCase();
+
+    return `
+      <div class="mono-task-card ${task.done ? 'done' : ''} ${task.priority}" data-task-id="${task.id}">
+        <button class="mono-task-check" data-task-id="${task.id}" aria-label="Concluir tarefa">${task.done ? "✓" : ""}</button>
+        <div class="mono-task-content">
+          <span class="mono-task-title">${task.text}</span>
+          ${tagsHtml}
+          ${pomodoroHtml}
+        </div>
+        <span class="mono-priority-badge">${priorityLabel}</span>
+        <button class="mono-task-remove" data-task-id="${task.id}" title="Remover do foco ativo">✕</button>
       </div>
-      <span class="mono-priority-badge">${priorityLabel}</span>
-    </div>
-  `;
+    `;
+  }).join("");
 
-  const checkBtn = contentEl.querySelector(".mono-task-check");
-  if (checkBtn) {
-    checkBtn.addEventListener("click", () => {
-      toggleTaskDone(task.id);
+  // Handlers para cada card na visualização mono
+  contentEl.querySelectorAll(".mono-task-check").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const taskId = btn.dataset.taskId;
+      toggleTaskDone(taskId);
       updateMonoTaskingUI();
     });
-  }
+  });
+
+  contentEl.querySelectorAll(".mono-task-remove").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const taskId = btn.dataset.taskId;
+      toggleMainMission(taskId);
+    });
+  });
 }
 
 ["mousemove", "mousedown", "keydown", "touchstart", "scroll"].forEach((evt) => {
@@ -2202,7 +2270,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initKanbanDragAndDrop();
   initMetricsListeners();
   initAiPlansListeners();
-  initAiPlansCollapse();
+  initCollapsibleSections();
   showRandomQuote();
   resetTimer(currentFocusTime, "focus"); // Init state
 
