@@ -1707,7 +1707,13 @@ body:not(.agent-mode-active) .agent-colors {
   box-shadow: 0 0 5px rgba(255, 0, 0, 0.4);
 }
 
+.sys-dump-content {
+  display: flex;
+}
+
 #sys-dump-textarea {
+  width: 100%;
+  box-sizing: border-box;
   background: rgba(0, 2, 0, 0.8);
   border: 1px solid rgba(0, 255, 65, 0.05);
   color: var(--matrix-green);
@@ -1720,6 +1726,13 @@ body:not(.agent-mode-active) .agent-colors {
   outline: none;
   border-radius: var(--radius-sm);
   transition: all 0.2s ease;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+#sys-dump-textarea::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 #sys-dump-textarea:focus {
