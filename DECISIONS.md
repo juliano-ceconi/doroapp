@@ -1138,3 +1138,49 @@ O usuário solicitou a criação de um novo favicon para o Doroapp com a imagem 
 - A barra de título do aplicativo instalado no Windows agora é preta, integrando perfeitamente com a janela da aplicação.
 - A barra lateral e a coluna de evolução podem ser compactadas sob demanda, permitindo focar nos módulos essenciais em telas menores ou monitores dedicados.
 
+---
+
+## [2026-08-21] Expansão do Catálogo de Rádios (20 Estações) e Alinhamento para Ruído Marrom
+
+### Contexto
+
+1. O catálogo de rádios necessitava de expansão com foco em gêneros estimulantes e hipnóticos para estados de fluxo de trabalho contínuo (Lo-Fi Hip Hop, Chillhop, Synthwave, Cyberpunk Hacking, Ambient & Drone, Deep Space, Game OST, Cinema Soundtracks, Clássica/Neoclássica, Smooth Jazz, Progressive Psytrance, Full-On Psytrance moderno e Goa Trance).
+2. A rádio anteriormente rotulada como "Full-On Psy" utilizava a estação alemã *Goanight*, cujo repertório é de Goa Trance / Acid Trance clássico dos anos 90/2000, e não o Full-On Psytrance contemporâneo de festival (145 BPM com rolling bassline contínuo).
+3. O gerador de áudio acústico via Web Audio API foi desenvolvido matematicamente utilizando o algoritmo de Ruído Marrom (Brownian noise), mas permanecia com o rótulo textual de "RUÍDO CINZA" na interface.
+
+### Decisão
+
+1. **Alinhamento de Nomenclatura Acústica (`index.html`)**:
+   - Renomear o label no painel de configurações para "RUÍDO MARROM:" e a dica do slider para "Volume do ruído marrom", alinhando o texto à implementação acústica real de Brown Noise em baixa frequência (-6 dB/oitava) ideal para TDAH.
+2. **Expansão e Curadoria de Rádios (`script.js`, `index.html`)**:
+   - Expansão do catálogo para 20 estações de streaming contínuo, todas validadas em HTTPS direto com `Content-Type: audio/mpeg`:
+     - `lofi`: REYFM Lo-Fi Beats (320kbps)
+     - `chillhop`: I Love Chillhop (192kbps)
+     - `synthwave`: Nightride FM (320kbps)
+     - `defcon`: SomaFM DEF CON Radio (256kbps)
+     - `ambient`: SomaFM Groove Salad (256kbps)
+     - `drone`: SomaFM Drone Zone (256kbps)
+     - `deepspace`: SomaFM Deep Space One (128kbps)
+     - `techno`: SomaFM The Trip (128kbps)
+     - `house`: SomaFM Beat Blender (128kbps)
+     - `prog`: Technolovers Psytrance (192kbps)
+     - `fullon`: Hirschmilch Psytrance (Full-On contemporâneo 145 BPM)
+     - `goa`: Goanight (Goa Trance clássico)
+     - `vgm`: Gamesboro VGM Radio (Game OST 24/7)
+     - `cinema`: Cinemix (Soundtracks e Cinema Instrumental)
+     - `classica`: Iowa Public Radio Classical
+     - `neoclass`: SomaFM Synphaera (Neoclássica e Ambient Moderno)
+     - `jazz`: SomaFM Illinois Street Lounge (Smooth Jazz & Lounge)
+     - `rain`: TorontoCast Nature Radio Rain
+     - `meditation`: Epic Lounge Sleep & Meditation
+     - `rock`: Radio Paradise
+3. **Resiliência e Fallback Seguro (`script.js`)**:
+   - Manutenção de fallback seguro para `lofi` caso o operador possua alguma chave legada salva no `localStorage`.
+
+### Consequências
+
+- O Doroapp passa a contar com um ecossistema musical completo e curado para diferentes perfis de foco, produtividade e relaxamento mental.
+- Distinção clara e precisa entre Full-On Psytrance contemporâneo (Hirschmilch) e Goa Trance clássico (Goanight).
+- Alinhamento conceitual e visual da síntese de ruído para Ruído Marrom puro.
+
+

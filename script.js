@@ -121,31 +121,49 @@ const XP_BASE = 7.65;
 const XP_EXPONENT = 3;
 
 const RADIO_PRESETS = {
-  lofi:      'https://ice1.somafm.com/groovesalad-256-mp3',
-  rock:      'https://stream.radioparadise.com/mp3-128',
-  house:     'https://ice1.somafm.com/beatblender-128-mp3',
-  techno:    'https://ice1.somafm.com/thetrip-128-mp3',
-  prog:      'https://stream.technolovers.fm/psytrance',
-  fullon:    'https://goanight.stream.laut.fm/goanight',
-  classica:  'https://classical-stream.iowapublicradio.org/Classical.mp3',
-  indie:     'https://listen-msmn.sharp-stream.com/nme1.mp3',
-  rain:      'https://maggie.torontocast.com:2020/stream/natureradiorain',
-  meditation:'https://stream.epic-lounge.com/sleep-meditation',
-  yoga:      'https://ice1.somafm.com/dronezone-256-mp3',
+  lofi:       'https://listen.reyfm.de/lofi_320kbps.mp3',
+  chillhop:   'https://ilm.stream35.radiohost.de/ilm_ilovechillhop_mp3-192',
+  synthwave:  'https://stream.nightride.fm/nightride.mp3',
+  defcon:     'https://ice1.somafm.com/defcon-256-mp3',
+  ambient:    'https://ice1.somafm.com/groovesalad-256-mp3',
+  drone:      'https://ice1.somafm.com/dronezone-256-mp3',
+  deepspace:  'https://ice1.somafm.com/deepspaceone-128-mp3',
+  techno:     'https://ice1.somafm.com/thetrip-128-mp3',
+  house:      'https://ice1.somafm.com/beatblender-128-mp3',
+  prog:       'https://stream.technolovers.fm/psytrance',
+  fullon:     'https://hirschmilch.de:7001/psytrance.mp3',
+  goa:        'https://goanight.stream.laut.fm/goanight',
+  vgm:        'https://radio.gamesboro.org/listen/gamesboro_radio/radio.mp3',
+  cinema:     'https://kathy.torontocast.com:3560/stream',
+  classica:   'https://classical-stream.iowapublicradio.org/Classical.mp3',
+  neoclass:   'https://ice1.somafm.com/synphaera-128-mp3',
+  jazz:       'https://ice1.somafm.com/illstreet-128-mp3',
+  rain:       'https://maggie.torontocast.com:2020/stream/natureradiorain',
+  meditation: 'https://stream.epic-lounge.com/sleep-meditation',
+  rock:       'https://stream.radioparadise.com/mp3-128',
 };
 
 const RADIO_GENRE_NAMES = {
-  lofi:      'Lofi',
-  rock:      'Rock',
-  house:     'House',
-  techno:    'Techno',
-  prog:      'Prog Psy',
-  fullon:    'Full-On Psy',
-  classica:  'Clássica',
-  indie:     'Indie',
-  rain:      'Chuva',
-  meditation:'Meditação',
-  yoga:      'Yoga',
+  lofi:       'Lo-Fi Beats',
+  chillhop:   'Chillhop',
+  synthwave:  'Synthwave',
+  defcon:     'Hacking',
+  ambient:    'Downtempo',
+  drone:      'Ambient Drone',
+  deepspace:  'Deep Space',
+  techno:     'Techno',
+  house:      'Deep House',
+  prog:       'Prog Psy',
+  fullon:     'Full-On Psy',
+  goa:        'Goa Trance',
+  vgm:        'Game OST',
+  cinema:     'Soundtracks',
+  classica:   'Clássica',
+  neoclass:   'Neoclássica',
+  jazz:       'Smooth Jazz',
+  rain:       'Chuva',
+  meditation: 'Meditação',
+  rock:       'Rock',
 };
 
 function getRequiredXP(levelIndex) {
@@ -1496,7 +1514,7 @@ function loadGame() {
     btnRadioToggle.classList.toggle('active', !!gameState.radioActive);
   }
   if (selectRadioGenre) {
-    selectRadioGenre.value = gameState.radioGenre || 'lofi';
+    selectRadioGenre.value = (gameState.radioGenre && RADIO_PRESETS[gameState.radioGenre]) ? gameState.radioGenre : 'lofi';
   }
   if (sliderRadioVol) {
     sliderRadioVol.value = gameState.radioVolume !== undefined ? gameState.radioVolume : 50;
