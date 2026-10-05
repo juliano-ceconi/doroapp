@@ -9,6 +9,7 @@ let gameState = {
       text: "Malhar",
       completed: false,
       xp: 500,
+      isDaily: true,
       triggerTime: "06:30",
       lastDoneDate: null
     },
@@ -22,8 +23,8 @@ let gameState = {
       targetProgress: 4,
       lastDoneDate: null
     },
-    { id: 5, text: "Meditar", completed: false, xp: 500 },
-    { id: 7, text: "Aeróbico", completed: false, xp: 500 },
+    { id: 5, text: "Meditar", completed: false, xp: 500, isDaily: true, lastDoneDate: null },
+    { id: 7, text: "Aeróbico", completed: false, xp: 500, isDaily: true, lastDoneDate: null },
     {
       id: "venvanse",
       text: "Hora do Foco",
@@ -211,7 +212,7 @@ const LEVELS = [
   "Diretor de Engenharia IA",
   "Tech Lead da Singularidade",
   "Cientista de Agentes",
-  "Pesquisador de IAG",
+  "Pesquisador de AGI",
   "Unicórnio do Deep Tech",
   "Founder Tech do Vale",
   "Arquiteto de IAs Autônomas",
@@ -713,15 +714,31 @@ function isWaterAlertActive(mission) {
   return mission.currentProgress < requiredGlasses;
 }
 
+function isDailyMission(mission) {
+  if (!mission) return false;
+  return Boolean(
+    mission.isDaily ||
+    mission.isMedicine ||
+    mission.triggerTime ||
+    mission.id === 5 || // Meditar
+    mission.id === 6 || // Malhar
+    mission.id === 7    // Aeróbico
+  );
+}
+
 function checkDailyMissionsReset() {
   let updated = false;
   const todayStr = new Date().toLocaleDateString('sv');
   gameState.missions.forEach((mission) => {
-    if (mission.isMedicine || mission.triggerTime) {
+    if (isDailyMission(mission)) {
       if (mission.lastDoneDate !== todayStr && mission.completed) {
         mission.completed = false;
         updated = true;
       }
+    }
+    if (mission.id === 2 && mission.completed) {
+      mission.completed = false;
+      updated = true;
     }
     if (mission.id === 4) {
       if (mission.lastDoneDate !== todayStr) {
@@ -812,9 +829,16 @@ function renderMissions() {
   const todayStr = new Date().toLocaleDateString('sv');
 
   gameState.missions.forEach((mission) => {
+    // Marco (id 2) é um botão de registro contínuo e nunca deve ficar com estado completed
+    if (mission.id === 2) {
+      mission.completed = false;
+    }
+
     const li = document.createElement("li");
     li.className = `mission-item ${mission.completed ? "completed" : ""}`;
-    li.title = "Clique simples para concluir/progredir | Duplo-clique para editar";
+    li.title = mission.id === 2
+      ? "Clique simples para registrar Marco (+XP) | Duplo-clique para editar"
+      : "Clique simples para concluir/progredir | Duplo-clique para editar";
 
     if (mission.isMedicine) {
       if (mission.lastDoneDate !== todayStr) {
@@ -827,7 +851,7 @@ function renderMissions() {
 
       li.innerText = `${mission.text} (${mission.triggerTime}) [${mission.xp} XP]`;
     } else {
-      if (mission.triggerTime && mission.lastDoneDate !== todayStr) {
+      if ((mission.triggerTime || isDailyMission(mission)) && mission.lastDoneDate !== todayStr) {
         mission.completed = false;
       }
 
@@ -919,9 +943,32 @@ function incrementMissionProgress(id, amount = 1) {
 
 function toggleMission(id) {
   const mission = gameState.missions.find((m) => m.id === id);
-  if (!mission || mission.completed) return;
- 
-  if (mission.isMedicine || mission.triggerTime) {
+  if (!mission) return;
+
+  // Botão 'Marco: Objetivo Atingido' (id 2) - Registro repetível de marco
+  if (mission.id === 2) {
+    addXP(mission.xp);
+    logHistoryEvent("missao", mission.id, mission.text, true, mission.xp);
+    playSound("finish");
+    mission.completed = false; // Permanece com visual normal de botão
+    saveGame();
+
+    // Feedback visual sutil estilo botão pressionado sem riscar nem ofuscar
+    const list = document.getElementById("mission-list");
+    if (list) {
+      const items = list.querySelectorAll(".mission-item");
+      const itemEl = Array.from(items).find((el) => el.textContent.includes(mission.text));
+      if (itemEl) {
+        itemEl.classList.add("mission-btn-press");
+        setTimeout(() => itemEl.classList.remove("mission-btn-press"), 300);
+      }
+    }
+    return;
+  }
+
+  if (mission.completed) return;
+
+  if (isDailyMission(mission)) {
     const todayStr = new Date().toLocaleDateString('sv');
     mission.completed = true;
     mission.lastDoneDate = todayStr;
@@ -938,14 +985,14 @@ function toggleMission(id) {
     logHistoryEvent("missao", mission.id, mission.text, true, mission.xp);
     playSound("finish");
     renderMissions();
- 
+
     // Auto-reset para permitir repetição após 1.5 segundos
     setTimeout(() => {
       mission.completed = false;
       renderMissions();
       saveGame();
     }, 1500);
- 
+
     saveGame();
   }
 }
@@ -1394,6 +1441,7 @@ function loadGame() {
 
     // Restore mission status, text and XP (loaded from localStorage)
     if (parsed.missions) {
+      const todayStr = new Date().toLocaleDateString('sv');
       gameState.missions = gameState.missions.map((mission) => {
         // Find saved version of this mission by ID
         const savedMission = parsed.missions.find((m) => m.id === mission.id);
@@ -1408,6 +1456,17 @@ function loadGame() {
           if (savedMission.xp !== undefined) restored.xp = savedMission.xp;
           if (savedMission.bonusXp !== undefined) restored.bonusXp = savedMission.bonusXp;
           if (savedMission.triggerTime !== undefined) restored.triggerTime = savedMission.triggerTime;
+
+          // Se for diária e o lastDoneDate for anterior a hoje, reseta completed
+          if (isDailyMission(restored) && restored.lastDoneDate !== todayStr) {
+            restored.completed = false;
+          }
+
+          // Marco: Objetivo Atingido (id 2) nunca deve vir marcado como completed
+          if (restored.id === 2) {
+            restored.completed = false;
+          }
+
           return restored;
         }
         return mission;
