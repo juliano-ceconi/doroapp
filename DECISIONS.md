@@ -1183,4 +1183,38 @@ O usuário solicitou a criação de um novo favicon para o Doroapp com a imagem 
 - Distinção clara e precisa entre Full-On Psytrance contemporâneo (Hirschmilch) e Goa Trance clássico (Goanight).
 - Alinhamento conceitual e visual da síntese de ruído para Ruído Marrom puro.
 
+---
+
+## [2026-10-05] Missões Diárias (Meditar e Aeróbico), Botão de Marcos Repetível e Ajuste de Título de Nível (AGI)
+
+### Contexto
+
+1. As missões "Meditar" e "Aeróbico" precisavam se comportar como missões diárias (assim como "Malhar"): uma vez concluídas pelo operador no dia, devem permanecer riscadas e ofuscadas até a virada do dia.
+2. A missão "Marco: Objetivo Atingido" estava sofrendo o auto-reset rápido de 1.5s (ficando riscada e ofuscada temporariamente e depois desmarcando sozinha). Como o operador pode atingir múltiplos marcos relevantes no mesmo dia, ela deve funcionar como um botão de ação com feedback de clique normal, sem riscar nem ofuscar.
+3. O título do nível 40 (índice 39) estava como "Pesquisador de IAG" e precisava ser atualizado para "Pesquisador de AGI" (termo canônico para Artificial General Intelligence).
+
+### Decisão
+
+1. **Missões Diárias Meditar e Aeróbico (`script.js`)**:
+   - Criação da função helper `isDailyMission(mission)` para identificar missões com `isDaily: true`, `isMedicine`, `triggerTime` ou IDs 5 ("Meditar"), 6 ("Malhar") e 7 ("Aeróbico").
+   - Atualização do array inicial `gameState.missions` com `isDaily: true, lastDoneDate: null` para "Meditar" e "Aeróbico".
+   - No `toggleMission()`, as missões diárias são marcadas com `completed = true`, recebem o `lastDoneDate = todayStr` e não sofrem timeout de auto-reset.
+   - No `checkDailyMissionsReset()` e no `renderMissions()`, resetam para `completed = false` automaticamente quando o dia muda (`lastDoneDate !== todayStr`).
+   - No `loadGame()`, missões diárias salvas preservam o estado concluído do dia, mas resetam caso tenham sido concluídas em data anterior.
+
+2. **Botão de Ação Repetível para 'Marco: Objetivo Atingido' (`script.js`, `style.css`)**:
+   - No `toggleMission()`, a missão de ID 2 ("Marco: Objetivo Atingido") é interceptada como botão de ação contínuo: concede o XP (+500 XP), toca o áudio de conquista (`finish`), registra o evento no histórico e mantém `mission.completed = false`.
+   - Adicionada a classe de animação tátil Cyberpunk `.mission-btn-press` em `style.css` (escala suave e brilho momentâneo no clique por 300ms) sem aplicar riscado (`text-decoration: line-through`) nem ofuscamento (`opacity: 0.5`).
+   - Garantido no `loadGame()` e no `checkDailyMissionsReset()` que o ID 2 nunca permaneça com estado `completed: true`.
+
+3. **Atualização Terminológica para AGI (`script.js`, `levels.md`)**:
+   - No array `LEVELS` do `script.js` e na documentação de progressão `levels.md`, o nível 40 foi ajustado de "Pesquisador de IAG" para "Pesquisador de AGI".
+
+### Consequências
+
+- "Meditar" e "Aeróbico" mantêm histórico diário limpo e permanecem riscadas durante todo o dia após a realização, resetando à meia-noite.
+- "Marco: Objetivo Atingido" pode ser acionado livremente múltiplas vezes ao dia com retorno sonoro e visual de botão, sem ficar riscado ou desmarcar sozinho.
+- Terminologia de progressão alinhada para "Pesquisador de AGI".
+
+
 
