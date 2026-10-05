@@ -73,7 +73,7 @@ Os níveis atuais no sistema são:
 36. Diretor de Engenharia IA
 37. Tech Lead da Singularidade
 38. Cientista de Agentes
-39. Pesquisador de IAG
+39. Pesquisador de AGI
 40. Unicórnio do Deep Tech
 41. Founder Tech do Vale
 42. Arquiteto de IAs Autônomas
