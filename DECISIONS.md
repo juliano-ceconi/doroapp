@@ -1216,5 +1216,33 @@ O usuário solicitou a criação de um novo favicon para o Doroapp com a imagem 
 - "Marco: Objetivo Atingido" pode ser acionado livremente múltiplas vezes ao dia com retorno sonoro e visual de botão, sem ficar riscado ou desmarcar sozinho.
 - Terminologia de progressão alinhada para "Pesquisador de AGI".
 
+---
 
+## [2026-10-06] Expansão do Dial de Rádios: Segunda Lo-Fi e Subgêneros Hi-BPM de Psytrance (Forest, Dark Psy, Psycore)
 
+### Contexto
+
+1. Necessidade de uma segunda opção de estação Lo-Fi posicionada logo após a primeira no dial para alternância de ambiência de foco suave.
+2. Expansão das vertentes psicodélicas aceleradas com a adição de três subgêneros hi-bpm de Psytrance posicionados logo após "Goa Trance": Forest, Dark Psy e Psycore.
+3. Desambiguação rigorosa obrigatória: garantir que as rádios adicionadas correspondam estritamente aos subgêneros hi-bpm do psytrance/goa e não a sons da natureza, dark ambient ou hardcore eletrônico genérico.
+4. Cumprimento da regra inegociável da arquitetura do Doroapp: streams diretas, estáveis, testadas e 100% sobre HTTPS para prevenir bloqueios de Mixed Content na Vercel.
+
+### Decisão
+
+1. **Segunda Rádio Lo-Fi (`lofi2`)**:
+   - Estação: Box Lofi Radio (Lo-Fi Study & Chill Beats).
+   - Stream: `https://stream.zeno.fm/tabzverz0fctv`.
+   - Rótulo: `Lo-Fi Chill`.
+   - Posição: Imediatamente após `lofi` em `RADIO_PRESETS`, `RADIO_GENRE_NAMES` e no menu `<select id="select-radio-genre">`.
+
+2. **Subgêneros Hi-BPM de Psytrance (`forest`, `darkpsy`, `psycore`)**:
+   - **Forest (`forest`)**: Psychedelic Travel Radio (`https://e20.yesstreaming.net:6148/stream`), canal dedicado a Forest Psytrance autêntico.
+   - **Dark Psy (`darkpsy`)**: RadiOzora Trance (`https://trance.out.airtime.pro:8000/trance_a`), canal de psytrance psicodélico pesado e dark do festival Ozora.
+   - **Psycore (`psycore`)**: Laut.fm Psycore (`https://psycore.stream.laut.fm/psycore`), canal dedicado a Goa e Psycore extremo (180+ BPM).
+   - Posição: Inseridas em sequência direta imediatamente após `goa` (Goa Trance) nos 3 pontos da arquitetura (`RADIO_PRESETS`, `RADIO_GENRE_NAMES` e `<select>`).
+
+### Consequências
+
+- O seletor de rádio agora acomoda 24 estações curadas sem extrapolar a largura visual (`max-width: 105px`).
+- Preservação total da estabilidade de áudio em produção sem quebra de protocolo HTTPS.
+- Cobertura completa do espectro de foco, desde downtempo/lo-fi até hi-bpm psytrance de alta energia mental.

@@ -123,6 +123,7 @@ const XP_EXPONENT = 3;
 
 const RADIO_PRESETS = {
   lofi:       'https://listen.reyfm.de/lofi_320kbps.mp3',
+  lofi2:      'https://stream.zeno.fm/tabzverz0fctv',
   chillhop:   'https://ilm.stream35.radiohost.de/ilm_ilovechillhop_mp3-192',
   synthwave:  'https://stream.nightride.fm/nightride.mp3',
   defcon:     'https://ice1.somafm.com/defcon-256-mp3',
@@ -134,6 +135,9 @@ const RADIO_PRESETS = {
   prog:       'https://stream.technolovers.fm/psytrance',
   fullon:     'https://hirschmilch.de:7001/psytrance.mp3',
   goa:        'https://goanight.stream.laut.fm/goanight',
+  forest:     'https://e20.yesstreaming.net:6148/stream',
+  darkpsy:    'https://trance.out.airtime.pro:8000/trance_a',
+  psycore:    'https://psycore.stream.laut.fm/psycore',
   vgm:        'https://radio.gamesboro.org/listen/gamesboro_radio/radio.mp3',
   cinema:     'https://kathy.torontocast.com:3560/stream',
   classica:   'https://classical-stream.iowapublicradio.org/Classical.mp3',
@@ -146,6 +150,7 @@ const RADIO_PRESETS = {
 
 const RADIO_GENRE_NAMES = {
   lofi:       'Lo-Fi Beats',
+  lofi2:      'Lo-Fi Chill',
   chillhop:   'Chillhop',
   synthwave:  'Synthwave',
   defcon:     'Hacking',
@@ -157,6 +162,9 @@ const RADIO_GENRE_NAMES = {
   prog:       'Prog Psy',
   fullon:     'Full-On Psy',
   goa:        'Goa Trance',
+  forest:     'Forest',
+  darkpsy:    'Dark Psy',
+  psycore:    'Psycore',
   vgm:        'Game OST',
   cinema:     'Soundtracks',
   classica:   'Clássica',
