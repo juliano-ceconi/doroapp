@@ -1270,3 +1270,31 @@ O usuário solicitou a criação de um novo favicon para o Doroapp com a imagem 
 - Zero quebra de layout ou compatibilidade no seletor de rádio.
 - 100% compatível com as regras HTTPS e infraestrutura Vercel.
 
+---
+
+## [2026-10-07] Adição das Rádios Hi-Tech e Experimental (200+ BPM)
+
+### Contexto
+
+1. Necessidade de preencher o dial com a vertente intermediária acelerada **Hi-Tech** (posicionada entre `Dark Psy` e `Psycore`) e uma estação dedicada ao extremo **Experimental** (200 BPM ou superior, posicionada logo após `Psycore`).
+2. Garantir streams estáveis sobre HTTPS direto (port 443), áudio MP3 de alta fidelidade e sem anúncios intrusivos ou interrupções.
+
+### Decisão
+
+1. **Hi-Tech (`hitech`)**:
+   - Estação: **Triplag Webradio** (`https://a3.asurahosting.com/listen/triplag/radio.mp3`).
+   - Bitrate: 192 kbps MP3 direto.
+   - Perfil: Web rádio internacional consagrada desde 2005 especializada em Darkpsy, Hi-Tech, Forest e Psycore.
+   - Posição: Entre `Dark Psy` e `Psycore` em `RADIO_PRESETS`, `RADIO_GENRE_NAMES` e `<select>`.
+2. **Experimental (`experim`)**:
+   - Estação: **FRENCHCORE24FM Radio** (`https://a8.asurahosting.com/listen/frenchcore24fm/radio.mp3`).
+   - Bitrate: 128 kbps MP3 direto.
+   - Perfil: Transmissão popular ininterrupta de ritmos extremos de 200 a 240+ BPM (Frenchcore, Tekno, Uptempo, Speedcore experimental).
+   - Posição: Imediatamente abaixo de `Psycore` em `RADIO_PRESETS`, `RADIO_GENRE_NAMES` e `<select>`.
+
+### Consequências
+
+- Progressão contínua e perfeita da curva de BPM psicodélico/extremo: Prog (136) -> Full-On (145) -> Goa (148) -> Forest (152) -> Dark Psy (156) -> Hi-Tech (170-190) -> Psycore (190-210) -> Experimental (200-240+).
+- Seletor de rádio expandido para 26 estações curadas, mantendo conformidade visual total e integridade HTTPS.
+
+
