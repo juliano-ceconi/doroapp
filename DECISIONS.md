@@ -1246,3 +1246,27 @@ O usuário solicitou a criação de um novo favicon para o Doroapp com a imagem 
 - O seletor de rádio agora acomoda 24 estações curadas sem extrapolar a largura visual (`max-width: 105px`).
 - Preservação total da estabilidade de áudio em produção sem quebra de protocolo HTTPS.
 - Cobertura completa do espectro de foco, desde downtempo/lo-fi até hi-bpm psytrance de alta energia mental.
+
+---
+
+## [2026-10-07] Correção da Rádio Psycore: Migração para PsyStation (Psycore Autêntico 190+ BPM)
+
+### Contexto
+
+1. O stream anterior da estação Psycore (`laut.fm/psycore`) não correspondia a uma programação contínua e autêntica de Psycore extremo, exibindo desvios de repertório e inconsistência de catálogo.
+2. A gestão de rádios exige estrita fidelidade de gênero, stream direto em HTTPS, áudio em alta fidelidade (`audio/mpeg`) e estabilidade em produção sem bloqueios de CORS/Mixed Content.
+
+### Decisão
+
+1. Substituição do stream em `RADIO_PRESETS.psycore`:
+   - Nova estação: **PsyStation - PsyCore** (`https://radio.psystation.com/listen/psystation_-_psycore/radio.mp3`).
+   - Bitrate: 192 kbps MP3 direto.
+   - Repertório verificado: 100% focado em Psycore autêntico e vertentes hi-BPM darkpsy (Psykovsky, Alice-D Records, Ancestral Records, faixas a 190+ BPM).
+2. Manutenção inalterada da chave `psycore` e do rótulo `Psycore` no menu `<select>` e em `RADIO_GENRE_NAMES`.
+
+### Consequências
+
+- Entrega sonora fiel à proposta de alta aceleração mental / hiperfoco do gênero Psycore.
+- Zero quebra de layout ou compatibilidade no seletor de rádio.
+- 100% compatível com as regras HTTPS e infraestrutura Vercel.
+
