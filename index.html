@@ -308,12 +308,6 @@
             <div class="metrics-panel" id="metrics-list">
               <!-- Métricas injetadas via JS -->
             </div>
-
-            <!-- Painel de Gráficos Retro -->
-            <div class="sys-graph-panel">
-              <h3>SINAL DE XP (ÚLTIMOS 7 DIAS)</h3>
-              <canvas id="sys-stats-canvas" width="220" height="110"></canvas>
-            </div>
           </div>
         </div>
 
@@ -324,6 +318,11 @@
             <button id="btn-toggle-history" class="btn-collapse" title="Recolher/Expandir Registro Histórico">[&minus;]</button>
           </div>
           <div class="history-content" id="history-content" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <!-- Painel de Gráficos Retro -->
+            <div class="sys-graph-panel">
+              <h3>SINAL DE XP (ÚLTIMOS 7 DIAS)</h3>
+              <canvas id="sys-stats-canvas" width="220" height="110"></canvas>
+            </div>
             <div style="display: flex; gap: 0.5rem; justify-content: center;">
               <button id="btn-export-history" class="btn-apply" style="font-size: 0.6rem; padding: 4px 8px; flex: 1;" title="Exportar dados como JSON">EXPORTAR LOG</button>
               <button id="btn-import-history" class="btn-apply" style="font-size: 0.6rem; padding: 4px 8px; flex: 1;" title="Importar dados de um JSON">IMPORTAR LOG</button>
