@@ -1235,6 +1235,21 @@ body:not(.agent-mode-active) .agent-colors {
     background: rgba(0, 10, 0, 0.4);
   }
 
+  .metrics-sidebar .panel-header h3 {
+    order: 0;
+    width: auto;
+    text-align: left;
+    border-top: none;
+    padding-top: 0;
+    background: none;
+  }
+
+  #evolution-panel > .panel-header {
+    border-top: 2px solid var(--matrix-dim);
+    padding: 1.5rem 1rem 0.25rem 1rem;
+    background: rgba(0, 10, 0, 0.4);
+  }
+
   .metrics-panel {
     order: 9;
     padding: 0 1rem 2rem 1rem;
