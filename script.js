@@ -1450,6 +1450,11 @@ function updateAiPlansUI() {
     label.textContent = `${plan.value}%`;
     row.append(title, wrapper, label);
 
+    if (plan.color) {
+      row.classList.add("custom-color");
+      row.style.setProperty("--plan-color", plan.color);
+    }
+
     if (editingSections.aiPlans) {
       row.classList.add("editing");
       row.appendChild(createRowActions(() => editAiPlan(plan.id), () => removeAiPlan(plan.id)));
@@ -1498,24 +1503,113 @@ function adjustAiPlanValue(id) {
   }
 }
 
-function addAiPlan() {
+const AI_PLAN_COLORS = [
+  { hex: "#cf8567", label: "Terracota" },
+  { hex: "#e06c75", label: "Coral" },
+  { hex: "#cf5a95", label: "Magenta" },
+  { hex: "#a66acb", label: "Roxo" },
+  { hex: "#4d8afd", label: "Azul" },
+  { hex: "#5ecad1", label: "Ciano" },
+  { hex: "#4ea387", label: "Jade" },
+  { hex: "#7ab04a", label: "Lima" },
+  { hex: "#cca958", label: "Âmbar" },
+  { hex: "#00ff41", label: "Matrix" },
+];
+
+function isValidHexColor(value) {
+  return typeof value === "string" && /^#[0-9a-f]{6}$/i.test(value);
+}
+
+// Resolve com a cor escolhida, "" para cor padrão ou undefined se cancelar
+function askPlanColor(planName, currentColor) {
+  return new Promise((resolve) => {
+    const overlay = document.createElement("div");
+    overlay.className = "plan-color-modal";
+    const box = document.createElement("div");
+    box.className = "plan-color-box";
+    const heading = document.createElement("h4");
+    heading.textContent = `Cor do plano ${planName}`;
+    const grid = document.createElement("div");
+    grid.className = "plan-color-grid";
+
+    const close = (result) => {
+      document.removeEventListener("keydown", onKey);
+      overlay.remove();
+      resolve(result);
+    };
+    const onKey = (e) => {
+      if (e.key === "Escape") close(undefined);
+    };
+
+    AI_PLAN_COLORS.forEach(({ hex, label }) => {
+      const swatch = document.createElement("button");
+      swatch.type = "button";
+      swatch.className = "plan-color-swatch";
+      swatch.title = label;
+      swatch.style.background = hex;
+      if (currentColor && currentColor.toLowerCase() === hex) swatch.classList.add("active");
+      swatch.addEventListener("click", () => close(hex));
+      grid.appendChild(swatch);
+    });
+
+    const actions = document.createElement("div");
+    actions.className = "plan-color-actions";
+    const custom = document.createElement("label");
+    custom.className = "btn-apply plan-color-custom";
+    custom.textContent = "OUTRA";
+    const picker = document.createElement("input");
+    picker.type = "color";
+    picker.value = isValidHexColor(currentColor) ? currentColor : "#00ff41";
+    picker.addEventListener("change", () => close(picker.value.toLowerCase()));
+    custom.appendChild(picker);
+    const reset = document.createElement("button");
+    reset.type = "button";
+    reset.className = "btn-apply";
+    reset.textContent = "PADRÃO";
+    reset.addEventListener("click", () => close(""));
+    const cancel = document.createElement("button");
+    cancel.type = "button";
+    cancel.className = "btn-apply";
+    cancel.textContent = "CANCELAR";
+    cancel.addEventListener("click", () => close(undefined));
+    actions.append(custom, reset, cancel);
+
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) close(undefined);
+    });
+    document.addEventListener("keydown", onKey);
+    box.append(heading, grid, actions);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+  });
+}
+
+function applyPlanColor(plan, color) {
+  if (color === undefined) return;
+  if (color) plan.color = color;
+  else delete plan.color;
+}
+
+async function addAiPlan() {
   if (hasReachedLimit(gameState.aiPlans, "planos")) return;
   const name = askItemName("Nome do novo plano de IA:", "", 20);
   if (name === null) return;
 
   const plan = { id: generateItemId(), name, value: 0 };
+  applyPlanColor(plan, await askPlanColor(name, ""));
   gameState.aiPlans.push(plan);
   logHistoryEvent("metrica", `ai_plan_${plan.id}`, `Plano ${plan.name}`, "criado");
   saveGame();
   updateAiPlansUI();
 }
 
-function editAiPlan(id) {
+async function editAiPlan(id) {
   const plan = gameState.aiPlans.find((p) => p.id === id);
   if (!plan) return;
   const name = askItemName("Nome do plano de IA:", plan.name, 20);
   if (name === null) return;
   plan.name = name;
+  applyPlanColor(plan, await askPlanColor(name, plan.color));
   logHistoryEvent("metrica", `ai_plan_${plan.id}`, `Plano ${plan.name}`, "editado");
   saveGame();
   updateAiPlansUI();
@@ -1807,7 +1901,12 @@ function restoreAiPlans(saved) {
     return saved
       .filter((p) => p && p.id && p.name)
       .slice(0, MAX_ITEMS_PER_SECTION)
-      .map((p) => ({ id: p.id, name: p.name, value: Number.isInteger(p.value) ? p.value : 0 }));
+      .map((p) => ({
+        id: p.id,
+        name: p.name,
+        value: Number.isInteger(p.value) ? p.value : 0,
+        ...(isValidHexColor(p.color) ? { color: p.color } : {}),
+      }));
   }
   if (!saved || typeof saved !== "object") return cloneList(DEFAULT_AI_PLANS);
   if (saved.agy_gemini === undefined && saved.antigravity !== undefined) {

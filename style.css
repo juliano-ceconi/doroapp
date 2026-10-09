@@ -706,6 +706,99 @@ body {
   box-shadow: 0 0 8px rgba(176, 124, 201, 0.4);
 }
 
+/* Cor escolhida pelo usuário sobrepõe a cor fixa por id */
+.ai-plan-row.custom-color[data-plan] .metric-title,
+.ai-plan-row.custom-color[data-plan] .metric-value-label {
+  color: var(--plan-color);
+  text-shadow: 0 0 3px color-mix(in srgb, var(--plan-color) 40%, transparent);
+}
+.ai-plan-row.custom-color[data-plan] .metric-progress-bar {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--plan-color) 35%, #000), var(--plan-color));
+  box-shadow: 0 0 8px color-mix(in srgb, var(--plan-color) 40%, transparent);
+}
+
+.plan-color-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2, 2, 3, 0.85);
+}
+
+.plan-color-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  max-width: 90vw;
+  background: var(--matrix-dark);
+  border: 1px solid var(--matrix-green);
+  border-radius: var(--radius);
+  box-shadow: 0 0 20px var(--matrix-glow);
+  font-family: var(--font-mono);
+}
+
+.plan-color-box h4 {
+  margin: 0;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--matrix-green);
+}
+
+.plan-color-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 28px);
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.plan-color-swatch {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--matrix-dim);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.plan-color-swatch:hover {
+  transform: scale(1.15);
+}
+
+.plan-color-swatch.active {
+  border-color: var(--matrix-green);
+  box-shadow: 0 0 6px var(--matrix-glow);
+}
+
+.plan-color-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.plan-color-actions .btn-apply {
+  flex: 1;
+  font-size: 0.6rem;
+  padding: 4px 8px;
+  text-align: center;
+}
+
+.plan-color-custom {
+  position: relative;
+  cursor: pointer;
+}
+
+.plan-color-custom input[type="color"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
 .ai-plan-row:hover {
   border-color: currentColor !important;
   background-color: rgba(255, 255, 255, 0.03) !important;
