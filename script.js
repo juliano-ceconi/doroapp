@@ -806,13 +806,14 @@ function editMission(id) {
 
   mission.text = cleanText.slice(0, 40);
 
-  if (mission.repeatable) {
+  if (isCustomMission(mission)) {
     const newTime = askOptionalTime(mission.triggerTime);
     if (newTime === "") {
       delete mission.triggerTime;
     } else if (newTime) {
       mission.triggerTime = newTime;
     }
+    applyMissionType(mission, askMissionType(mission.isDaily ? "daily" : "repeatable"));
   } else if (mission.triggerTime !== undefined) {
     // Ajuste do horário de disparo se a missão possuir triggerTime
     const newTriggerTime = prompt(`Editar horário de disparo (formato HH:MM, atual: ${mission.triggerTime}):`, mission.triggerTime);
@@ -881,6 +882,37 @@ function askOptionalTime(currentTime) {
   return `${h.padStart(2, "0")}:${m.padStart(2, "0")}`;
 }
 
+function isCustomMission(mission) {
+  return String(mission.id).startsWith("custom_");
+}
+
+// Diária: 1x por dia, fica riscada até o dia seguinte. Repetível: XP a cada clique.
+function askMissionType(currentType) {
+  const current = currentType === "daily" ? "D" : "R";
+  while (true) {
+    const input = prompt(
+      "Tipo da missão:\nR = repetível (dá XP a cada clique)\nD = diária (1x por dia, fica riscada até amanhã)",
+      current,
+    );
+    if (input === null) return currentType;
+    const clean = input.trim().toUpperCase();
+    if (clean === "R") return "repeatable";
+    if (clean === "D") return "daily";
+    alert("Digite R (repetível) ou D (diária).");
+  }
+}
+
+function applyMissionType(mission, type) {
+  if (type === "daily") {
+    mission.isDaily = true;
+    delete mission.repeatable;
+  } else {
+    mission.repeatable = true;
+    mission.completed = false;
+    delete mission.isDaily;
+  }
+}
+
 function generateItemId() {
   return `custom_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 }
@@ -902,7 +934,7 @@ function addMission() {
     return;
   }
 
-  const xpInput = prompt("XP ganho a cada clique:", "100");
+  const xpInput = prompt("XP ganho ao concluir:", "100");
   if (xpInput === null) return;
   const xp = parseInt(xpInput, 10);
   if (isNaN(xp) || xp < 0) {
@@ -915,11 +947,11 @@ function addMission() {
     text: cleanName,
     completed: false,
     xp,
-    repeatable: true,
     lastDoneDate: null,
   };
   const time = askOptionalTime("");
   if (time) mission.triggerTime = time;
+  applyMissionType(mission, askMissionType("repeatable"));
 
   gameState.missions.push(mission);
   logHistoryEvent("missao", mission.id, mission.text, "criada", 0);
@@ -970,6 +1002,40 @@ function createAddButton(count, label, onAdd) {
     onAdd();
   });
   return btn;
+}
+
+function createRestoreButton(onRestore) {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "btn-restore-defaults";
+  btn.textContent = "RESTAURAR PADRÃO";
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    onRestore();
+  });
+  return btn;
+}
+
+// Confirmação digitada: um OK acidental não pode apagar a seção inteira
+function confirmRestoreDefaults(sectionName) {
+  const input = prompt(
+    `ATENÇÃO: isso apaga TODOS os itens de ${sectionName} (inclusive os personalizados) ` +
+    "e volta para a lista padrão, com os valores iniciais.\n\nDigite RESTAURAR para confirmar:",
+  );
+  if (input === null) return false;
+  if (input.trim().toUpperCase() !== "RESTAURAR") {
+    alert("Texto não confere. Nada foi alterado.");
+    return false;
+  }
+  return true;
+}
+
+function restoreDefaultMissions() {
+  if (!confirmRestoreDefaults("Missões")) return;
+  gameState.missions = cloneList(DEFAULT_MISSIONS);
+  logHistoryEvent("missao", "todas", "Missões", "restauradas", 0);
+  saveGame();
+  renderMissions();
 }
 
 function createEmptyHint() {
@@ -1091,8 +1157,10 @@ function renderMissions() {
   });
 
   const footer = document.createElement("li");
+  footer.className = "mission-footer";
   if (editingSections.missions) {
     footer.appendChild(createAddButton(gameState.missions.length, "MISSÃO", addMission));
+    footer.appendChild(createRestoreButton(restoreDefaultMissions));
   } else if (gameState.missions.length === 0) {
     footer.appendChild(createEmptyHint());
   }
@@ -1277,6 +1345,7 @@ function updateMetricsUI() {
 
   if (editingSections.metrics) {
     container.appendChild(createAddButton(gameState.metrics.length, "CAMPO", addMetric));
+    container.appendChild(createRestoreButton(restoreDefaultMetrics));
   } else if (gameState.metrics.length === 0) {
     container.appendChild(createEmptyHint());
   }
@@ -1343,6 +1412,14 @@ function removeMetric(id) {
   updateMetricsUI();
 }
 
+function restoreDefaultMetrics() {
+  if (!confirmRestoreDefaults("Evolução")) return;
+  gameState.metrics = cloneList(DEFAULT_METRICS);
+  logHistoryEvent("metrica", "todas", "Evolução", "restaurada");
+  saveGame();
+  updateMetricsUI();
+}
+
 function initMetricsListeners() {
   initSectionEditToggle("btn-edit-evolution", "metrics", updateMetricsUI);
 }
@@ -1386,6 +1463,7 @@ function updateAiPlansUI() {
 
   if (editingSections.aiPlans) {
     container.appendChild(createAddButton(gameState.aiPlans.length, "PLANO", addAiPlan));
+    container.appendChild(createRestoreButton(restoreDefaultAiPlans));
   } else if (gameState.aiPlans.length === 0) {
     container.appendChild(createEmptyHint());
   }
@@ -1449,6 +1527,14 @@ function removeAiPlan(id) {
   if (!confirm(`Remover o plano "${plan.name}"?`)) return;
   gameState.aiPlans = gameState.aiPlans.filter((p) => p.id !== id);
   logHistoryEvent("metrica", `ai_plan_${plan.id}`, `Plano ${plan.name}`, "removido");
+  saveGame();
+  updateAiPlansUI();
+}
+
+function restoreDefaultAiPlans() {
+  if (!confirmRestoreDefaults("Planos de IA")) return;
+  gameState.aiPlans = cloneList(DEFAULT_AI_PLANS);
+  logHistoryEvent("metrica", "ai_plans", "Planos de IA", "restaurados");
   saveGame();
   updateAiPlansUI();
 }
