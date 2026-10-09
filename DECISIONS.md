@@ -1297,4 +1297,27 @@ O usuário solicitou a criação de um novo favicon para o Doroapp com a imagem 
 - Progressão contínua e perfeita da curva de BPM psicodélico/extremo: Prog (136) -> Full-On (145) -> Goa (148) -> Forest (152) -> Dark Psy (156) -> Hi-Tech (170-190) -> Psycore (190-210) -> Experimental (200-240+).
 - Seletor de rádio expandido para 26 estações curadas, mantendo conformidade visual total e integridade HTTPS.
 
+---
+
+## [2026-10-09] Planos de IA, Missões e Evolução Editáveis
+
+### Contexto
+
+1. As três seções eram fixas: linhas escritas direto no HTML e listas de chaves no JS. O `loadGame` sempre reconstruía os padrões, então não dava para remover nem criar itens.
+2. Usuário iniciante precisa de um ponto de partida enxuto (ferramentas gratuitas, sem chave de API).
+
+### Decisão
+
+1. **Listas dinâmicas** em `gameState`: `aiPlans` = `[{ id, name, value }]`, `metrics` = `[{ id, name, icon, value }]`, `missions` segue array. Tudo renderizado via JS; HTML só tem os contêineres.
+2. **Modo edição por seção** (botão `[✎]` no cabeçalho): mostra `✎` (editar) e `×` (remover) em cada item e o botão `+ ADICIONAR (n/20)`. Fora do modo edição o comportamento antigo segue igual (clique dá XP, duplo-clique ajusta). Evita remoção ou XP acidental.
+3. **Limite de 20 itens** por seção (`MAX_ITEMS_PER_SECTION`). Padrões podem ser removidos.
+4. **Planos de IA padrão (usuário novo):** só `AGY GEMINI`, `AGY CLAUDE` e `OpenCode`. Novos planos têm nome livre e cor verde padrão (cores específicas continuam valendo para os ids antigos).
+5. **Missões criadas pelo usuário** (`repeatable: true`): nome, XP e horário opcional. Cada clique dá XP e a missão volta disponível na hora. Com horário, o alerta acende após o horário até o primeiro clique do dia. Missões padrão mantêm o comportamento original.
+6. **Evolução:** campo novo pede nome e ícone (emoji, primeiro grafema do texto digitado; padrão `⭐`).
+
+### Consequências
+
+- **Migração transparente:** save antigo em formato objeto vira lista. Quem já usava mantém os 11 planos que via na tela e as 10 métricas, com os valores atuais. Na lista de missões, o save passa a ser a fonte da verdade (os campos de comportamento das missões padrão são completados pelo id).
+- Removida uma missão padrão ligada a regra especial (ex.: `2h de foco` com o timer, `Beber água` com o lembrete), a regra simplesmente deixa de agir; não há botão de restaurar padrões.
+- Versão antiga do app aberta depois da nova leria métricas/planos como vazios (sem service worker e com `Cache-Control: must-revalidate`, risco baixo).
 
