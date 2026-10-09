@@ -1318,6 +1318,8 @@ O usuário solicitou a criação de um novo favicon para o Doroapp com a imagem 
 ### Consequências
 
 - **Migração transparente:** save antigo em formato objeto vira lista. Quem já usava mantém os 11 planos que via na tela e as 10 métricas, com os valores atuais. Na lista de missões, o save passa a ser a fonte da verdade (os campos de comportamento das missões padrão são completados pelo id).
-- Removida uma missão padrão ligada a regra especial (ex.: `2h de foco` com o timer, `Beber água` com o lembrete), a regra simplesmente deixa de agir; não há botão de restaurar padrões.
+- Removida uma missão padrão ligada a regra especial (ex.: `2h de foco` com o timer, `Beber água` com o lembrete), a regra deixa de agir até a seção ser restaurada.
+- **Adendo (2026-10-09):** missão personalizada (id `custom_*`) escolhe o tipo ao criar/editar: `R` repetível ou `D` diária (`isDaily`, mesmo comportamento das diárias padrão: riscada até o dia seguinte).
+- **Adendo (2026-10-09):** botão `RESTAURAR PADRÃO` no modo edição de cada seção, abaixo do adicionar. Exige digitar `RESTAURAR` (não basta um OK) e substitui a lista inteira pelos padrões com valores iniciais; itens personalizados são apagados.
 - Versão antiga do app aberta depois da nova leria métricas/planos como vazios (sem service worker e com `Cache-Control: must-revalidate`, risco baixo).
 
