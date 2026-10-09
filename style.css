@@ -835,6 +835,31 @@ body {
   cursor: not-allowed;
 }
 
+.btn-restore-defaults {
+  width: 100%;
+  background: none;
+  border: 1px solid var(--matrix-dim);
+  color: var(--matrix-dim-medium);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 1px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-restore-defaults:hover {
+  border-color: #ff2b2b;
+  color: #ff2b2b;
+  box-shadow: 0 0 6px rgba(255, 43, 43, 0.4);
+}
+
+.mission-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
 .panel-empty-hint {
   font-size: 0.6rem;
   color: var(--matrix-dim-medium);
