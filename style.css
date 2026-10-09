@@ -838,8 +838,8 @@ body {
 .btn-restore-defaults {
   width: 100%;
   background: none;
-  border: 1px solid var(--matrix-dim);
-  color: var(--matrix-dim-medium);
+  border: 1px solid rgba(216, 166, 87, 0.45);
+  color: #d8a657;
   font-family: var(--font-mono);
   font-size: 0.55rem;
   letter-spacing: 1px;
@@ -849,9 +849,9 @@ body {
 }
 
 .btn-restore-defaults:hover {
-  border-color: #ff2b2b;
-  color: #ff2b2b;
-  box-shadow: 0 0 6px rgba(255, 43, 43, 0.4);
+  border-color: #d8a657;
+  background-color: rgba(216, 166, 87, 0.08);
+  box-shadow: 0 0 8px rgba(216, 166, 87, 0.35);
 }
 
 .mission-footer {
