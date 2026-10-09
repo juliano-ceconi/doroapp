@@ -66,31 +66,8 @@ let gameState = {
   agentMode: false,
   agentColor: 'purple',
   tasks: [],
-  metrics: {
-    productivity: 1,
-    physical: 1,
-    money: 1,
-    emotional: 1,
-    health: 1,
-    spiritual: 1,
-    eating: 1,
-    water: 1,
-    aerobic: 1,
-    punctuality: 1,
-  },
-  aiPlans: {
-    claude: 0,
-    codex: 0,
-    agy_gemini: 0,
-    agy_claude: 0,
-    openrouter: 0,
-    groq: 0,
-    opencode: 0,
-    ai_studio: 0,
-    cerebras: 0,
-    nvidia: 0,
-    sambanova: 0,
-  },
+  metrics: [],
+  aiPlans: [],
   keyboardSwitch: 'none',
   keyboardVolume: 80,
   activeTaskId: null,
@@ -104,6 +81,53 @@ let gameState = {
   radioVolume: 50,
   radioGenre: 'lofi',
 };
+
+const DEFAULT_MISSIONS = gameState.missions.map((m) => ({ ...m }));
+const MAX_ITEMS_PER_SECTION = 20;
+
+// Padrão para usuário novo: só ferramentas gratuitas sem chave de API
+const DEFAULT_AI_PLANS = [
+  { id: "agy_gemini", name: "AGY GEMINI", value: 0 },
+  { id: "agy_claude", name: "AGY CLAUDE", value: 0 },
+  { id: "opencode", name: "OpenCode", value: 0 },
+];
+
+// Planos que existiam fixos no HTML antes da lista editável (migração de saves antigos)
+const LEGACY_AI_PLANS = [
+  { id: "claude", name: "Claude" },
+  { id: "codex", name: "Codex" },
+  { id: "agy_gemini", name: "AGY GEMINI" },
+  { id: "agy_claude", name: "AGY CLAUDE" },
+  { id: "openrouter", name: "OpenRouter" },
+  { id: "groq", name: "Groq" },
+  { id: "opencode", name: "OpenCode" },
+  { id: "ai_studio", name: "AI Studio" },
+  { id: "cerebras", name: "Cerebras" },
+  { id: "nvidia", name: "NVIDIA" },
+  { id: "sambanova", name: "SambaNova" },
+];
+
+const DEFAULT_METRICS = [
+  { id: "productivity", name: "Produtividade", icon: "⚡", value: 1 },
+  { id: "physical", name: "Físico", icon: "💪", value: 1 },
+  { id: "money", name: "Dinheiro", icon: "💵", value: 1 },
+  { id: "emotional", name: "Emocional", icon: "🧠", value: 1 },
+  { id: "health", name: "Saúde", icon: "❤️", value: 1 },
+  { id: "spiritual", name: "Espiritual", icon: "🧘", value: 1 },
+  { id: "eating", name: "Alimentação", icon: "🥗", value: 1 },
+  { id: "water", name: "Água", icon: "💧", value: 1 },
+  { id: "aerobic", name: "Aeróbico", icon: "🏃", value: 1 },
+  { id: "punctuality", name: "Pontualidade", icon: "⏱️", value: 1 },
+];
+
+const METRIC_ICON_SUGGESTIONS = "⭐ 📚 🎯 🎨 💼 🛌 🎮 🧹 ✍️ 🌱 🎵 🧩";
+
+function cloneList(list) {
+  return list.map((item) => ({ ...item }));
+}
+
+gameState.metrics = cloneList(DEFAULT_METRICS);
+gameState.aiPlans = cloneList(DEFAULT_AI_PLANS);
 
 const AGENT_COLORS = {
   purple: { main: '#b026ff', glow: 'rgba(176,38,255,0.5)', dim: '#4c0082', dimMedium: '#7e12c0' },
@@ -780,10 +804,17 @@ function editMission(id) {
     return;
   }
 
-  mission.text = cleanText;
+  mission.text = cleanText.slice(0, 40);
 
-  // Ajuste do horário de disparo se a missão possuir triggerTime
-  if (mission.triggerTime !== undefined) {
+  if (mission.repeatable) {
+    const newTime = askOptionalTime(mission.triggerTime);
+    if (newTime === "") {
+      delete mission.triggerTime;
+    } else if (newTime) {
+      mission.triggerTime = newTime;
+    }
+  } else if (mission.triggerTime !== undefined) {
+    // Ajuste do horário de disparo se a missão possuir triggerTime
     const newTriggerTime = prompt(`Editar horário de disparo (formato HH:MM, atual: ${mission.triggerTime}):`, mission.triggerTime);
     if (newTriggerTime !== null) {
       const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
@@ -833,6 +864,142 @@ function editMission(id) {
   renderMissions();
 }
 
+// Retorna "HH:MM", "" (sem horário) ou null (cancelado/inválido = manter atual)
+function askOptionalTime(currentTime) {
+  const input = prompt(
+    "Horário do lembrete (HH:MM) — opcional, deixe vazio para nenhum:",
+    currentTime || "",
+  );
+  if (input === null) return null;
+  const clean = input.trim();
+  if (clean === "") return "";
+  if (!/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(clean)) {
+    alert("Formato de horário inválido. Deve ser HH:MM (ex: 06:30).");
+    return null;
+  }
+  const [h, m] = clean.split(":");
+  return `${h.padStart(2, "0")}:${m.padStart(2, "0")}`;
+}
+
+function generateItemId() {
+  return `custom_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+}
+
+function hasReachedLimit(list, label) {
+  if (list.length < MAX_ITEMS_PER_SECTION) return false;
+  alert(`Limite de ${MAX_ITEMS_PER_SECTION} ${label} atingido. Remova um para adicionar outro.`);
+  return true;
+}
+
+function addMission() {
+  if (hasReachedLimit(gameState.missions, "missões")) return;
+
+  const name = prompt("Nome da nova missão:");
+  if (name === null) return;
+  const cleanName = name.trim().slice(0, 40);
+  if (!cleanName) {
+    alert("O nome da missão não pode ser vazio.");
+    return;
+  }
+
+  const xpInput = prompt("XP ganho a cada clique:", "100");
+  if (xpInput === null) return;
+  const xp = parseInt(xpInput, 10);
+  if (isNaN(xp) || xp < 0) {
+    alert("XP inválido. Use um número inteiro a partir de 0.");
+    return;
+  }
+
+  const mission = {
+    id: generateItemId(),
+    text: cleanName,
+    completed: false,
+    xp,
+    repeatable: true,
+    lastDoneDate: null,
+  };
+  const time = askOptionalTime("");
+  if (time) mission.triggerTime = time;
+
+  gameState.missions.push(mission);
+  logHistoryEvent("missao", mission.id, mission.text, "criada", 0);
+  saveGame();
+  renderMissions();
+}
+
+function removeMission(id) {
+  const mission = gameState.missions.find((m) => m.id === id);
+  if (!mission) return;
+  if (!confirm(`Remover a missão "${mission.text}"?`)) return;
+  gameState.missions = gameState.missions.filter((m) => m.id !== id);
+  logHistoryEvent("missao", mission.id, mission.text, "removida", 0);
+  saveGame();
+  renderMissions();
+}
+
+// Modo edição por seção: exibe ✎/× em cada item e o botão de adicionar
+const editingSections = { aiPlans: false, missions: false, metrics: false };
+
+function createRowActions(onEdit, onRemove) {
+  const actions = document.createElement("span");
+  actions.className = "row-actions";
+  [["✎", "Editar", onEdit], ["×", "Remover", onRemove]].forEach(([symbol, title, handler]) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "row-action-btn";
+    btn.textContent = symbol;
+    btn.title = title;
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      handler();
+    });
+    btn.addEventListener("dblclick", (e) => e.stopPropagation());
+    actions.appendChild(btn);
+  });
+  return actions;
+}
+
+function createAddButton(count, label, onAdd) {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "btn-add-item";
+  btn.textContent = `+ ${label} (${count}/${MAX_ITEMS_PER_SECTION})`;
+  btn.disabled = count >= MAX_ITEMS_PER_SECTION;
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    onAdd();
+  });
+  return btn;
+}
+
+function createEmptyHint() {
+  const hint = document.createElement("p");
+  hint.className = "panel-empty-hint";
+  hint.textContent = "Nenhum item. Use [✎] para adicionar.";
+  return hint;
+}
+
+function initSectionEditToggle(btnId, sectionKey, render) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.addEventListener("click", () => {
+    editingSections[sectionKey] = !editingSections[sectionKey];
+    btn.classList.toggle("active", editingSections[sectionKey]);
+    btn.innerText = editingSections[sectionKey] ? "[OK]" : "[✎]";
+    render();
+  });
+}
+
+function pulseMissionItem(mission) {
+  const list = document.getElementById("mission-list");
+  if (!list) return;
+  const itemEl = list.querySelector(`[data-mission-id="${CSS.escape(String(mission.id))}"]`);
+  if (itemEl) {
+    itemEl.classList.add("mission-btn-press");
+    setTimeout(() => itemEl.classList.remove("mission-btn-press"), 300);
+  }
+}
+
 function renderMissions() {
   const list = document.getElementById("mission-list");
   if (!list) return;
@@ -848,9 +1015,11 @@ function renderMissions() {
 
     const li = document.createElement("li");
     li.className = `mission-item ${mission.completed ? "completed" : ""}`;
-    li.title = mission.id === 2
-      ? "Clique simples para registrar Marco (+XP) | Duplo-clique para editar"
+    li.dataset.missionId = String(mission.id);
+    li.title = mission.id === 2 || mission.repeatable
+      ? "Clique simples para registrar (+XP) | Duplo-clique para editar"
       : "Clique simples para concluir/progredir | Duplo-clique para editar";
+    let label = "";
 
     if (mission.isMedicine) {
       if (mission.lastDoneDate !== todayStr) {
@@ -861,7 +1030,7 @@ function renderMissions() {
         li.classList.add("medicine-alert");
       }
 
-      li.innerText = `${mission.text} (${mission.triggerTime}) [${mission.xp} XP]`;
+      label = `${mission.text} (${mission.triggerTime}) [${mission.xp} XP]`;
     } else {
       if ((mission.triggerTime || isDailyMission(mission)) && mission.lastDoneDate !== todayStr) {
         mission.completed = false;
@@ -880,20 +1049,32 @@ function renderMissions() {
         missionText = `${mission.text} (07h, 10h, 11h30, 16h)`;
       }
       
-      li.innerText = `${missionText}${progressText} [${xpToShow} XP]`;
+      label = `${missionText}${progressText} [${xpToShow} XP]`;
 
       if (mission.id === 4 && isWaterAlertActive(mission)) {
         li.classList.add("medicine-alert");
       }
 
-      if (mission.triggerTime && !mission.completed && hasMedicineTriggered(mission.triggerTime)) {
+      const doneTodayRepeatable = mission.repeatable && mission.lastDoneDate === todayStr;
+      if (mission.triggerTime && !mission.completed && !doneTodayRepeatable && hasMedicineTriggered(mission.triggerTime)) {
         li.classList.add("medicine-alert");
       }
+    }
+
+    const labelEl = document.createElement("span");
+    labelEl.className = "mission-text";
+    labelEl.textContent = label;
+    li.appendChild(labelEl);
+
+    if (editingSections.missions) {
+      li.classList.add("editing");
+      li.appendChild(createRowActions(() => editMission(mission.id), () => removeMission(mission.id)));
     }
 
     let clickTimeout = null;
     li.onclick = (e) => {
       e.stopPropagation();
+      if (editingSections.missions) return;
       if (e.detail === 1) {
         clickTimeout = setTimeout(() => {
           toggleMission(mission.id);
@@ -908,6 +1089,14 @@ function renderMissions() {
     };
     list.appendChild(li);
   });
+
+  const footer = document.createElement("li");
+  if (editingSections.missions) {
+    footer.appendChild(createAddButton(gameState.missions.length, "MISSÃO", addMission));
+  } else if (gameState.missions.length === 0) {
+    footer.appendChild(createEmptyHint());
+  }
+  if (footer.hasChildNodes()) list.appendChild(footer);
 }
 
 function incrementMissionProgress(id, amount = 1) {
@@ -966,15 +1155,20 @@ function toggleMission(id) {
     saveGame();
 
     // Feedback visual sutil estilo botão pressionado sem riscar nem ofuscar
-    const list = document.getElementById("mission-list");
-    if (list) {
-      const items = list.querySelectorAll(".mission-item");
-      const itemEl = Array.from(items).find((el) => el.textContent.includes(mission.text));
-      if (itemEl) {
-        itemEl.classList.add("mission-btn-press");
-        setTimeout(() => itemEl.classList.remove("mission-btn-press"), 300);
-      }
-    }
+    pulseMissionItem(mission);
+    return;
+  }
+
+  // Missões criadas pelo usuário: sempre repetíveis, dão XP e voltam disponíveis
+  if (mission.repeatable) {
+    mission.completed = false;
+    mission.lastDoneDate = new Date().toLocaleDateString('sv');
+    addXP(mission.xp);
+    logHistoryEvent("missao", mission.id, mission.text, true, mission.xp);
+    playSound("finish");
+    saveGame();
+    renderMissions();
+    pulseMissionItem(mission);
     return;
   }
 
@@ -1009,107 +1203,259 @@ function toggleMission(id) {
   }
 }
 
-// Metrics Logic
+// Metrics Logic (Evolução)
+function getFirstGrapheme(text) {
+  if (typeof Intl !== "undefined" && Intl.Segmenter) {
+    const first = new Intl.Segmenter("pt-BR", { granularity: "grapheme" }).segment(text)[Symbol.iterator]().next();
+    return first.done ? "" : first.value.segment;
+  }
+  return Array.from(text).slice(0, 2).join("");
+}
+
+function askMetricIcon(currentIcon) {
+  const input = prompt(`Ícone do campo (emoji). Sugestões: ${METRIC_ICON_SUGGESTIONS}`, currentIcon || "⭐");
+  if (input === null) return null;
+  return getFirstGrapheme(input.trim()) || "⭐";
+}
+
+function askItemName(message, currentName, maxLength) {
+  const input = prompt(message, currentName || "");
+  if (input === null) return null;
+  const clean = input.trim().slice(0, maxLength);
+  if (!clean) {
+    alert("O nome não pode ser vazio.");
+    return null;
+  }
+  return clean;
+}
+
 function updateMetricsUI() {
-  const metrics = [
-    "productivity",
-    "physical",
-    "money",
-    "emotional",
-    "health",
-    "spiritual",
-    "eating",
-    "water",
-    "aerobic",
-    "punctuality"
-  ];
-  metrics.forEach((metric) => {
-    const value = gameState.metrics[metric] !== undefined ? gameState.metrics[metric] : 1;
-    const bar = document.getElementById(`metric-bar-${metric}`);
-    const label = document.getElementById(`metric-val-${metric}`);
-    if (bar) bar.style.width = `${value}%`;
-    if (label) label.textContent = `${value}%`;
+  const container = document.getElementById("metrics-list");
+  if (!container) return;
+  container.innerHTML = "";
+
+  gameState.metrics.forEach((metric) => {
+    const row = document.createElement("div");
+    row.className = "metric-row";
+    row.dataset.metric = metric.id;
+    row.title = "Dê duplo-clique para ajustar";
+
+    const header = document.createElement("div");
+    header.className = "metric-header";
+    const info = document.createElement("div");
+    info.className = "metric-info";
+    const icon = document.createElement("span");
+    icon.className = "metric-icon";
+    icon.textContent = metric.icon;
+    const title = document.createElement("span");
+    title.className = "metric-title";
+    title.textContent = metric.name;
+    info.append(icon, title);
+    const label = document.createElement("span");
+    label.className = "metric-value-label";
+    label.textContent = `${metric.value}%`;
+    header.append(info, label);
+
+    if (editingSections.metrics) {
+      row.classList.add("editing");
+      header.appendChild(createRowActions(() => editMetric(metric.id), () => removeMetric(metric.id)));
+    }
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "metric-progress-wrapper";
+    const bar = document.createElement("div");
+    bar.className = "metric-progress-bar";
+    bar.style.width = `${metric.value}%`;
+    wrapper.appendChild(bar);
+
+    row.append(header, wrapper);
+    row.addEventListener("dblclick", () => {
+      if (!editingSections.metrics) adjustMetricValue(metric.id);
+    });
+    container.appendChild(row);
   });
+
+  if (editingSections.metrics) {
+    container.appendChild(createAddButton(gameState.metrics.length, "CAMPO", addMetric));
+  } else if (gameState.metrics.length === 0) {
+    container.appendChild(createEmptyHint());
+  }
+}
+
+function adjustMetricValue(id) {
+  const metric = gameState.metrics.find((m) => m.id === id);
+  if (!metric) return;
+
+  const newValueInput = prompt(
+    `Ajustar ${metric.name} (atual: ${metric.value}%).\nInsira um valor de 1 a 100:`,
+    metric.value,
+  );
+
+  if (newValueInput !== null) {
+    const newValue = parseInt(newValueInput, 10);
+    if (!isNaN(newValue) && newValue >= 1 && newValue <= 100) {
+      metric.value = newValue;
+      logHistoryEvent("metrica", metric.id, metric.name, newValue);
+      saveGame();
+      updateMetricsUI();
+    } else {
+      alert("Por favor, insira um número inteiro válido de 1 a 100.");
+    }
+  }
+}
+
+function addMetric() {
+  if (hasReachedLimit(gameState.metrics, "campos")) return;
+  const name = askItemName("Nome do novo campo de Evolução:", "", 20);
+  if (name === null) return;
+  const icon = askMetricIcon("⭐");
+  if (icon === null) return;
+
+  const metric = { id: generateItemId(), name, icon, value: 1 };
+  gameState.metrics.push(metric);
+  logHistoryEvent("metrica", metric.id, metric.name, "criada");
+  saveGame();
+  updateMetricsUI();
+}
+
+function editMetric(id) {
+  const metric = gameState.metrics.find((m) => m.id === id);
+  if (!metric) return;
+  const name = askItemName("Nome do campo:", metric.name, 20);
+  if (name === null) return;
+  const icon = askMetricIcon(metric.icon);
+  if (icon === null) return;
+
+  metric.name = name;
+  metric.icon = icon;
+  logHistoryEvent("metrica", metric.id, metric.name, "editada");
+  saveGame();
+  updateMetricsUI();
+}
+
+function removeMetric(id) {
+  const metric = gameState.metrics.find((m) => m.id === id);
+  if (!metric) return;
+  if (!confirm(`Remover o campo "${metric.name}" da Evolução?`)) return;
+  gameState.metrics = gameState.metrics.filter((m) => m.id !== id);
+  logHistoryEvent("metrica", metric.id, metric.name, "removida");
+  saveGame();
+  updateMetricsUI();
 }
 
 function initMetricsListeners() {
-  const metricRows = document.querySelectorAll(".metric-row:not(.ai-plan-row)");
-  metricRows.forEach((row) => {
-    row.addEventListener("dblclick", () => {
-      const metricKey = row.getAttribute("data-metric");
-      if (!metricKey) return;
-      const metricName = row.querySelector(".metric-title").textContent;
-      const currentValue = gameState.metrics[metricKey];
-
-      const newValueInput = prompt(
-        `Ajustar ${metricName} (atual: ${currentValue}%).\nInsira um valor de 1 a 100:`,
-        currentValue,
-      );
-
-      if (newValueInput !== null) {
-        const newValue = parseInt(newValueInput, 10);
-        if (!isNaN(newValue) && newValue >= 1 && newValue <= 100) {
-          gameState.metrics[metricKey] = newValue;
-          logHistoryEvent("metrica", metricKey, metricName.trim(), newValue);
-          saveGame();
-          updateMetricsUI();
-        } else {
-          alert("Por favor, insira um número inteiro válido de 1 a 100.");
-        }
-      }
-    });
-  });
+  initSectionEditToggle("btn-edit-evolution", "metrics", updateMetricsUI);
 }
 
-// Persistence
 // AI Plans Logic
 function updateAiPlansUI() {
-  const plans = ["claude", "codex", "agy_gemini", "agy_claude", "openrouter", "groq", "opencode", "ai_studio", "cerebras", "nvidia", "sambanova"];
-  plans.forEach((plan) => {
-    const value = gameState.aiPlans[plan] !== undefined ? gameState.aiPlans[plan] : 0;
-    const bar = document.getElementById(`ai-plan-bar-${plan}`);
-    const label = document.getElementById(`ai-plan-val-${plan}`);
-    if (bar) {
-      bar.style.width = `${value}%`;
+  const container = document.getElementById("ai-plans-content");
+  if (!container) return;
+  container.innerHTML = "";
+
+  gameState.aiPlans.forEach((plan) => {
+    const row = document.createElement("div");
+    row.className = "metric-row ai-plan-row";
+    row.dataset.plan = plan.id;
+    row.title = "Dê duplo-clique para ajustar";
+
+    const title = document.createElement("span");
+    title.className = "metric-title";
+    title.textContent = plan.name;
+    const wrapper = document.createElement("div");
+    wrapper.className = "metric-progress-wrapper";
+    const bar = document.createElement("div");
+    bar.className = "metric-progress-bar";
+    bar.style.width = `${plan.value}%`;
+    wrapper.appendChild(bar);
+    const label = document.createElement("span");
+    label.className = "metric-value-label";
+    label.textContent = `${plan.value}%`;
+    row.append(title, wrapper, label);
+
+    if (editingSections.aiPlans) {
+      row.classList.add("editing");
+      row.appendChild(createRowActions(() => editAiPlan(plan.id), () => removeAiPlan(plan.id)));
     }
-    if (label) {
-      label.textContent = `${value}%`;
-    }
+
+    row.addEventListener("dblclick", () => {
+      if (!editingSections.aiPlans) adjustAiPlanValue(plan.id);
+    });
+    container.appendChild(row);
   });
+
+  if (editingSections.aiPlans) {
+    container.appendChild(createAddButton(gameState.aiPlans.length, "PLANO", addAiPlan));
+  } else if (gameState.aiPlans.length === 0) {
+    container.appendChild(createEmptyHint());
+  }
+}
+
+function adjustAiPlanValue(id) {
+  const plan = gameState.aiPlans.find((p) => p.id === id);
+  if (!plan) return;
+  const currentValue = plan.value;
+
+  const newValueInput = prompt(
+    `Ajustar Uso de ${plan.name} (atual: ${currentValue}%).\nInsira um valor de 0 a 100:`,
+    currentValue,
+  );
+
+  if (newValueInput !== null) {
+    const newValue = parseInt(newValueInput, 10);
+    if (!isNaN(newValue) && newValue >= 0 && newValue <= 100) {
+      let xpGained = 0;
+      if (newValue === 100 && currentValue < 100) {
+        xpGained = 500;
+        addXP(xpGained);
+        alert(`BÔNUS PLANO DE IA: +500 XP! Você atingiu 100% no plano ${plan.name}!`);
+      }
+      plan.value = newValue;
+      logHistoryEvent("metrica", `ai_plan_${plan.id}`, `Uso ${plan.name}`, newValue, xpGained);
+      saveGame();
+      updateAiPlansUI();
+    } else {
+      alert("Por favor, insira um número inteiro válido de 0 a 100.");
+    }
+  }
+}
+
+function addAiPlan() {
+  if (hasReachedLimit(gameState.aiPlans, "planos")) return;
+  const name = askItemName("Nome do novo plano de IA:", "", 20);
+  if (name === null) return;
+
+  const plan = { id: generateItemId(), name, value: 0 };
+  gameState.aiPlans.push(plan);
+  logHistoryEvent("metrica", `ai_plan_${plan.id}`, `Plano ${plan.name}`, "criado");
+  saveGame();
+  updateAiPlansUI();
+}
+
+function editAiPlan(id) {
+  const plan = gameState.aiPlans.find((p) => p.id === id);
+  if (!plan) return;
+  const name = askItemName("Nome do plano de IA:", plan.name, 20);
+  if (name === null) return;
+  plan.name = name;
+  logHistoryEvent("metrica", `ai_plan_${plan.id}`, `Plano ${plan.name}`, "editado");
+  saveGame();
+  updateAiPlansUI();
+}
+
+function removeAiPlan(id) {
+  const plan = gameState.aiPlans.find((p) => p.id === id);
+  if (!plan) return;
+  if (!confirm(`Remover o plano "${plan.name}"?`)) return;
+  gameState.aiPlans = gameState.aiPlans.filter((p) => p.id !== id);
+  logHistoryEvent("metrica", `ai_plan_${plan.id}`, `Plano ${plan.name}`, "removido");
+  saveGame();
+  updateAiPlansUI();
 }
 
 function initAiPlansListeners() {
-  const planRows = document.querySelectorAll(".ai-plan-row");
-  planRows.forEach((row) => {
-    row.addEventListener("dblclick", () => {
-      const planKey = row.getAttribute("data-plan");
-      const planName = row.querySelector(".metric-title").textContent;
-      const currentValue = gameState.aiPlans[planKey] !== undefined ? gameState.aiPlans[planKey] : 0;
-
-      const newValueInput = prompt(
-        `Ajustar Uso de ${planName} (atual: ${currentValue}%).\nInsira um valor de 0 a 100:`,
-        currentValue,
-      );
-
-      if (newValueInput !== null) {
-        const newValue = parseInt(newValueInput, 10);
-        if (!isNaN(newValue) && newValue >= 0 && newValue <= 100) {
-          let xpGained = 0;
-          if (newValue === 100 && currentValue < 100) {
-            xpGained = 500;
-            addXP(xpGained);
-            alert(`BÔNUS PLANO DE IA: +500 XP! Você atingiu 100% no plano ${planName}!`);
-          }
-          gameState.aiPlans[planKey] = newValue;
-          logHistoryEvent("metrica", `ai_plan_${planKey}`, `Uso ${planName}`, newValue, xpGained);
-          saveGame();
-          updateAiPlansUI();
-        } else {
-          alert("Por favor, insira um número inteiro válido de 0 a 100.");
-        }
-      }
-    });
-  });
+  initSectionEditToggle("btn-edit-ai-plans", "aiPlans", updateAiPlansUI);
+  initSectionEditToggle("btn-edit-missions", "missions", renderMissions);
 }
 
 function setupCollapsibleSection(panelId, btnId, storageKey, defaultCollapsed = false) {
@@ -1358,6 +1704,33 @@ function renderStatsGraph() {
 }
 
 
+// Saves antigos guardavam métricas/planos como objeto { chave: valor }
+function restoreMetrics(saved) {
+  if (Array.isArray(saved)) {
+    return saved
+      .filter((m) => m && m.id && m.name)
+      .slice(0, MAX_ITEMS_PER_SECTION)
+      .map((m) => ({ id: m.id, name: m.name, icon: m.icon || "⭐", value: Number.isInteger(m.value) ? m.value : 1 }));
+  }
+  const legacy = saved && typeof saved === "object" ? saved : {};
+  return DEFAULT_METRICS.map((m) => ({ ...m, value: legacy[m.id] !== undefined ? legacy[m.id] : 1 }));
+}
+
+function restoreAiPlans(saved) {
+  if (Array.isArray(saved)) {
+    return saved
+      .filter((p) => p && p.id && p.name)
+      .slice(0, MAX_ITEMS_PER_SECTION)
+      .map((p) => ({ id: p.id, name: p.name, value: Number.isInteger(p.value) ? p.value : 0 }));
+  }
+  if (!saved || typeof saved !== "object") return cloneList(DEFAULT_AI_PLANS);
+  if (saved.agy_gemini === undefined && saved.antigravity !== undefined) {
+    saved.agy_gemini = saved.antigravity;
+  }
+  // Usuário existente mantém todos os planos que já via na tela
+  return LEGACY_AI_PLANS.map((p) => ({ ...p, value: saved[p.id] !== undefined ? saved[p.id] : 0 }));
+}
+
 function loadGame() {
   let saved = localStorage.getItem("doroappSave");
   if (!saved) {
@@ -1399,115 +1772,36 @@ function loadGame() {
     gameState.radioVolume = parsed.radioVolume !== undefined ? parsed.radioVolume : 50;
     gameState.radioGenre = parsed.radioGenre !== undefined ? parsed.radioGenre : 'lofi';
 
-    // Restore metrics
-    if (parsed.metrics) {
-      gameState.metrics = {
-        productivity: parsed.metrics.productivity !== undefined ? parsed.metrics.productivity : 1,
-        physical: parsed.metrics.physical !== undefined ? parsed.metrics.physical : 1,
-        money: parsed.metrics.money !== undefined ? parsed.metrics.money : 1,
-        emotional: parsed.metrics.emotional !== undefined ? parsed.metrics.emotional : 1,
-        health: parsed.metrics.health !== undefined ? parsed.metrics.health : 1,
-        spiritual: parsed.metrics.spiritual !== undefined ? parsed.metrics.spiritual : 1,
-        eating: parsed.metrics.eating !== undefined ? parsed.metrics.eating : 1,
-        water: parsed.metrics.water !== undefined ? parsed.metrics.water : 1,
-        aerobic: parsed.metrics.aerobic !== undefined ? parsed.metrics.aerobic : 1,
-        punctuality: parsed.metrics.punctuality !== undefined ? parsed.metrics.punctuality : 1,
-      };
-    } else {
-      gameState.metrics = {
-        productivity: 1,
-        physical: 1,
-        money: 1,
-        emotional: 1,
-        health: 1,
-        spiritual: 1,
-        eating: 1,
-        water: 1,
-        aerobic: 1,
-        punctuality: 1,
-      };
-    }
+    gameState.metrics = restoreMetrics(parsed.metrics);
+    gameState.aiPlans = restoreAiPlans(parsed.aiPlans);
 
-    // Restore AI Plans
-    if (parsed.aiPlans) {
-      gameState.aiPlans = {
-        claude: parsed.aiPlans.claude !== undefined ? parsed.aiPlans.claude : 0,
-        codex: parsed.aiPlans.codex !== undefined ? parsed.aiPlans.codex : 0,
-        agy_gemini: parsed.aiPlans.agy_gemini !== undefined ? parsed.aiPlans.agy_gemini : (parsed.aiPlans.antigravity !== undefined ? parsed.aiPlans.antigravity : 0),
-        agy_claude: parsed.aiPlans.agy_claude !== undefined ? parsed.aiPlans.agy_claude : 0,
-        openrouter: parsed.aiPlans.openrouter !== undefined ? parsed.aiPlans.openrouter : 0,
-        groq: parsed.aiPlans.groq !== undefined ? parsed.aiPlans.groq : 0,
-        opencode: parsed.aiPlans.opencode !== undefined ? parsed.aiPlans.opencode : 0,
-      };
-    } else {
-      gameState.aiPlans = {
-        claude: 0,
-        codex: 0,
-        agy_gemini: 0,
-        agy_claude: 0,
-        openrouter: 0,
-        groq: 0,
-        opencode: 0,
-      };
-    }
-
-    // Restore mission status, text and XP (loaded from localStorage)
-    if (parsed.missions) {
+    // Lista salva é a fonte da verdade (permite remover padrões e criar missões)
+    if (Array.isArray(parsed.missions)) {
       const todayStr = new Date().toLocaleDateString('sv');
-      gameState.missions = gameState.missions.map((mission) => {
-        // Find saved version of this mission by ID
-        const savedMission = parsed.missions.find((m) => m.id === mission.id);
-        if (savedMission) {
-          const restored = {
-            ...mission,
-            completed: savedMission.completed,
-            currentProgress: savedMission.currentProgress || 0,
-            lastDoneDate: savedMission.lastDoneDate || null,
-          };
-          if (savedMission.text !== undefined) restored.text = savedMission.text;
-          if (savedMission.xp !== undefined) restored.xp = savedMission.xp;
-          if (savedMission.bonusXp !== undefined) restored.bonusXp = savedMission.bonusXp;
-          if (savedMission.triggerTime !== undefined) restored.triggerTime = savedMission.triggerTime;
+      gameState.missions = parsed.missions.slice(0, MAX_ITEMS_PER_SECTION).map((savedMission) => {
+        const base = DEFAULT_MISSIONS.find((m) => m.id === savedMission.id);
+        const restored = { ...(base || {}), ...savedMission };
+        restored.currentProgress = savedMission.currentProgress || 0;
+        restored.lastDoneDate = savedMission.lastDoneDate || null;
 
-          // Se for diária e o lastDoneDate for anterior a hoje, reseta completed
-          if (isDailyMission(restored) && restored.lastDoneDate !== todayStr) {
-            restored.completed = false;
-          }
-
-          // Marco: Objetivo Atingido (id 2) nunca deve vir marcado como completed
-          if (restored.id === 2) {
-            restored.completed = false;
-          }
-
-          return restored;
+        // Se for diária e o lastDoneDate for anterior a hoje, reseta completed
+        if (isDailyMission(restored) && restored.lastDoneDate !== todayStr) {
+          restored.completed = false;
         }
-        return mission;
+
+        // Marco (id 2) e missões repetíveis nunca devem vir marcadas como completed
+        if (restored.id === 2 || restored.repeatable) {
+          restored.completed = false;
+        }
+
+        return restored;
       });
     }
   } else {
     gameState.tasks = [];
     gameState.operatorName = "Juliano Ceconi";
-    gameState.metrics = {
-      productivity: 1,
-      physical: 1,
-      money: 1,
-      emotional: 1,
-      health: 1,
-      spiritual: 1,
-      eating: 1,
-      water: 1,
-      aerobic: 1,
-      punctuality: 1,
-    };
-    gameState.aiPlans = {
-      claude: 0,
-      codex: 0,
-      agy_gemini: 0,
-      agy_claude: 0,
-      openrouter: 0,
-      groq: 0,
-      opencode: 0,
-    };
+    gameState.metrics = cloneList(DEFAULT_METRICS);
+    gameState.aiPlans = cloneList(DEFAULT_AI_PLANS);
     gameState.keyboardSwitch = 'none';
     gameState.keyboardVolume = 80;
     gameState.activeTaskId = null;
