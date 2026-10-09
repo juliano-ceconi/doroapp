@@ -711,6 +711,138 @@ body {
   background-color: rgba(255, 255, 255, 0.03) !important;
 }
 
+/* Seções editáveis (Planos de IA, Missões, Evolução) */
+.panel-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.btn-edit-section {
+  opacity: 0.55;
+}
+
+.btn-edit-section.active {
+  opacity: 1;
+  color: var(--quote-ice-white);
+  text-shadow: 0 0 6px var(--matrix-glow);
+}
+
+.ai-plan-row .metric-title,
+.metrics-panel .metric-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ai-plan-row .metric-title {
+  max-width: 95px;
+}
+
+.metrics-panel .metric-info {
+  min-width: 0;
+}
+
+.ai-plan-row .metric-progress-wrapper {
+  min-width: 30px;
+}
+
+.row-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.row-action-btn {
+  background: none;
+  border: 1px solid var(--matrix-dim);
+  color: var(--matrix-green);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  line-height: 1;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.row-action-btn:hover {
+  border-color: var(--matrix-green);
+  color: #fff;
+  box-shadow: 0 0 6px var(--matrix-glow);
+}
+
+.row-action-btn:last-child:hover {
+  border-color: #ff2b2b;
+  color: #ff2b2b;
+  box-shadow: 0 0 6px rgba(255, 43, 43, 0.5);
+}
+
+.metric-row.editing,
+.mission-item.editing {
+  border-style: dashed;
+  cursor: default;
+}
+
+.metrics-panel .metric-row.editing .metric-header {
+  gap: 0.4rem;
+}
+
+.metrics-panel .metric-row.editing .metric-value-label {
+  margin-left: auto;
+}
+
+.mission-item.editing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+
+.mission-item.editing:hover {
+  transform: none;
+}
+
+.mission-item .mission-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.btn-add-item {
+  width: 100%;
+  background: none;
+  border: 1px dashed var(--matrix-dim);
+  color: var(--matrix-green);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 0.3rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-add-item:hover:not(:disabled) {
+  border-color: var(--matrix-green);
+  box-shadow: 0 0 8px rgba(0, 255, 65, 0.2);
+  background-color: rgba(0, 15, 0, 0.7);
+}
+
+.btn-add-item:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.panel-empty-hint {
+  font-size: 0.6rem;
+  color: var(--matrix-dim-medium);
+  text-align: center;
+  padding: 0.3rem 0;
+  list-style: none;
+}
+
 /* Main Content */
 .main-content {
   flex: 1;
