@@ -1325,3 +1325,18 @@ O usuário solicitou a criação de um novo favicon para o Doroapp com a imagem 
 
 - **Adendo (2026-10-09):** plano de IA ganha campo opcional `color` (hex `#rrggbb`), escolhido ao criar/editar num modal com paleta neon, cor livre (`OUTRA`) ou `PADRÃO` (remove a cor). A cor escolhida sobrepõe a cor fixa por id; sem `color`, vale o comportamento anterior. Cor inválida em save/import é descartada.
 - **Adendo (2026-10-09):** gráfico `SINAL DE XP` saiu de Evolução e foi para o topo do Registro Histórico, para seguir visível com Evolução recolhida.
+
+## [2026-10-09] Nova Ordem dos Blocos no Mobile
+
+### Contexto
+
+No celular (até 768px), configurações, sys dump, missão ativa e evolução não
+tinham posição definida e subiam para o topo da tela, antes do perfil.
+
+### Decisão
+
+Ordem fixa no mobile: perfil (level/nome/XP/título) → DEEP DIVE FOCUS → relógio
+→ missão ativa (modo mono) → configurações → frase aleatória → sys dump →
+missões → board (foco de hoje/urgentes/importantes) → planos de IA → evolução →
+registro histórico. Configurações e sys dump ganharam margem lateral, já que no
+mobile perdem o recuo da barra lateral.

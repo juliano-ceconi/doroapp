@@ -1316,25 +1316,39 @@ body:not(.agent-mode-active) .agent-colors {
     width: 100%;
     padding: 0 1rem;
   }
-  .ai-plans-panel {
+  .mono-tasking-panel {
     order: 4;
-    width: 100%;
-    padding: 1rem 1rem 0 1rem;
-    margin-top: 1.5rem;
-    border-top: 1px solid var(--matrix-dim);
   }
-  .board-section {
+  .sys-config-panel {
     order: 5;
-    padding: 1.5rem 1rem 0 1rem;
-    margin-top: 2.2rem;
-    border-top: 1px solid var(--matrix-dim);
+    margin: 1.5rem 1rem 0 1rem;
   }
   .daily-quote {
     order: 6;
     margin: 2rem 1rem;
   }
-  .mission-log {
+  .sys-dump-panel {
     order: 7;
+    margin: 0 1rem;
+  }
+  .board-section {
+    order: 9;
+    padding: 1.5rem 1rem 0 1rem;
+    margin-top: 2.2rem;
+    border-top: 1px solid var(--matrix-dim);
+  }
+  .ai-plans-panel {
+    order: 10;
+    width: 100%;
+    padding: 1rem 1rem 0 1rem;
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--matrix-dim);
+  }
+  .evolution-panel {
+    order: 11;
+  }
+  .mission-log {
+    order: 8;
     margin-top: 1rem;
     width: 100%;
     padding: 1.5rem 1rem;
@@ -1376,7 +1390,7 @@ body:not(.agent-mode-active) .agent-colors {
   }
 
   .history-actions {
-    order: 10;
+    order: 12;
     width: 100%;
     background: rgba(0, 10, 0, 0.4) !important;
     padding: 1.5rem 1rem !important;
